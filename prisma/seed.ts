@@ -43,21 +43,17 @@ async function main() {
   const superAdmin = await prisma.admin.create({
     data: {
       email: "admin@dropindrop.cm",
-      password:
-        process.env.NODE_ENV === "developpement"
-          ? "Admin123!"
-          : hashPassword("Admin123"), // TODO: Hash in production!
+      password: "Admin123!", // TODO: Hash with bcrypt in production
       name: "Super Admin",
       role: "SUPER_ADMIN",
       isActive: true,
-      permissions: ["ALL"],
     },
   });
 
   const manager = await prisma.admin.create({
     data: {
       email: "manager@dropindrop.cm",
-      password: hashPassword("Manager123!"),
+      password: "Manager123!", // TODO: Hash with bcrypt in production
       name: "Delivery Manager",
       role: "DELIVERY_MANAGER",
       isActive: true,

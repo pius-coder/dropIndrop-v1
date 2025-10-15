@@ -20,3 +20,8 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
     </QueryClientProvider>
   );
 }
+
+// Main providers wrapper (alias for QueryProvider)
+export function Providers({ children }: { children: React.ReactNode }) {
+  return <QueryProvider>{children}</QueryProvider>;
+}
