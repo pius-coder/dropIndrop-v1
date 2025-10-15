@@ -1,0 +1,400 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========================================
+// ADMIN & AUTH
+// ========================================
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      AdminRole
+  isActive  Boolean  @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastLoginAt DateTime?
+
+  // Relations
+  dropsCreated Drop[] @relation("CreatedDrops")
+  ordersValidated Order[] @relation("ValidatedOrders")
+  settingsUpdates SiteSettings[] @relation("SettingsUpdates")
+
+  @@index([email])
+  @@map("admins")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  DELIVERY_MANAGER
+  SUPPORT
+}
+
+// ========================================
+// CATALOG
+// ========================================
+
+model Category {
+  id    String @id @default(cuid())
+  name  String
+  slug  String @unique
+  icon  String?
+  order Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  subcategories Subcategory[]
+  articles      Article[]
+
+  @@index([slug])
+  @@map("categories")
+}
+
+model Subcategory {
+  id         String @id @default(cuid())
+  name       String
+  slug       String @unique
+  categoryId String
+  order      Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  articles Article[]
+
+  @@index([categoryId])
+  @@index([slug])
+  @@map("subcategories")
+}
+
+model Article {
+  id            String  @id @default(cuid())
+  code          String  @unique
+  name          String
+  description   String
+  price         Decimal @db.Decimal(10, 2)
+  stock         Int
+  minStock      Int     @default(5)
+
+  categoryId    String
+  subcategoryId String?
+
+  images        String[]
+  videos        String[]
+
+  uniqueSlug    String  @unique
+
+  // Analytics
+  views         Int @default(0)
+  clicksToBuy   Int @default(0)
+
+  status        ArticleStatus @default(AVAILABLE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  category      Category @relation(fields: [categoryId], references: [id])
+  subcategory   Subcategory? @relation(fields: [subcategoryId], references: [id])
+  orders        Order[]
+  dropArticles  DropArticle[]
+  analytics     ArticleAnalytics[]
+
+  @@index([code])
+  @@index([uniqueSlug])
+  @@index([categoryId])
+  @@index([status])
+  @@map("articles")
+}
+
+enum ArticleStatus {
+  AVAILABLE
+  OUT_OF_STOCK
+  ARCHIVED
+}
+
+// ========================================
+// DROPS & WHATSAPP
+// ========================================
+
+model MessageTemplate {
+  id        String  @id @default(cuid())
+  name      String
+  content   String  @db.Text
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  drops Drop[]
+
+  @@map("message_templates")
+}
+
+model Drop {
+  id                String   @id @default(cuid())
+  name              String
+  messageTemplateId String?
+
+  status            DropStatus @default(DRAFT)
+  scheduledFor      DateTime?
+  sentAt            DateTime?
+
+  totalArticlesSent Int @default(0)
+  totalGroupsSent   Int @default(0)
+
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  creator         Admin @relation("CreatedDrops", fields: [createdBy], references: [id])
+  messageTemplate MessageTemplate? @relation(fields: [messageTemplateId], references: [id])
+  articles        DropArticle[]
+  groups          DropGroup[]
+  history         DropHistory[]
+
+  @@index([createdBy])
+  @@index([status])
+  @@map("drops")
+}
+
+enum DropStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  FAILED
+}
+
+model DropArticle {
+  id        String @id @default(cuid())
+  dropId    String
+  articleId String
+  order     Int    @default(0)
+
+  // Relations
+  drop    Drop    @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([dropId, articleId])
+  @@index([dropId])
+  @@index([articleId])
+  @@map("drop_articles")
+}
+
+model WhatsAppGroup {
+  id           String  @id @default(cuid())
+  wahaGroupId  String  @unique
+  name         String
+  memberCount  Int     @default(0)
+  isActive     Boolean @default(true)
+
+  lastDropSentAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  drops   DropGroup[]
+  history DropHistory[]
+
+  @@index([wahaGroupId])
+  @@map("whatsapp_groups")
+}
+
+model DropGroup {
+  id      String @id @default(cuid())
+  dropId  String
+  groupId String
+
+  // Relations
+  drop  Drop          @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  group WhatsAppGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([dropId, groupId])
+  @@index([dropId])
+  @@index([groupId])
+  @@map("drop_groups")
+}
+
+model DropHistory {
+  id              String   @id @default(cuid())
+  dropId          String
+  whatsappGroupId String
+  articleId       String
+  messagesSent    Int      @default(0)
+  status          String
+  sentAt          DateTime @default(now())
+
+  // Relations
+  drop  Drop          @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  group WhatsAppGroup @relation(fields: [whatsappGroupId], references: [id], onDelete: Cascade)
+
+  @@index([dropId])
+  @@index([whatsappGroupId])
+  @@index([articleId])
+  @@index([sentAt])
+  @@map("drop_history")
+}
+
+// ========================================
+// CUSTOMERS & ORDERS
+// ========================================
+
+model Customer {
+  id       String  @id @default(cuid())
+  name     String
+  phone    String  @unique
+  email    String?
+  password String?
+
+  totalOrders Int     @default(0)
+  totalSpent  Decimal @db.Decimal(10, 2) @default(0)
+
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  orders Order[]
+
+  @@index([phone])
+  @@map("customers")
+}
+
+model Order {
+  id          String @id @default(cuid())
+  orderNumber String @unique
+
+  customerId String
+  articleId  String
+
+  amount Decimal @db.Decimal(10, 2)
+
+  // Payment
+  paymentStatus        PaymentStatus @default(PENDING)
+  paymentMethod        PaymentMethod
+  paymentTransactionId String?
+  paidAt               DateTime?
+
+  // Pickup/Delivery
+  ticketCode       String   @unique
+  ticketQRCode     String
+  ticketExpiresAt  DateTime
+
+  pickupStatus PickupStatus @default(PENDING)
+  pickedUpBy   String?
+  pickedUpAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  customer      Customer @relation(fields: [customerId], references: [id])
+  article       Article  @relation(fields: [articleId], references: [id])
+  validator     Admin?   @relation("ValidatedOrders", fields: [pickedUpBy], references: [id])
+
+  @@index([customerId])
+  @@index([articleId])
+  @@index([orderNumber])
+  @@index([ticketCode])
+  @@index([paymentStatus])
+  @@index([pickupStatus])
+  @@map("orders")
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  MTN_MOMO
+  ORANGE_MONEY
+}
+
+enum PickupStatus {
+  PENDING
+  PICKED_UP
+  CANCELLED
+}
+
+// ========================================
+// ANALYTICS
+// ========================================
+
+model ArticleAnalytics {
+  id        String   @id @default(cuid())
+  articleId String
+
+  viewedAt   DateTime @default(now())
+  viewSource String
+  clickedAt  DateTime?
+
+  // Relations
+  article Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@index([articleId])
+  @@index([viewedAt])
+  @@map("article_analytics")
+}
+
+// ========================================
+// SETTINGS
+// ========================================
+
+model SiteSettings {
+  id String @id @default(cuid())
+
+  // WhatsApp
+  whatsappGroupLink String
+  wahaApiUrl        String
+  wahaApiKey        String
+  wahaPhoneNumber   String
+
+  // Store Info
+  storeName    String
+  storeAddress String
+  storeHours   String
+  supportPhone String
+
+  // Payment
+  pawapayApiKey      String
+  pawapayMode        String
+  enableMtnMomo      Boolean @default(true)
+  enableOrangeMoney  Boolean @default(true)
+
+  // Home Page
+  homeTitle    String
+  homeSubtitle String
+  logoUrl      String?
+  bannerUrl    String?
+
+  // Tickets
+  ticketExpiryDays Int @default(7)
+
+  updatedAt DateTime @default(now())
+  updatedBy String
+
+  // Relations
+  updater Admin @relation("SettingsUpdates", fields: [updatedBy], references: [id])
+
+  @@map("site_settings")
+}
