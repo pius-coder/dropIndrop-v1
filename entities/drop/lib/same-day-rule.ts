@@ -205,7 +205,9 @@ export async function validateDropSameDayRule(
  * @param validations Array of per-group validations
  * @returns true if drop can be sent
  */
-export function canSendDrop(validations: SameDayValidation[]): boolean {
+export function canSendDropWithSameDayRule(
+  validations: SameDayValidation[],
+): boolean {
   return validations.some(
     (validation) => validation.allowedArticleIds.length > 0,
   );

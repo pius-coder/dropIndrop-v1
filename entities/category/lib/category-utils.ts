@@ -138,10 +138,10 @@ export function suggestNextOrder(categories: Category[]): number {
 }
 
 /**
- * Reorder categories
+ * Prepare category reordering
  * Updates order of all categories to be sequential
  */
-export function reorderCategories(
+export function prepareCategoryReordering(
   categories: Category[],
 ): Array<{ id: string; order: number }> {
   return categories

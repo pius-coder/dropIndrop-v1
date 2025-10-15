@@ -79,9 +79,9 @@ export function getDropStatusColor(status: DropStatus): string {
 /**
  * Check if drop is scheduled for future
  */
-export function isScheduledForFuture(
-  drop: Pick<Drop, "scheduledFor">,
-): boolean {
+export function isScheduledForFuture(drop: {
+  scheduledFor?: Date | null;
+}): boolean {
   if (!drop.scheduledFor) return false;
   return drop.scheduledFor.getTime() > Date.now();
 }
@@ -90,9 +90,10 @@ export function isScheduledForFuture(
  * Check if drop is overdue
  * (scheduled for past but not sent)
  */
-export function isDropOverdue(
-  drop: Pick<Drop, "scheduledFor" | "status">,
-): boolean {
+export function isDropOverdue(drop: {
+  scheduledFor?: Date | null;
+  status: DropStatus;
+}): boolean {
   if (!drop.scheduledFor) return false;
   if (drop.status === "SENT") return false;
   return drop.scheduledFor.getTime() < Date.now();
