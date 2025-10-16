@@ -7,6 +7,7 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { logger, errorHandler, cors } from "@/lib/api/middleware";
+import auth from "../routes/auth";
 import articles from "../routes/articles";
 
 export const runtime = "nodejs";
@@ -45,6 +46,7 @@ app.get("/", (c) => {
   });
 });
 
+app.route("/auth", auth);
 app.route("/articles", articles);
 
 // 404 handler
