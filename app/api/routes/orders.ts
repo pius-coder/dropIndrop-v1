@@ -163,6 +163,7 @@ app.post("/validate-ticket", authMiddleware, zValidator("json", validateTicketSc
     where: { ticketCode },
     include: {
       article: { select: { id: true, name: true, price: true, images: true } },
+      customer: true,
     },
   });
 
@@ -174,7 +175,7 @@ app.post("/validate-ticket", authMiddleware, zValidator("json", validateTicketSc
     });
   }
 
-  if (order.paymentStatus !== "CONFIRMED") {
+  if (order.paymentStatus !== "PAID") {
     return c.json({
       valid: true,
       order: {
@@ -182,13 +183,10 @@ app.post("/validate-ticket", authMiddleware, zValidator("json", validateTicketSc
         orderNumber: order.orderNumber,
         ticketCode: order.ticketCode,
         article: order.article,
-        customer: {
-          name: order.customerName,
-          phone: order.customerPhone,
-        },
+        customer: order.customer,
         paymentStatus: order.paymentStatus,
         pickupStatus: order.pickupStatus,
-        totalPrice: Number(order.totalPrice),
+        totalPrice: Number(order.amount),
         createdAt: order.createdAt,
       },
       message: "Paiement en attente de confirmation",
@@ -204,13 +202,10 @@ app.post("/validate-ticket", authMiddleware, zValidator("json", validateTicketSc
         orderNumber: order.orderNumber,
         ticketCode: order.ticketCode,
         article: order.article,
-        customer: {
-          name: order.customerName,
-          phone: order.customerPhone,
-        },
+        customer: order.customer,
         paymentStatus: order.paymentStatus,
         pickupStatus: order.pickupStatus,
-        totalPrice: Number(order.totalPrice),
+        totalPrice: Number(order.amount),
         createdAt: order.createdAt,
       },
       message: "Commande déjà retirée",
@@ -225,13 +220,10 @@ app.post("/validate-ticket", authMiddleware, zValidator("json", validateTicketSc
       orderNumber: order.orderNumber,
       ticketCode: order.ticketCode,
       article: order.article,
-      customer: {
-        name: order.customerName,
-        phone: order.customerPhone,
-      },
+      customer: order.customer,
       paymentStatus: order.paymentStatus,
       pickupStatus: order.pickupStatus,
-      totalPrice: Number(order.totalPrice),
+      totalPrice: Number(order.amount),
       createdAt: order.createdAt,
     },
     message: "Ticket valide - Retrait autorisé",
