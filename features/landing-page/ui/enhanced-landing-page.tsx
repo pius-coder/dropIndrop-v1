@@ -1,19 +1,17 @@
 /**
  * Enhanced Landing Page
- * Dynamic homepage with content from SiteSettings
+ * Marketing-focused homepage with content from SiteSettings
  */
 
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useArticles } from "@/features/article-list/lib/use-articles";
 import { useSiteSettings } from "@/features/site-settings/lib/use-site-settings";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Search, ShoppingBag, LogIn, UserPlus, MessageCircle, Shield, Truck } from "lucide-react";
-import { ArticleCard } from "@/entities/article/ui/article-card";
+import { Loader2, Search, ShoppingBag, LogIn, UserPlus, MessageCircle, Shield, Truck, Star, ArrowRight, Smartphone, CreditCard, Users } from "lucide-react";
 
 export function EnhancedLandingPage() {
   const router = useRouter();
@@ -21,15 +19,6 @@ export function EnhancedLandingPage() {
 
   // Get site settings for dynamic content
   const { data: settings } = useSiteSettings();
-
-  // Get articles for homepage display
-  const { data, isLoading, error } = useArticles({
-    search,
-    status: "AVAILABLE",
-    sortBy: "createdAt",
-    sortOrder: "desc",
-    limit: 8, // Show featured articles
-  });
 
   const handleWhatsAppJoin = () => {
     if (settings?.whatsappGroupLink) {
@@ -43,48 +32,71 @@ export function EnhancedLandingPage() {
     }
   };
 
+  const features = [
+    {
+      icon: <ShoppingBag className="h-8 w-8" />,
+      title: "Shopping Facile",
+      description: "Parcourez et achetez des produits en quelques clics",
+    },
+    {
+      icon: <MessageCircle className="h-8 w-8" />,
+      title: "Intégration WhatsApp",
+      description: "Recevez des mises à jour et du support via WhatsApp",
+    },
+    {
+      icon: <CreditCard className="h-8 w-8" />,
+      title: "Paiements Sécurisés",
+      description: "Traitement des paiements sûr et sécurisé",
+    },
+    {
+      icon: <Smartphone className="h-8 w-8" />,
+      title: "Mobile First",
+      description: "Expérience optimisée pour les appareils mobiles",
+    },
+  ];
+
+  const steps = [
+    {
+      number: "1",
+      title: "Rejoignez notre groupe WhatsApp",
+      description: "Connectez-vous à notre communauté et parcourez les produits",
+    },
+    {
+      number: "2",
+      title: "Cliquez sur les liens produits",
+      description: "Trouvez les liens produits partagés dans notre groupe WhatsApp",
+    },
+    {
+      number: "3",
+      title: "Checkout Facile",
+      description: "Paiement sécurisé et confirmation de livraison instantanée",
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section - Dynamic from SiteSettings */}
-      <section className="bg-primary text-primary-foreground py-12 md:py-20">
-        <div className="container">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <h1 className="text-4xl md:text-6xl font-bold">
-              {settings?.homeTitle || "Drop-In-Drop"}
-            </h1>
-            <p className="text-lg md:text-xl opacity-90">
-              {settings?.homeSubtitle || "Les meilleurs produits tech au Cameroun"}
-            </p>
-
-            {/* WhatsApp CTA */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 max-w-md mx-auto">
-              <p className="text-sm mb-3">📱 Rejoignez notre groupe WhatsApp</p>
-              <Button
-                onClick={handleWhatsAppJoin}
-                className="w-full bg-green-600 hover:bg-green-700"
-                size="lg"
-              >
-                <MessageCircle className="mr-2 h-5 w-5" />
-                Rejoindre le groupe
-              </Button>
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <ShoppingBag className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <span className="text-2xl font-bold text-primary">
+                {settings?.storeName || "Drop-In-Drop"}
+              </span>
             </div>
-
-            {/* Auth Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+            <div className="flex items-center gap-4">
               <Button
-                variant="secondary"
-                size="lg"
+                variant="ghost"
                 onClick={() => router.push("/auth/login")}
-                className="w-full sm:w-auto"
               >
                 <LogIn className="mr-2 h-4 w-4" />
                 Se connecter
               </Button>
               <Button
-                variant="outline"
-                size="lg"
                 onClick={() => router.push("/auth/register")}
-                className="w-full sm:w-auto"
               >
                 <UserPlus className="mr-2 h-4 w-4" />
                 Créer un compte
@@ -92,203 +104,142 @@ export function EnhancedLandingPage() {
             </div>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* Search Section */}
-      <section className="py-8 border-b bg-muted/50">
-        <div className="container">
-          <div className="max-w-2xl mx-auto">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Rechercher un produit..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-md border bg-background text-base md:text-sm"
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                />
-              </div>
-              <Button onClick={handleSearch}>Rechercher</Button>
-            </div>
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-16 md:py-24">
+        <div className="text-center max-w-4xl mx-auto">
+          <Badge variant="secondary" className="mb-4">
+            <Star className="h-4 w-4 mr-1" />
+            Bienvenue chez {settings?.storeName || "Drop-In-Drop"}
+          </Badge>
+
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+            {settings?.homeTitle || "Achetez Intelligemment"}
+            <span className="text-primary">, Vivez Mieux</span>
+          </h1>
+
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            {settings?.homeSubtitle || "Découvrez des produits exceptionnels, connectez-vous à notre communauté et profitez d'une expérience d'achat fluide via notre plateforme WhatsApp."}
+          </p>
+
+          <div className="flex justify-center">
+            <Button
+              size="lg"
+              className="text-lg px-8 py-6"
+              onClick={handleWhatsAppJoin}
+            >
+              <MessageCircle className="h-5 w-5 mr-2" />
+              Rejoindre notre groupe WhatsApp
+              <ArrowRight className="h-5 w-5 ml-2" />
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-16">
-        <div className="container">
-          <div className="max-w-3xl mx-auto text-center space-y-6 mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold">
-              Comment ça marche ?
+      {/* Features Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-foreground mb-4">
+            Pourquoi choisir {settings?.storeName || "Drop-In-Drop"} ?
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Découvrez une expérience d'achat comme jamais auparavant avec nos fonctionnalités innovantes
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, index) => (
+            <Card
+              key={index}
+              className="text-center hover:shadow-lg transition-shadow"
+            >
+              <CardHeader>
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mb-4">
+                  {feature.icon}
+                </div>
+                <CardTitle className="text-xl">{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground text-base">
+                  {feature.description}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="bg-muted/50 py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Comment ça marche
             </h2>
-            <p className="text-muted-foreground">
-              Achetez facilement via notre plateforme WhatsApp
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Démarrez avec {settings?.storeName || "Drop-In-Drop"} en seulement 3 étapes simples
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-3 gap-6">
-            <Card>
-              <CardContent className="pt-6 text-center">
-                <div className="text-4xl mb-3">1️⃣</div>
-                <h3 className="font-semibold mb-2">Parcourez</h3>
-                <p className="text-sm text-muted-foreground">
-                  Découvrez nos produits et choisissez ce qui vous plaît
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6 text-center">
-                <div className="text-4xl mb-3">2️⃣</div>
-                <h3 className="font-semibold mb-2">Commandez</h3>
-                <p className="text-sm text-muted-foreground">
-                  Remplissez le formulaire et choisissez votre paiement
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="pt-6 text-center">
-                <div className="text-4xl mb-3">3️⃣</div>
-                <h3 className="font-semibold mb-2">Récupérez</h3>
-                <p className="text-sm text-muted-foreground">
-                  Présentez votre ticket et récupérez votre produit
-                </p>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {steps.map((step, index) => (
+              <div key={index} className="text-center">
+                <div className="w-16 h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+                  {step.number}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-muted-foreground">{step.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Featured Articles */}
-      <section className="py-16 bg-muted/30">
-        <div className="container">
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">
-              Produits en vedette
-            </h2>
-            <p className="text-muted-foreground">Découvrez notre sélection</p>
-          </div>
-
-          {isLoading && (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin" />
+      {/* WhatsApp CTA */}
+      <section className="container mx-auto px-4 py-16">
+        <Card className="max-w-2xl mx-auto bg-gradient-to-r from-green-50 to-green-100 border-green-200">
+          <CardContent className="pt-8 pb-8 text-center">
+            <MessageCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
+            <h3 className="text-2xl font-bold text-green-800 mb-2">
+              Rejoignez notre communauté WhatsApp
+            </h3>
+            <p className="text-green-700 mb-6 max-w-md mx-auto">
+              Restez connecté, obtenez des offres exclusives et recevez un support instantané via notre groupe WhatsApp. Rejoignez des milliers de clients satisfaits !
+            </p>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <Users className="h-5 w-5 text-green-600" />
+              <span className="text-green-700 font-medium">
+                10,000+ Membres
+              </span>
             </div>
-          )}
-
-          {error && (
-            <Card className="border-destructive">
-              <CardContent className="p-6 text-center">
-                <p className="text-destructive">Erreur lors du chargement</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {data && data.articles.length === 0 && (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <ShoppingBag className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">
-                  Aucun produit disponible pour le moment
-                </p>
-              </CardContent>
-            </Card>
-          )}
-
-          {data && data.articles.length > 0 && (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-                {data.articles.slice(0, 8).map((article) => (
-                  <div
-                    key={article.id}
-                    className="cursor-pointer transition-transform hover:scale-105"
-                    onClick={() => router.push(`/a/${article.uniqueSlug}`)}
-                  >
-                    <ArticleCard article={article} />
-                  </div>
-                ))}
-              </div>
-
-              <div className="text-center">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => router.push("/articles")}
-                >
-                  Voir tous les produits
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-16">
-        <div className="container">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8">
-              Pourquoi nous choisir ?
-            </h2>
-            <div className="grid sm:grid-cols-3 gap-6">
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <Shield className="h-12 w-12 mx-auto mb-3 text-primary" />
-                  <h3 className="font-semibold mb-2">Sécurisé</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Paiements sécurisés via Mobile Money
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <Truck className="h-12 w-12 mx-auto mb-3 text-primary" />
-                  <h3 className="font-semibold mb-2">Livraison rapide</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Récupération immédiate après paiement
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="pt-6 text-center">
-                  <MessageCircle className="h-12 w-12 mx-auto mb-3 text-primary" />
-                  <h3 className="font-semibold mb-2">Support WhatsApp</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Assistance 24/7 via notre groupe
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
+            <Button
+              size="lg"
+              className="bg-green-600 hover:bg-green-700 text-white"
+              onClick={handleWhatsAppJoin}
+            >
+              <MessageCircle className="h-5 w-5 mr-2" />
+              Rejoindre le groupe WhatsApp maintenant
+            </Button>
+            <p className="text-xs text-green-600 mt-4">
+              En rejoignant, vous acceptez nos règles communautaires et conditions d'utilisation.
+            </p>
+          </CardContent>
+        </Card>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t bg-muted/50">
-        <div className="container">
-          <div className="text-center space-y-4">
-            <div className="flex justify-center gap-6 text-sm text-muted-foreground">
-              <a href="/about" className="hover:text-primary">À propos</a>
-              <a href="/contact" className="hover:text-primary">Contact</a>
-              <a href="/terms" className="hover:text-primary">Conditions</a>
-              <a href="/privacy" className="hover:text-primary">Confidentialité</a>
+      <footer className="bg-background border-t py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="w-6 h-6 bg-primary rounded flex items-center justify-center">
+                <ShoppingBag className="h-4 w-4 text-primary-foreground" />
+              </div>
+              <span className="font-bold text-primary">{settings?.storeName || "Drop-In-Drop"}</span>
             </div>
-
-            <div className="space-y-2">
-              <p className="font-medium">{settings?.storeName || "Drop-In-Drop"}</p>
-              <p className="text-sm text-muted-foreground">
-                {settings?.storeAddress || "Cameroun"}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {settings?.storeHours || "Lundi - Samedi: 8h - 18h"}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Support: {settings?.supportPhone || "+237 6XX XXX XXX"}
-              </p>
-            </div>
-
-            <p className="text-xs text-muted-foreground">
-              © 2025 Drop-In-Drop. Tous droits réservés.
+            <p className="text-muted-foreground text-sm">
+              © 2025 {settings?.storeName || "Drop-In-Drop"}. Tous droits réservés. | Fait avec ❤️ pour le Cameroun
             </p>
           </div>
         </div>
