@@ -4,12 +4,14 @@
 
 "use client";
 
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { useCreateDrop } from "../lib/use-create-drop";
 import { createDropSchema, type CreateDropInput } from "../model/types";
+import { ArticleSelector } from "./article-selector";
 import {
   Form,
   FormControl,
@@ -26,6 +28,7 @@ import { Loader2 } from "lucide-react";
 
 export function DropCreateForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { mutate: createDrop, isPending } = useCreateDrop();
 
   const form = useForm<CreateDropInput>({
@@ -36,6 +39,17 @@ export function DropCreateForm() {
       groupIds: [],
     },
   });
+
+  // Load pre-selected articles from URL
+  useEffect(() => {
+    const articleIds = searchParams.getAll('articleIds');
+    if (articleIds.length > 0) {
+      form.setValue('articleIds', articleIds);
+      toast.success(`${articleIds.length} article(s) pré-sélectionné(s)`, {
+        description: "Vous pouvez modifier votre sélection ci-dessous",
+      });
+    }
+  }, [searchParams, form]);
 
   const onSubmit = (data: CreateDropInput) => {
     createDrop(data, {
@@ -86,15 +100,27 @@ export function DropCreateForm() {
               )}
             />
 
-            {/* Article Selection - Simplified for now */}
-            <div className="rounded-lg border p-4 bg-muted/50">
-              <p className="text-sm text-muted-foreground">
-                ℹ️ Sélection d'articles: À implémenter avec un composant multi-select
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">
-                Pour l'instant, utilisez l'API directement avec articleIds: ["id1", "id2"]
-              </p>
-            </div>
+            {/* Article Selection */}
+            <FormField
+              control={form.control}
+              name="articleIds"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Articles à envoyer *</FormLabel>
+                  <FormDescription>
+                    Sélectionnez 1 à 20 articles pour ce drop
+                  </FormDescription>
+                  <FormControl>
+                    <ArticleSelector
+                      selectedIds={field.value}
+                      onSelectionChange={field.onChange}
+                      maxSelection={20}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Group Selection - Simplified for now */}
             <div className="rounded-lg border p-4 bg-muted/50">

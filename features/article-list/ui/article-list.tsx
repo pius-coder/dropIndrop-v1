@@ -7,6 +7,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useArticles } from "../lib/use-articles";
 import { ArticleCard } from "@/entities/article/ui/article-card";
 import { ArticleListFilters } from "./article-list-filters";
@@ -22,6 +23,7 @@ import type {
 import { ArticleTable } from "./article-table";
 
 export function ArticleList() {
+  const router = useRouter();
   const [filters, setFilters] = useState<Partial<Filters>>({});
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<ArticleViewMode>("table");
@@ -52,8 +54,10 @@ export function ArticleList() {
   };
 
   const handleCreateDrop = () => {
-    // TODO: Navigate to drop create with selected articles
-    console.log("Create drop with articles:", selectedArticleIds);
+    // Navigate to drop creation with pre-selected articles
+    const params = new URLSearchParams();
+    selectedArticleIds.forEach(id => params.append('articleIds', id));
+    router.push(`/admin/drops/new?${params.toString()}`);
   };
 
   // Article actions
