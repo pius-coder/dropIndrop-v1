@@ -1,6 +1,6 @@
 /**
  * API Client - Type-safe HTTP wrapper with auth
- * 
+ *
  * Features:
  * - Auto-attach auth token from Zustand store
  * - Centralized error handling
@@ -24,7 +24,8 @@ class ApiClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_APP_URL || "";
+    // For Next.js API routes, prefix all calls with /api
+    this.baseURL = "/api";
   }
 
   private getToken(): string | null {
@@ -32,13 +33,9 @@ class ApiClient {
     return useAuthStore.getState().token;
   }
 
-  async request<T>(
-    method: string,
-    url: string,
-    data?: unknown,
-  ): Promise<T> {
+  async request<T>(method: string, url: string, data?: unknown): Promise<T> {
     const token = this.getToken();
-    
+
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
@@ -47,27 +44,54 @@ class ApiClient {
       headers["Authorization"] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${this.baseURL}${url}`, {
-      method,
-      headers,
-      body: data ? JSON.stringify(data) : undefined,
-    });
+    try {
+      const response = await fetch(`${this.baseURL}${url}`, {
+        method,
+        headers,
+        body: data ? JSON.stringify(data) : undefined,
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new ApiError(
-        response.status,
-        response.statusText,
-        errorData.message || `API Error: ${response.statusText}`,
-      );
+      // Parse response body for both success and error cases
+      let responseData: any;
+      const contentType = response.headers.get("content-type");
+      
+      if (contentType?.includes("application/json")) {
+        responseData = await response.json();
+      } else if (response.status === 204) {
+        // No content
+        return undefined as T;
+      } else {
+        responseData = { message: await response.text() };
+      }
+
+      // Only throw for server errors (5xx) or network errors
+      if (response.status >= 500) {
+        throw new ApiError(
+          response.status,
+          response.statusText,
+          responseData.message || `Server Error: ${response.statusText}`
+        );
+      }
+
+      // For client errors (4xx), return error data in the response
+      if (!response.ok) {
+        return {
+          error: true,
+          status: response.status,
+          message: responseData.message || responseData.error || response.statusText,
+          ...responseData,
+        } as T;
+      }
+
+      // Success response
+      return responseData as T;
+    } catch (error) {
+      // Network errors or other fetch failures
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(0, "Network Error", "Unable to connect to server");
     }
-
-    // Handle 204 No Content
-    if (response.status === 204) {
-      return undefined as T;
-    }
-
-    return response.json();
   }
 
   get<T>(url: string): Promise<T> {

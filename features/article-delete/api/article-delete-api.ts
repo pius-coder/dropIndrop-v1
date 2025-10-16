@@ -10,5 +10,5 @@ import { apiClient } from "@/shared/api/client";
  * Delete article by ID
  */
 export async function deleteArticle(id: string): Promise<void> {
-  return apiClient.delete(`/api/articles/${id}`);
+  return apiClient.delete(`/articles/${id}`);
 }

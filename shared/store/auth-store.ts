@@ -36,7 +36,16 @@ export const useAuthStore = create<AuthState>()(
 
       login: (user, token) => set({ user, token }),
       
-      logout: () => set({ user: null, token: null }),
+      logout: async () => {
+        // Call logout API to clear cookie
+        try {
+          await fetch("/api/auth/logout", { method: "POST" });
+        } catch (error) {
+          console.error("Logout error:", error);
+        }
+        // Clear client state
+        set({ user: null, token: null });
+      },
       
       isAuthenticated: () => {
         const state = get();

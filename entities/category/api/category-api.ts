@@ -1,6 +1,6 @@
 /**
  * Category API - Client-side methods
- * 
+ *
  * Type-safe API calls for Category entity
  */
 
@@ -36,43 +36,52 @@ export async function getCategoryTree(): Promise<CategoryTreeNode[]> {
 /**
  * Get single category by ID
  */
-export async function getCategory(id: string): Promise<CategoryWithSubcategories> {
-  return apiClient.get<CategoryWithSubcategories>(`/api/categories/${id}`);
+export async function getCategory(
+  id: string
+): Promise<CategoryWithSubcategories> {
+  return apiClient.get<CategoryWithSubcategories>(`/categories/${id}`);
 }
 
 /**
  * Get category by slug
  */
-export async function getCategoryBySlug(slug: string): Promise<CategoryWithSubcategories> {
-  return apiClient.get<CategoryWithSubcategories>(`/api/categories/slug/${slug}`);
+export async function getCategoryBySlug(
+  slug: string
+): Promise<CategoryWithSubcategories> {
+  return apiClient.get<CategoryWithSubcategories>(`/categories/slug/${slug}`);
 }
 
 /**
  * Create category
  */
-export async function createCategory(data: CreateCategoryInput): Promise<Category> {
+export async function createCategory(
+  data: CreateCategoryInput
+): Promise<Category> {
   return apiClient.post<Category>("/api/categories", data);
 }
 
 /**
  * Update category
  */
-export async function updateCategory(id: string, data: UpdateCategoryInput): Promise<Category> {
-  return apiClient.put<Category>(`/api/categories/${id}`, data);
+export async function updateCategory(
+  id: string,
+  data: UpdateCategoryInput
+): Promise<Category> {
+  return apiClient.put<Category>(`/categories/${id}`, data);
 }
 
 /**
  * Delete category
  */
 export async function deleteCategory(id: string): Promise<void> {
-  return apiClient.delete<void>(`/api/categories/${id}`);
+  return apiClient.delete<void>(`/categories/${id}`);
 }
 
 /**
  * Reorder categories
  */
 export async function reorderCategories(
-  orders: Array<{ id: string; order: number }>,
+  orders: Array<{ id: string; order: number }>
 ): Promise<void> {
   return apiClient.post<void>("/api/categories/reorder", { orders });
 }
@@ -87,14 +96,18 @@ export async function getSubcategories(): Promise<SubcategoryWithCategory[]> {
 /**
  * Get single subcategory by ID
  */
-export async function getSubcategory(id: string): Promise<SubcategoryWithCategory> {
-  return apiClient.get<SubcategoryWithCategory>(`/api/subcategories/${id}`);
+export async function getSubcategory(
+  id: string
+): Promise<SubcategoryWithCategory> {
+  return apiClient.get<SubcategoryWithCategory>(`/subcategories/${id}`);
 }
 
 /**
  * Create subcategory
  */
-export async function createSubcategory(data: CreateSubcategoryInput): Promise<Subcategory> {
+export async function createSubcategory(
+  data: CreateSubcategoryInput
+): Promise<Subcategory> {
   return apiClient.post<Subcategory>("/api/subcategories", data);
 }
 
@@ -103,14 +116,14 @@ export async function createSubcategory(data: CreateSubcategoryInput): Promise<S
  */
 export async function updateSubcategory(
   id: string,
-  data: UpdateSubcategoryInput,
+  data: UpdateSubcategoryInput
 ): Promise<Subcategory> {
-  return apiClient.put<Subcategory>(`/api/subcategories/${id}`, data);
+  return apiClient.put<Subcategory>(`/subcategories/${id}`, data);
 }
 
 /**
  * Delete subcategory
  */
 export async function deleteSubcategory(id: string): Promise<void> {
-  return apiClient.delete<void>(`/api/subcategories/${id}`);
+  return apiClient.delete<void>(`/subcategories/${id}`);
 }

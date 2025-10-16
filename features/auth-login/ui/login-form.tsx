@@ -6,6 +6,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { loginRequestSchema, type LoginRequest } from "../model/types";
 import { useLogin } from "../lib/use-login";
 import {
@@ -25,9 +26,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useEffect } from "react";
 
 export function LoginForm() {
-  const { login, isLoading } = useLogin();
+  const searchParams = useSearchParams();
+  const from = searchParams?.get("from") || "/admin/dashboard";
+  useEffect(() => {
+    console.log(`Login Form : ${from}`);
+  }, [from]);
+
+  const { login, isLoading } = useLogin(from);
 
   const form = useForm<LoginRequest>({
     resolver: zodResolver(loginRequestSchema),

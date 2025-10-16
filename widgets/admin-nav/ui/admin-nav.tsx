@@ -7,7 +7,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   Package,
@@ -21,7 +22,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/shared/store/auth-store";
-import { cn } from "@/lib/utils";
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -43,6 +43,13 @@ const navigation = [
 
 export function AdminNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/admin/login");
+  };
 
   return (
     <div className="w-64 bg-gray-900 text-white flex flex-col">
@@ -80,10 +87,10 @@ export function AdminNav() {
       <div className="p-4 border-t border-gray-800">
         <div className="mb-3">
           <p className="text-sm font-medium">{user?.name || "Admin User"}</p>
-          <p className="text-xs text-gray-400">{user?.email || "admin@example.com"}</p>
-          <p className="text-xs text-gray-500 mt-1">
-            {user?.role || "ADMIN"}
+          <p className="text-xs text-gray-400">
+            {user?.email || "admin@example.com"}
           </p>
+          <p className="text-xs text-gray-500 mt-1">{user?.role || "ADMIN"}</p>
         </div>
         <Button
           variant="outline"

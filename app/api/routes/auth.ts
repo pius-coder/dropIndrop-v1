@@ -59,8 +59,21 @@ app.post("/login", zValidator("json", loginRequestSchema), async (c) => {
 
   const { password: _, ...adminWithoutPassword } = admin;
 
+  const cookieOptions = [
+    `auth-token=${token}`,
+    "HttpOnly",
+    "Path=/",
+    `Max-Age=${7 * 24 * 60 * 60}`,
+    "SameSite=Lax",
+    process.env.NODE_ENV === "production" ? "Secure" : "",
+  ]
+    .filter(Boolean)
+    .join("; ");
+
+  c.header("Set-Cookie", cookieOptions);
+
   return c.json({
-    token,
+    token, // Also return in response for client-side storage
     admin: adminWithoutPassword,
   });
 });

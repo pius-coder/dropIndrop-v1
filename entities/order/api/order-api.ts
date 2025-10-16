@@ -1,6 +1,6 @@
 /**
  * Order API - Client-side methods
- * 
+ *
  * Type-safe API calls for Order entity
  */
 
@@ -18,15 +18,20 @@ import type {
 /**
  * Get list of orders with optional filters
  */
-export async function getOrders(filters?: OrderFilter): Promise<OrderWithRelations[]> {
+export async function getOrders(
+  filters?: OrderFilter
+): Promise<OrderWithRelations[]> {
   const params = new URLSearchParams();
 
   if (filters) {
     if (filters.customerId) params.append("customerId", filters.customerId);
     if (filters.articleId) params.append("articleId", filters.articleId);
-    if (filters.paymentStatus) params.append("paymentStatus", filters.paymentStatus);
-    if (filters.pickupStatus) params.append("pickupStatus", filters.pickupStatus);
-    if (filters.paymentMethod) params.append("paymentMethod", filters.paymentMethod);
+    if (filters.paymentStatus)
+      params.append("paymentStatus", filters.paymentStatus);
+    if (filters.pickupStatus)
+      params.append("pickupStatus", filters.pickupStatus);
+    if (filters.paymentMethod)
+      params.append("paymentMethod", filters.paymentMethod);
     if (filters.search) params.append("search", filters.search);
     if (filters.createdAfter)
       params.append("createdAfter", filters.createdAfter.toISOString());
@@ -34,7 +39,7 @@ export async function getOrders(filters?: OrderFilter): Promise<OrderWithRelatio
       params.append("createdBefore", filters.createdBefore.toISOString());
   }
 
-  const url = `/api/orders${params.toString() ? `?${params.toString()}` : ""}`;
+  const url = `/orders${params.toString() ? `?${params.toString()}` : ""}`;
   return apiClient.get<OrderWithRelations[]>(url);
 }
 
@@ -42,21 +47,25 @@ export async function getOrders(filters?: OrderFilter): Promise<OrderWithRelatio
  * Get single order by ID
  */
 export async function getOrder(id: string): Promise<OrderWithRelations> {
-  return apiClient.get<OrderWithRelations>(`/api/orders/${id}`);
+  return apiClient.get<OrderWithRelations>(`/orders/${id}`);
 }
 
 /**
  * Get order by order number
  */
-export async function getOrderByNumber(orderNumber: string): Promise<OrderWithRelations> {
-  return apiClient.get<OrderWithRelations>(`/api/orders/number/${orderNumber}`);
+export async function getOrderByNumber(
+  orderNumber: string
+): Promise<OrderWithRelations> {
+  return apiClient.get<OrderWithRelations>(`/orders/number/${orderNumber}`);
 }
 
 /**
  * Get order by ticket code
  */
-export async function getOrderByTicket(ticketCode: string): Promise<OrderWithRelations> {
-  return apiClient.get<OrderWithRelations>(`/api/orders/ticket/${ticketCode}`);
+export async function getOrderByTicket(
+  ticketCode: string
+): Promise<OrderWithRelations> {
+  return apiClient.get<OrderWithRelations>(`/orders/ticket/${ticketCode}`);
 }
 
 /**
@@ -85,14 +94,14 @@ export async function validateTicket(data: ValidateTicketInput): Promise<{
  * Confirm pickup (mark order as picked up)
  */
 export async function confirmPickup(orderId: string): Promise<Order> {
-  return apiClient.post<Order>(`/api/orders/${orderId}/pickup`, {});
+  return apiClient.post<Order>(`/orders/${orderId}/pickup`, {});
 }
 
 /**
  * Cancel order (before pickup)
  */
 export async function cancelOrder(orderId: string): Promise<Order> {
-  return apiClient.post<Order>(`/api/orders/${orderId}/cancel`, {});
+  return apiClient.post<Order>(`/orders/${orderId}/cancel`, {});
 }
 
 /**
@@ -102,7 +111,7 @@ export async function retryPayment(orderId: string): Promise<{
   order: Order;
   paymentUrl?: string;
 }> {
-  return apiClient.post(`/api/orders/${orderId}/retry-payment`, {});
+  return apiClient.post(`/orders/${orderId}/retry-payment`, {});
 }
 
 /**
@@ -123,12 +132,14 @@ export async function getOrderStats(): Promise<{
  * Send ticket to customer via WhatsApp
  */
 export async function sendTicket(orderId: string): Promise<void> {
-  return apiClient.post<void>(`/api/orders/${orderId}/send-ticket`, {});
+  return apiClient.post<void>(`/orders/${orderId}/send-ticket`, {});
 }
 
 /**
  * Get customer orders
  */
-export async function getCustomerOrders(phone: string): Promise<OrderWithRelations[]> {
-  return apiClient.get<OrderWithRelations[]>(`/api/orders/customer/${phone}`);
+export async function getCustomerOrders(
+  phone: string
+): Promise<OrderWithRelations[]> {
+  return apiClient.get<OrderWithRelations[]>(`/orders/customer/${phone}`);
 }

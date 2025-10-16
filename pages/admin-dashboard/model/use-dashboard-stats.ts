@@ -42,7 +42,7 @@ export function useDashboardStats() {
   return useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: async () => {
-      return apiClient.get<DashboardStats>("/api/dashboard/stats");
+      return apiClient.get<DashboardStats>("/dashboard/stats");
     },
     staleTime: 60 * 1000, // 1 minute
   });

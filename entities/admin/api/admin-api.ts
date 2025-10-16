@@ -1,6 +1,6 @@
 /**
  * Admin API - Client-side methods
- * 
+ *
  * Type-safe API calls for Admin entity
  */
 
@@ -42,7 +42,9 @@ export async function getMe(): Promise<AdminPublic> {
 /**
  * Update current admin profile
  */
-export async function updateMe(data: Pick<UpdateAdminInput, "name" | "email">): Promise<AdminPublic> {
+export async function updateMe(
+  data: Pick<UpdateAdminInput, "name" | "email">
+): Promise<AdminPublic> {
   return apiClient.put<AdminPublic>("/api/auth/me", data);
 }
 
@@ -64,11 +66,12 @@ export async function getAdmins(filters?: AdminFilter): Promise<AdminPublic[]> {
 
   if (filters) {
     if (filters.role) params.append("role", filters.role);
-    if (filters.isActive !== undefined) params.append("isActive", filters.isActive.toString());
+    if (filters.isActive !== undefined)
+      params.append("isActive", filters.isActive.toString());
     if (filters.search) params.append("search", filters.search);
   }
 
-  const url = `/api/admins${params.toString() ? `?${params.toString()}` : ""}`;
+  const url = `/admins${params.toString() ? `?${params.toString()}` : ""}`;
   return apiClient.get<AdminPublic[]>(url);
 }
 
@@ -76,33 +79,38 @@ export async function getAdmins(filters?: AdminFilter): Promise<AdminPublic[]> {
  * Get single admin by ID (SUPER_ADMIN only)
  */
 export async function getAdmin(id: string): Promise<AdminPublic> {
-  return apiClient.get<AdminPublic>(`/api/admins/${id}`);
+  return apiClient.get<AdminPublic>(`/admins/${id}`);
 }
 
 /**
  * Create admin (SUPER_ADMIN only)
  */
-export async function createAdmin(data: CreateAdminInput): Promise<AdminPublic> {
+export async function createAdmin(
+  data: CreateAdminInput
+): Promise<AdminPublic> {
   return apiClient.post<AdminPublic>("/api/admins", data);
 }
 
 /**
  * Update admin (SUPER_ADMIN only)
  */
-export async function updateAdmin(id: string, data: UpdateAdminInput): Promise<AdminPublic> {
-  return apiClient.put<AdminPublic>(`/api/admins/${id}`, data);
+export async function updateAdmin(
+  id: string,
+  data: UpdateAdminInput
+): Promise<AdminPublic> {
+  return apiClient.put<AdminPublic>(`/admins/${id}`, data);
 }
 
 /**
  * Delete admin (SUPER_ADMIN only)
  */
 export async function deleteAdmin(id: string): Promise<void> {
-  return apiClient.delete<void>(`/api/admins/${id}`);
+  return apiClient.delete<void>(`/admins/${id}`);
 }
 
 /**
  * Activate/deactivate admin (SUPER_ADMIN only)
  */
 export async function toggleAdminStatus(id: string): Promise<AdminPublic> {
-  return apiClient.post<AdminPublic>(`/api/admins/${id}/toggle-status`, {});
+  return apiClient.post<AdminPublic>(`/admins/${id}/toggle-status`, {});
 }

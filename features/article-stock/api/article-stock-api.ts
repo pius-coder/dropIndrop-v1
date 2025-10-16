@@ -15,8 +15,5 @@ export async function adjustStock(
   articleId: string,
   adjustment: StockAdjustment
 ): Promise<Article> {
-  return apiClient.patch<Article>(
-    `/api/articles/${articleId}/stock`,
-    adjustment
-  );
+  return apiClient.patch<Article>(`/articles/${articleId}/stock`, adjustment);
 }

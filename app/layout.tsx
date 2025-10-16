@@ -1,11 +1,12 @@
 /**
  * Root Layout
- * 
+ *
  * Main layout for the entire application
  */
 
 import type { Metadata } from "next";
 import "./globals.css";
+import { Providers } from "@/shared/api/providers";
 
 export const metadata: Metadata = {
   title: "Drop-In-Drop - Plateforme E-commerce WhatsApp",
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

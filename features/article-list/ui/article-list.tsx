@@ -1,6 +1,6 @@
 /**
  * Article List Component
- * 
+ *
  * Mobile-first grid layout for displaying articles
  */
 
@@ -13,19 +13,64 @@ import { ArticleListFilters } from "./article-list-filters";
 import { ArticleListPagination } from "./article-list-pagination";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Grid3x3, List } from "lucide-react";
-import type { ArticleListFilters as Filters, ArticleViewMode } from "../model/types";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Grid3x3, List, Table, Send } from "lucide-react";
+import type {
+  ArticleListFilters as Filters,
+  ArticleViewMode,
+} from "../model/types";
+import { ArticleTable } from "./article-table";
 
 export function ArticleList() {
   const [filters, setFilters] = useState<Partial<Filters>>({});
   const [page, setPage] = useState(1);
-  const [viewMode, setViewMode] = useState<ArticleViewMode>("grid");
+  const [viewMode, setViewMode] = useState<ArticleViewMode>("table");
+  const [selectedArticleIds, setSelectedArticleIds] = useState<string[]>([]);
 
   const { data, isLoading, error } = useArticles({
     ...filters,
     page,
     limit: 20,
   });
+
+  // Article selection
+  const toggleArticleSelection = (articleId: string) => {
+    setSelectedArticleIds(prev =>
+      prev.includes(articleId)
+        ? prev.filter(id => id !== articleId)
+        : [...prev, articleId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (!data?.articles) return;
+    if (selectedArticleIds.length === data.articles.length) {
+      setSelectedArticleIds([]);
+    } else {
+      setSelectedArticleIds(data.articles.map(a => a.id));
+    }
+  };
+
+  const handleCreateDrop = () => {
+    // TODO: Navigate to drop create with selected articles
+    console.log("Create drop with articles:", selectedArticleIds);
+  };
+
+  // Article actions
+  const handleView = (article: any) => {
+    console.log("View article:", article);
+    // TODO: Navigate to article detail page
+  };
+
+  const handleEdit = (article: any) => {
+    console.log("Edit article:", article);
+    // TODO: Open edit modal or navigate to edit page
+  };
+
+  const handleDelete = (article: any) => {
+    console.log("Delete article:", article);
+    // TODO: Show confirmation dialog and delete
+  };
 
   if (isLoading) {
     return (
@@ -42,35 +87,57 @@ export function ArticleList() {
           <p className="text-destructive">
             Erreur lors du chargement des articles
           </p>
-          <p className="text-sm text-muted-foreground mt-2">
-            {error.message}
-          </p>
+          <p className="text-sm text-muted-foreground mt-2">{error.message}</p>
         </CardContent>
       </Card>
     );
   }
 
-  const { articles, total, totalPages, hasNextPage, hasPreviousPage } = data || {
-    articles: [],
-    total: 0,
-    totalPages: 0,
-    hasNextPage: false,
-    hasPreviousPage: false,
-  };
+  const { articles, total, totalPages, hasNextPage, hasPreviousPage } =
+    data || {
+      articles: [],
+      total: 0,
+      totalPages: 0,
+      hasNextPage: false,
+      hasPreviousPage: false,
+    };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Articles</h2>
-          <p className="text-muted-foreground">
-            {total} article{total !== 1 ? "s" : ""} disponible{total !== 1 ? "s" : ""}
-          </p>
+        <div className="flex items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Articles</h2>
+            <p className="text-muted-foreground">
+              {total} article{total !== 1 ? "s" : ""} disponible{total !== 1 ? "s" : ""}
+            </p>
+          </div>
+
+          {/* Selected Count & Create Drop */}
+          {selectedArticleIds.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-sm">
+                {selectedArticleIds.length} sélectionné{selectedArticleIds.length !== 1 ? "s" : ""}
+              </Badge>
+              <Button size="sm" onClick={handleCreateDrop}>
+                <Send className="h-4 w-4 mr-2" />
+                Créer un Drop
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* View Mode Toggle */}
         <div className="flex gap-2">
+          <Button
+            variant={viewMode === "table" ? "default" : "outline"}
+            size="icon"
+            onClick={() => setViewMode("table")}
+            aria-label="Vue tableau"
+          >
+            <Table className="h-4 w-4" />
+          </Button>
           <Button
             variant={viewMode === "grid" ? "default" : "outline"}
             size="icon"
@@ -93,7 +160,7 @@ export function ArticleList() {
       {/* Filters */}
       <ArticleListFilters filters={filters} onFiltersChange={setFilters} />
 
-      {/* Articles Grid/List */}
+      {/* Articles Grid/List/Table */}
       {articles.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
@@ -109,16 +176,45 @@ export function ArticleList() {
             )}
           </CardContent>
         </Card>
+      ) : viewMode === "table" ? (
+        <ArticleTable
+          articles={articles}
+          selectedIds={selectedArticleIds}
+          onToggleSelection={toggleArticleSelection}
+          onToggleSelectAll={toggleSelectAll}
+          onView={handleView}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
+            <ArticleCard
+              key={article.id}
+              article={article}
+              selected={selectedArticleIds.includes(article.id)}
+              onToggleSelection={() => toggleArticleSelection(article.id)}
+              onClick={handleView}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              showActions
+            />
           ))}
         </div>
       ) : (
         <div className="space-y-4">
           {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} variant="list" />
+            <ArticleCard
+              key={article.id}
+              article={article}
+              variant="list"
+              selected={selectedArticleIds.includes(article.id)}
+              onToggleSelection={() => toggleArticleSelection(article.id)}
+              onClick={handleView}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              showActions
+            />
           ))}
         </div>
       )}

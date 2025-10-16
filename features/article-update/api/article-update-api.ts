@@ -15,12 +15,12 @@ export async function updateArticle(
   id: string,
   data: UpdateArticleInput
 ): Promise<Article> {
-  return apiClient.put<Article>(`/api/articles/${id}`, data);
+  return apiClient.put<Article>(`/articles/${id}`, data);
 }
 
 /**
  * Get article by ID for editing
  */
 export async function getArticleById(id: string): Promise<Article> {
-  return apiClient.get<Article>(`/api/articles/${id}`);
+  return apiClient.get<Article>(`/articles/${id}`);
 }

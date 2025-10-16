@@ -80,9 +80,9 @@ export function ArticleListFilters({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tous</SelectItem>
-            <SelectItem value="ACTIVE">Actif</SelectItem>
-            <SelectItem value="INACTIVE">Inactif</SelectItem>
+            <SelectItem value="AVAILABLE">Disponible</SelectItem>
             <SelectItem value="OUT_OF_STOCK">Rupture</SelectItem>
+            <SelectItem value="ARCHIVED">Archivé</SelectItem>
           </SelectContent>
         </Select>
 

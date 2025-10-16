@@ -14,7 +14,7 @@ export async function sendDrop(
   dropId: string,
   force: boolean = false
 ): Promise<SendDropResponse> {
-  return apiClient.post<SendDropResponse>(`/api/drops/${dropId}/send`, {
+  return apiClient.post<SendDropResponse>(`/drops/${dropId}/send`, {
     force,
   });
 }
@@ -23,12 +23,14 @@ export async function sendDrop(
  * Get sending progress (for real-time updates)
  */
 export async function getSendProgress(dropId: string): Promise<SendProgress> {
-  return apiClient.get<SendProgress>(`/api/drops/${dropId}/progress`);
+  return apiClient.get<SendProgress>(`/drops/${dropId}/progress`);
 }
 
 /**
  * Cancel ongoing send
  */
-export async function cancelSend(dropId: string): Promise<{ success: boolean }> {
-  return apiClient.post<{ success: boolean }>(`/api/drops/${dropId}/cancel`, {});
+export async function cancelSend(
+  dropId: string
+): Promise<{ success: boolean }> {
+  return apiClient.post<{ success: boolean }>(`/drops/${dropId}/cancel`, {});
 }

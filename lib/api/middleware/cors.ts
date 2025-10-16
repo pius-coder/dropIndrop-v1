@@ -8,9 +8,12 @@ import { cors as honoCors } from "hono/cors";
 
 /**
  * CORS middleware configuration
+ * 
+ * For Next.js same-origin requests, allow all origins
+ * In production, restrict to your domain
  */
 export const cors = honoCors({
-  origin: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  origin: "*", // Allow all origins (same-origin for Next.js)
   credentials: true,
   allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization"],

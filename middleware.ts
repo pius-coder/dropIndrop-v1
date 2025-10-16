@@ -1,6 +1,6 @@
 /**
  * Next.js Middleware
- * 
+ *
  * Route protection for:
  * - Admin routes (/admin/*)
  * - Client routes (/client/*)
@@ -29,28 +29,21 @@ function isPublicRoute(pathname: string): boolean {
 }
 
 /**
- * Get auth token from cookies
+ * Get JWT token from HTTP-only cookie
  */
-function getAuthToken(request: NextRequest): string | undefined {
-  return request.cookies.get("auth-storage")?.value;
+function getAuthToken(request: NextRequest): string | null {
+  return request.cookies.get("auth-token")?.value || null;
 }
 
 /**
- * Parse auth storage from cookie
+ * Verify and decode JWT token using hono/jwt
  */
-function getAuthFromCookie(request: NextRequest): {
-  user: any;
-  token: string | null;
-} | null {
-  const authCookie = request.cookies.get("auth-storage")?.value;
-  
-  if (!authCookie) {
-    return null;
-  }
-
+async function verifyToken(token: string): Promise<any | null> {
   try {
-    const parsed = JSON.parse(decodeURIComponent(authCookie));
-    return parsed.state || null;
+    const { verify } = await import("hono/jwt");
+    const secret = process.env.JWT_SECRET || "your-super-secret-jwt-key-change-in-production";
+    const decoded = await verify(token, secret);
+    return decoded;
   } catch {
     return null;
   }
@@ -60,12 +53,12 @@ function getAuthFromCookie(request: NextRequest): {
  * Check if user is admin
  */
 function isAdmin(auth: any): boolean {
-  return auth?.user?.role && [
-    "SUPER_ADMIN",
-    "ADMIN",
-    "DELIVERY_MANAGER",
-    "SUPPORT"
-  ].includes(auth.user.role);
+  return (
+    auth?.user?.role &&
+    ["SUPER_ADMIN", "ADMIN", "DELIVERY_MANAGER", "SUPPORT"].includes(
+      auth.user.role
+    )
+  );
 }
 
 /**
@@ -75,7 +68,7 @@ function isCustomer(auth: any): boolean {
   return auth?.user && !auth.user.role; // Customers don't have roles
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip middleware for static files, images, and Next.js internals
@@ -87,22 +80,29 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get authentication state
-  const auth = getAuthFromCookie(request);
-  const isAuthenticated = !!(auth?.token && auth?.user);
+  // Get JWT token from cookie
+  const token = getAuthToken(request);
+
+  // For admin routes, verify JWT token
+  let userData: any = null;
+  if (token && (ADMIN_ROUTES.test(pathname) || CLIENT_ROUTES.test(pathname))) {
+    userData = await verifyToken(token);
+  }
+
+  const isAuthenticated = !!userData;
 
   // ============================================
   // ADMIN ROUTES
   // ============================================
   if (ADMIN_ROUTES.test(pathname)) {
-    // If not authenticated or not an admin
-    if (!isAuthenticated || !isAdmin(auth)) {
+    // Check if authenticated and is admin
+    if (!isAuthenticated || !isAdmin({ user: userData })) {
       const loginUrl = new URL("/admin/login", request.url);
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);
     }
 
-    // Admin is authenticated, allow access
+    // Admin authenticated, allow access
     return NextResponse.next();
   }
 
@@ -111,7 +111,7 @@ export function middleware(request: NextRequest) {
   // ============================================
   if (pathname === "/admin/login") {
     // If already authenticated as admin, redirect to dashboard
-    if (isAuthenticated && isAdmin(auth)) {
+    if (isAuthenticated && isAdmin({ user: userData })) {
       return NextResponse.redirect(new URL("/admin/dashboard", request.url));
     }
 
@@ -124,7 +124,7 @@ export function middleware(request: NextRequest) {
   // ============================================
   if (CLIENT_ROUTES.test(pathname)) {
     // If not authenticated as customer
-    if (!isAuthenticated || !isCustomer(auth)) {
+    if (!isAuthenticated || !isCustomer({ user: userData })) {
       const loginUrl = new URL("/", request.url); // Redirect to home with OTP
       loginUrl.searchParams.set("from", pathname);
       return NextResponse.redirect(loginUrl);

@@ -1,6 +1,6 @@
 /**
  * Article List - API Methods
- * 
+ *
  * API calls for article listing
  */
 
@@ -30,9 +30,7 @@ export async function getArticles(
   params.append("page", (query.page || 1).toString());
   params.append("limit", (query.limit || 20).toString());
 
-  return apiClient.get<ArticleListResponse>(
-    `/api/articles?${params.toString()}`
-  );
+  return apiClient.get<ArticleListResponse>(`/articles?${params.toString()}`);
 }
 
 /**

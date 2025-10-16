@@ -17,9 +17,10 @@ export async function getOrders(
 
   if (filters.search) params.append("search", filters.search);
   if (filters.status) params.append("status", filters.status);
-  if (filters.paymentStatus) params.append("paymentStatus", filters.paymentStatus);
+  if (filters.paymentStatus)
+    params.append("paymentStatus", filters.paymentStatus);
   if (filters.sortBy) params.append("sortBy", filters.sortBy);
   if (filters.sortOrder) params.append("sortOrder", filters.sortOrder);
 
-  return apiClient.get<OrderListResponse>(`/api/orders?${params.toString()}`);
+  return apiClient.get<OrderListResponse>(`/orders?${params.toString()}`);
 }

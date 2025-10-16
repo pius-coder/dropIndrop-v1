@@ -9,11 +9,15 @@ import { handle } from "hono/vercel";
 import { logger, errorHandler, cors } from "@/lib/api/middleware";
 import auth from "../routes/auth";
 import drops from "../routes/drops";
+import logout from "../routes/logout";
+import dashboard from "../routes/dashboard";
 import articles from "../routes/articles";
 import orders from "../routes/orders";
 
 export const runtime = "nodejs";
 
+// basePath strips /api/ from incoming requests
+// So /api/auth/login becomes /auth/login for Hono routing
 const app = new Hono().basePath("/api");
 
 app.use("*", logger);
@@ -49,6 +53,8 @@ app.get("/", (c) => {
 });
 
 app.route("/auth", auth);
+app.route("/auth", logout);
+app.route("/dashboard", dashboard);
 app.route("/articles", articles);
 app.route("/drops", drops);
 app.route("/orders", orders);
