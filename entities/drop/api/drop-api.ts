@@ -49,7 +49,7 @@ export async function getDrop(id: string): Promise<DropWithRelations> {
  * Create new drop
  */
 export async function createDrop(data: CreateDropInput): Promise<Drop> {
-  return apiClient.post<Drop>("/api/drops", data);
+  return apiClient.post<Drop>("/drops", data);
 }
 
 /**

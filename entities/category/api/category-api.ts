@@ -23,14 +23,14 @@ import type {
  * Get all categories with subcategories
  */
 export async function getCategories(): Promise<CategoryWithSubcategories[]> {
-  return apiClient.get<CategoryWithSubcategories[]>("/api/categories");
+  return apiClient.get<CategoryWithSubcategories[]>("/categories");
 }
 
 /**
  * Get category tree (hierarchical structure)
  */
 export async function getCategoryTree(): Promise<CategoryTreeNode[]> {
-  return apiClient.get<CategoryTreeNode[]>("/api/categories/tree");
+  return apiClient.get<CategoryTreeNode[]>("/categories/tree");
 }
 
 /**
@@ -57,7 +57,7 @@ export async function getCategoryBySlug(
 export async function createCategory(
   data: CreateCategoryInput
 ): Promise<Category> {
-  return apiClient.post<Category>("/api/categories", data);
+  return apiClient.post<Category>("/categories", data);
 }
 
 /**
@@ -83,14 +83,14 @@ export async function deleteCategory(id: string): Promise<void> {
 export async function reorderCategories(
   orders: Array<{ id: string; order: number }>
 ): Promise<void> {
-  return apiClient.post<void>("/api/categories/reorder", { orders });
+  return apiClient.post<void>("/categories/reorder", { orders });
 }
 
 /**
  * Get all subcategories
  */
 export async function getSubcategories(): Promise<SubcategoryWithCategory[]> {
-  return apiClient.get<SubcategoryWithCategory[]>("/api/subcategories");
+  return apiClient.get<SubcategoryWithCategory[]>("/subcategories");
 }
 
 /**
@@ -108,7 +108,7 @@ export async function getSubcategory(
 export async function createSubcategory(
   data: CreateSubcategoryInput
 ): Promise<Subcategory> {
-  return apiClient.post<Subcategory>("/api/subcategories", data);
+  return apiClient.post<Subcategory>("/subcategories", data);
 }
 
 /**

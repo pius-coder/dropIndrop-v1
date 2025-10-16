@@ -75,7 +75,7 @@ export async function createOrder(data: CreateOrderInput): Promise<{
   order: Order;
   paymentUrl?: string;
 }> {
-  return apiClient.post("/api/orders", data);
+  return apiClient.post("/orders", data);
 }
 
 /**
@@ -87,7 +87,7 @@ export async function validateTicket(data: ValidateTicketInput): Promise<{
   errors?: string[];
   warnings?: string[];
 }> {
-  return apiClient.post("/api/orders/validate-ticket", data);
+  return apiClient.post("/orders/validate-ticket", data);
 }
 
 /**
@@ -125,7 +125,7 @@ export async function getOrderStats(): Promise<{
   cancelled: number;
   revenue: number;
 }> {
-  return apiClient.get("/api/orders/stats");
+  return apiClient.get("/orders/stats");
 }
 
 /**

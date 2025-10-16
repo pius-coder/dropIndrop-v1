@@ -108,12 +108,13 @@ export function DropCreateForm() {
                 <FormItem>
                   <FormLabel>Articles à envoyer *</FormLabel>
                   <FormDescription>
-                    Sélectionnez 1 à 20 articles pour ce drop
+                    Sélectionnez 3 à 20 articles pour ce drop (minimum 3 requis)
                   </FormDescription>
                   <FormControl>
                     <ArticleSelector
                       selectedIds={field.value}
                       onSelectionChange={field.onChange}
+                      minSelection={3}
                       maxSelection={20}
                     />
                   </FormControl>

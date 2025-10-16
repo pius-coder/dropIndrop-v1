@@ -22,21 +22,21 @@ export async function login(data: LoginInput): Promise<{
   admin: AdminPublic;
   token: string;
 }> {
-  return apiClient.post("/api/auth/login", data);
+  return apiClient.post("/auth/login", data);
 }
 
 /**
  * Logout admin
  */
 export async function logout(): Promise<void> {
-  return apiClient.post<void>("/api/auth/logout", {});
+  return apiClient.post<void>("/auth/logout", {});
 }
 
 /**
  * Get current admin profile
  */
 export async function getMe(): Promise<AdminPublic> {
-  return apiClient.get<AdminPublic>("/api/auth/me");
+  return apiClient.get<AdminPublic>("/auth/me");
 }
 
 /**
@@ -45,7 +45,7 @@ export async function getMe(): Promise<AdminPublic> {
 export async function updateMe(
   data: Pick<UpdateAdminInput, "name" | "email">
 ): Promise<AdminPublic> {
-  return apiClient.put<AdminPublic>("/api/auth/me", data);
+  return apiClient.put<AdminPublic>("/auth/me", data);
 }
 
 /**
@@ -55,7 +55,7 @@ export async function changePassword(data: {
   currentPassword: string;
   newPassword: string;
 }): Promise<void> {
-  return apiClient.post<void>("/api/auth/change-password", data);
+  return apiClient.post<void>("/auth/change-password", data);
 }
 
 /**
@@ -88,7 +88,7 @@ export async function getAdmin(id: string): Promise<AdminPublic> {
 export async function createAdmin(
   data: CreateAdminInput
 ): Promise<AdminPublic> {
-  return apiClient.post<AdminPublic>("/api/admins", data);
+  return apiClient.post<AdminPublic>("/admins", data);
 }
 
 /**

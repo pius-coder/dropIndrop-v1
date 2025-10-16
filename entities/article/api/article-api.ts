@@ -63,7 +63,7 @@ export async function getArticleBySlug(
 export async function createArticle(
   data: CreateArticleInput
 ): Promise<Article> {
-  return apiClient.post<Article>("/api/articles", data);
+  return apiClient.post<Article>("/articles", data);
 }
 
 /**

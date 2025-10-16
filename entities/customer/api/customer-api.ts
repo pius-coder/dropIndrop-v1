@@ -63,7 +63,7 @@ export async function getCustomerByPhone(
 export async function createOrGetCustomer(
   data: CustomerInput
 ): Promise<Customer> {
-  return apiClient.post<Customer>("/api/customers", data);
+  return apiClient.post<Customer>("/customers", data);
 }
 
 /**

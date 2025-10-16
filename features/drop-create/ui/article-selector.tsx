@@ -22,12 +22,14 @@ import { useDebounce } from "@/shared/lib/use-debounce";
 interface ArticleSelectorProps {
   selectedIds: string[];
   onSelectionChange: (ids: string[]) => void;
+  minSelection?: number;
   maxSelection?: number;
 }
 
 export function ArticleSelector({ 
   selectedIds, 
   onSelectionChange,
+  minSelection = 3,
   maxSelection = 20 
 }: ArticleSelectorProps) {
   const [search, setSearch] = useState("");
@@ -69,6 +71,11 @@ export function ArticleSelector({
           <p className="text-sm font-medium">
             {selectedIds.length} / {maxSelection} articles sélectionnés
           </p>
+          {selectedIds.length < minSelection && (
+            <p className="text-xs text-destructive">
+              Minimum {minSelection} articles requis
+            </p>
+          )}
           {!canSelectMore && (
             <p className="text-xs text-destructive">
               Limite maximale atteinte

@@ -1,16 +1,25 @@
 /**
  * Drop Entity - Types & Schema
- * 
+ *
  * Critical business rule: Same article cannot be sent to same group on same day
  */
 
 import { z } from "zod";
-import type { Drop as PrismaDrop, DropStatus as PrismaDropStatus } from "@prisma/client";
+import type {
+  Drop as PrismaDrop,
+  DropStatus as PrismaDropStatus,
+} from "@prisma/client";
 
 /**
  * Drop Status Enum
  */
-export const DropStatusEnum = z.enum(["DRAFT", "SCHEDULED", "SENDING", "SENT", "FAILED"]);
+export const DropStatusEnum = z.enum([
+  "DRAFT",
+  "SCHEDULED",
+  "SENDING",
+  "SENT",
+  "FAILED",
+]);
 export type DropStatus = z.infer<typeof DropStatusEnum>;
 
 /**
@@ -44,7 +53,7 @@ export const createDropSchema = z.object({
       },
       {
         message: "La date programmée doit être dans le futur",
-      },
+      }
     ),
 });
 
