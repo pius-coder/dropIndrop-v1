@@ -15,6 +15,8 @@ import articles from "../routes/articles";
 import orders from "../routes/orders";
 import customers from "../routes/customers";
 import articlesPublic from "../routes/articles-public";
+import purchase from "../routes/purchase";
+import payments from "../routes/payments";
 
 export const runtime = "nodejs";
 
@@ -62,6 +64,8 @@ app.route("/articles", articlesPublic);
 app.route("/drops", drops);
 app.route("/orders", orders);
 app.route("/customers", customers);
+app.route("/purchase", purchase);
+app.route("/payments", payments);
 
 // 404 handler
 app.notFound((c) => {

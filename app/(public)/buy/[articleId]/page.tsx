@@ -1,39 +1,39 @@
 /**
- * Public Article View Page
- * Shows article details with gallery and buy button
+ * Purchase Confirmation Page
+ * Shows article details and initiates payment flow
  */
 
 "use client";
 
 import { useParams } from "next/navigation";
-import { usePublicArticle } from "@/features/article-public/lib/use-public-article";
-import { ArticlePublicView } from "@/features/article-public/ui/article-public-view";
+import { usePurchaseConfirmation } from "@/features/customer-purchase/lib/use-purchase";
+import { PurchaseConfirmationView } from "@/features/customer-purchase/ui/purchase-confirmation-view";
 import { Loader2 } from "lucide-react";
 
-export default function PublicArticlePage() {
+export default function PurchaseConfirmationPage() {
   const params = useParams();
-  const uniqueSlug = (params?.uniqueSlug as string) ?? ("" as string);
+  const articleId = params.articleId as string;
 
-  const { data: article, isLoading, error } = usePublicArticle(uniqueSlug);
+  const { data, isLoading, error } = usePurchaseConfirmation(articleId);
 
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-2">
           <Loader2 className="h-6 w-6 animate-spin" />
-          <span>Chargement de l'article...</span>
+          <span>Chargement de la commande...</span>
         </div>
       </div>
     );
   }
 
-  if (error || !article) {
+  if (error || !data) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-semibold mb-4">Article introuvable</h1>
+          <h1 className="text-2xl font-semibold mb-4">Erreur</h1>
           <p className="text-muted-foreground mb-4">
-            L'article que vous recherchez n'existe pas ou n'est plus disponible.
+            Impossible de charger les détails de la commande.
           </p>
           <a
             href="/"
@@ -46,5 +46,5 @@ export default function PublicArticlePage() {
     );
   }
 
-  return <ArticlePublicView article={article} />;
+  return <PurchaseConfirmationView data={data} />;
 }

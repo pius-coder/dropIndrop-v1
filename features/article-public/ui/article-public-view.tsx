@@ -25,9 +25,9 @@ export function ArticlePublicView({ article }: ArticlePublicViewProps) {
 
   const handleBuyClick = () => {
     if (isAuthenticated) {
-      router.push(`/purchase?articleId=${article.id}`);
+      router.push(`/buy/${article.id}`);
     } else {
-      router.push(`/auth/login?redirectTo=/purchase?articleId=${article.id}`);
+      router.push(`/auth/login?redirectTo=/buy/${article.id}`);
     }
   };
 
