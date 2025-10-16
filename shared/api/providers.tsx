@@ -10,6 +10,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getQueryClient } from "./query-client";
 import { CustomerProvider } from "@/entities/customer/lib/customer-context";
+import { Toaster } from "@/components/ui/sonner";
 
 export function QueryProvider({ children }: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
@@ -18,6 +19,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <CustomerProvider>
         {children}
+        <Toaster />
       </CustomerProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

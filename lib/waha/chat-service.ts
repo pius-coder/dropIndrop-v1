@@ -49,6 +49,58 @@ interface SendTextRequest {
 }
 
 /**
+ * Check if WAHA service is enabled
+ */
+function isWahaServiceEnabled(): boolean {
+  return process.env.WAHA_SERVICE_STATUS === "ON";
+}
+
+/**
+ * Mock WAHA service for development/testing
+ */
+async function mockSendText(request: SendTextRequest): Promise<WahaResponse<WahaMessageResponse>> {
+  console.log("🔧 WAHA MOCK: Sending message to", request.chatId);
+  console.log("📝 Message:", request.text);
+
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  // Mock successful response
+  return {
+    success: true,
+    data: {
+      id: {
+        fromMe: true,
+        remote: request.chatId,
+        id: `mock_${Date.now()}`,
+        self: "mock_self",
+        _serialized: `mock_${Date.now()}`,
+      },
+      ack: 2,
+      hasMedia: false,
+      body: request.text,
+      type: "chat",
+      timestamp: Date.now(),
+      from: "mock_from",
+      to: request.chatId,
+      deviceType: "mock",
+      isForwarded: false,
+      forwardingScore: 0,
+      isStatus: false,
+      isStarred: false,
+      fromMe: true,
+      hasQuotedMsg: false,
+      hasReaction: false,
+      vCards: [],
+      mentionedIds: [],
+      groupMentions: [],
+      isGif: false,
+      links: [],
+    },
+  };
+}
+
+/**
  * WAHA Chat Messaging Service
  */
 export class WahaChatService {
@@ -67,6 +119,11 @@ export class WahaChatService {
     request: SendTextRequest
   ): Promise<WahaResponse<WahaMessageResponse>> {
     try {
+      // If WAHA service is disabled, use mock
+      if (!isWahaServiceEnabled()) {
+        return await mockSendText(request);
+      }
+
       const payload = {
         session: this.sessionName,
         chatId: request.chatId,
@@ -96,6 +153,14 @@ export class WahaChatService {
         data,
       };
     } catch (error) {
+      console.error("WAHA sendText error:", error);
+
+      // If WAHA fails, fall back to mock for development
+      if (process.env.NODE_ENV === "development") {
+        console.log("🔄 Falling back to mock WAHA service");
+        return await mockSendText(request);
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",

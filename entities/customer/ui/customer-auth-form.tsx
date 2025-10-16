@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Smartphone, Shield, LogIn, UserPlus } from "lucide-react";
+import { toast } from "sonner";
 import {
   sendOtpSchema,
   verifyOtpSchema,
@@ -83,11 +84,21 @@ export function CustomerAuthForm({
         setPhoneNumber(data.phone);
         setStep("verify");
         verifyForm.setValue("phone", data.phone);
+
+        toast.success("Code OTP envoyé!", {
+          description: "Vérifiez votre WhatsApp pour le code de vérification",
+        });
       } else {
         setError(result.message || "Erreur lors de l'envoi du code");
+        toast.error("Erreur d'envoi", {
+          description: result.message || "Impossible d'envoyer le code OTP",
+        });
       }
     } catch (error) {
       setError("Erreur de connexion");
+      toast.error("Erreur de connexion", {
+        description: "Vérifiez votre connexion internet",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -110,6 +121,10 @@ export function CustomerAuthForm({
         // Store token in localStorage
         localStorage.setItem("customerToken", result.token);
 
+        toast.success("Connexion réussie!", {
+          description: `Bienvenue, ${result.customer.name}`,
+        });
+
         // Call success callback or redirect
         if (onSuccess) {
           onSuccess(result.token, result.customer);
@@ -118,9 +133,15 @@ export function CustomerAuthForm({
         }
       } else {
         setError(result.message || "Code OTP invalide");
+        toast.error("Code invalide", {
+          description: result.message || "Le code OTP n'est pas valide",
+        });
       }
     } catch (error) {
       setError("Erreur de connexion");
+      toast.error("Erreur de connexion", {
+        description: "Vérifiez votre connexion internet",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -146,12 +167,20 @@ export function CustomerAuthForm({
       const result = await response.json();
 
       if (result.success) {
-        setError(null);
+        toast.success("Code renvoyé!", {
+          description: "Un nouveau code a été envoyé à votre WhatsApp",
+        });
       } else {
         setError(result.message || "Erreur lors du renvoi du code");
+        toast.error("Erreur de renvoi", {
+          description: result.message || "Impossible de renvoyer le code",
+        });
       }
     } catch (error) {
       setError("Erreur de connexion");
+      toast.error("Erreur de connexion", {
+        description: "Vérifiez votre connexion internet",
+      });
     } finally {
       setIsLoading(false);
     }
