@@ -7,13 +7,12 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { logger, errorHandler, cors } from "@/lib/api/middleware";
+import articles from "../routes/articles";
 
-// Create Hono app
 export const runtime = "nodejs";
 
 const app = new Hono().basePath("/api");
 
-// Global middleware
 app.use("*", logger);
 app.use("*", cors);
 app.use("*", errorHandler);
@@ -46,10 +45,7 @@ app.get("/", (c) => {
   });
 });
 
-// TODO: Import and register route handlers
-// Example:
-// import { articleRoutes } from "./routes/articles";
-// app.route("/articles", articleRoutes);
+app.route("/articles", articles);
 
 // 404 handler
 app.notFound((c) => {
