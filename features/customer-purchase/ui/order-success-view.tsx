@@ -118,10 +118,10 @@ export function OrderSuccessView({ data }: OrderSuccessViewProps) {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => window.location.href = "/"}
+                onClick={() => window.location.href = "/client"}
               >
-                <Home className="mr-2 h-4 w-4" />
-                Retour à l'accueil
+                <span className="mr-2">📊</span>
+                Mon tableau de bord
               </Button>
             </div>
 
