@@ -339,6 +339,12 @@ export function CustomerAuthForm({
                       placeholder="123456"
                       maxLength={6}
                       className="text-center text-2xl tracking-widest"
+                      onChange={(e) => {
+                        // Only allow numbers
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        field.onChange(value);
+                      }}
+                      autoComplete="one-time-code"
                     />
                   </FormControl>
                   <FormMessage />
