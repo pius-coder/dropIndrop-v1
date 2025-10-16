@@ -23,7 +23,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
 export function DropCreateForm() {
@@ -42,9 +48,9 @@ export function DropCreateForm() {
 
   // Load pre-selected articles from URL
   useEffect(() => {
-    const articleIds = searchParams.getAll('articleIds');
+    const articleIds = searchParams?.getAll("articleIds") ?? [];
     if (articleIds.length > 0) {
-      form.setValue('articleIds', articleIds);
+      form.setValue("articleIds", articleIds);
       toast.success(`${articleIds.length} article(s) pré-sélectionné(s)`, {
         description: "Vous pouvez modifier votre sélection ci-dessous",
       });
@@ -52,6 +58,10 @@ export function DropCreateForm() {
   }, [searchParams, form]);
 
   const onSubmit = (data: CreateDropInput) => {
+    console.log("Drop Creation Started", data);
+    console.log("Form State:", form.getValues());
+    console.log("Form Errors:", form.formState.errors);
+
     createDrop(data, {
       onSuccess: (drop) => {
         toast.success("Drop créé avec succès", {
@@ -72,12 +82,24 @@ export function DropCreateForm() {
       <CardHeader>
         <CardTitle>Nouveau Drop</CardTitle>
         <CardDescription>
-          Créer une campagne marketing pour envoyer des articles aux groupes WhatsApp
+          Créer une campagne marketing pour envoyer des articles aux groupes
+          WhatsApp
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form 
+            onSubmit={form.handleSubmit(
+              onSubmit,
+              (errors) => {
+                console.log("Validation Errors:", errors);
+                toast.error("Erreur de validation", {
+                  description: "Veuillez vérifier tous les champs requis"
+                });
+              }
+            )} 
+            className="space-y-6"
+          >
             {/* Name */}
             <FormField
               control={form.control}
@@ -92,9 +114,7 @@ export function DropCreateForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Nom identifiant la campagne
-                  </FormDescription>
+                  <FormDescription>Nom identifiant la campagne</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -114,7 +134,7 @@ export function DropCreateForm() {
                     <ArticleSelector
                       selectedIds={field.value}
                       onSelectionChange={field.onChange}
-                      minSelection={3}
+                      minSelection={1}
                       maxSelection={20}
                     />
                   </FormControl>
@@ -123,15 +143,35 @@ export function DropCreateForm() {
               )}
             />
 
-            {/* Group Selection - Simplified for now */}
-            <div className="rounded-lg border p-4 bg-muted/50">
-              <p className="text-sm text-muted-foreground">
-                ℹ️ Sélection de groupes: À implémenter avec un composant multi-select
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">
-                Pour l'instant, utilisez l'API directement avec groupIds: ["id1", "id2"]
-              </p>
-            </div>
+            {/* Group Selection - Hidden field with empty array for now */}
+            <FormField
+              control={form.control}
+              name="whatsappGroupIds"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Groupes WhatsApp *</FormLabel>
+                  <FormDescription>
+                    ⚠️ Sélection de groupes à implémenter
+                  </FormDescription>
+                  <FormControl>
+                    <div className="rounded-lg border p-4 bg-muted/50">
+                      <p className="text-sm text-muted-foreground">
+                        ℹ️ Sélection de groupes: À implémenter avec un composant multi-select
+                      </p>
+                      <p className="text-xs text-destructive mt-2">
+                        Temporairement: Aucun groupe sélectionné (TODO)
+                      </p>
+                      {/* Hidden input to satisfy form */}
+                      <input 
+                        type="hidden" 
+                        value={field.value?.join(',') || ''} 
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Buttons */}
             <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4">

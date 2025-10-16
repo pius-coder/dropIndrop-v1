@@ -38,8 +38,9 @@ export const createDropSchema = z.object({
 
   whatsappGroupIds: z
     .array(z.string().uuid())
-    .min(1, "Au moins un groupe est requis")
-    .max(10, "Maximum 10 groupes par envoi"),
+    .min(0, "Groupes WhatsApp (en développement)")
+    .max(10, "Maximum 10 groupes par envoi")
+    .default([]),
 
   messageTemplateId: z.string().uuid().optional(),
 
