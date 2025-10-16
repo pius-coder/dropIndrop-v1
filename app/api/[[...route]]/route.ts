@@ -1,6 +1,6 @@
 /**
  * Main API Route Handler
- * 
+ *
  * Hono app with all routes and middleware
  */
 
@@ -8,6 +8,7 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import { logger, errorHandler, cors } from "@/lib/api/middleware";
 import auth from "../routes/auth";
+import drops from "../routes/drops";
 import articles from "../routes/articles";
 
 export const runtime = "nodejs";
@@ -49,6 +50,7 @@ app.get("/", (c) => {
 app.route("/auth", auth);
 app.route("/articles", articles);
 app.route("/drops", drops);
+app.route("/orders", orders);
 
 // 404 handler
 app.notFound((c) => {
@@ -58,7 +60,7 @@ app.notFound((c) => {
       message: "Route introuvable",
       path: c.req.path,
     },
-    404,
+    404
   );
 });
 
