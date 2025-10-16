@@ -48,6 +48,7 @@ app.get("/", (c) => {
 
 app.route("/auth", auth);
 app.route("/articles", articles);
+app.route("/drops", drops);
 
 // 404 handler
 app.notFound((c) => {
