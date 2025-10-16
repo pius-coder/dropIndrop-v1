@@ -36,7 +36,7 @@ export function DropCreateForm() {
     defaultValues: {
       name: "",
       articleIds: [],
-      groupIds: [],
+      whatsappGroupIds: [],
     },
   });
 
