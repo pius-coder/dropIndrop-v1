@@ -133,7 +133,7 @@ async function main() {
   console.log("\n📦 Creating articles...");
   const iphone15 = await prisma.article.create({
     data: {
-      code: "ART-20240101-0001",
+      code: "ART-20250101-0001",
       name: "iPhone 15 Pro Max",
       description: "Le dernier iPhone avec puce A17 Pro",
       price: 850000,
@@ -152,7 +152,7 @@ async function main() {
 
   const macbook = await prisma.article.create({
     data: {
-      code: "ART-20240101-0002",
+      code: "ART-20250101-0002",
       name: "MacBook Pro 14 M3",
       description: "MacBook Pro avec puce M3, 16GB RAM",
       price: 1200000,
@@ -171,7 +171,7 @@ async function main() {
 
   const chemise = await prisma.article.create({
     data: {
-      code: "ART-20240101-0003",
+      code: "ART-20250101-0003",
       name: "Chemise Homme Élégante",
       description: "Chemise en coton, parfaite pour bureau",
       price: 15000,

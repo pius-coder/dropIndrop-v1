@@ -3,19 +3,19 @@
 ## Overview
 Order creation form with payment integration and ticket generation.
 
-**Time:** 2 hours  
+**Time:** 2 hours
 **Status:** ✅ Complete (UI ready, server integration pending)
 
 ---
 
 ## Architecture Adherence
 
-✅ **Feature-Sliced Design** - Complete vertical slice  
-✅ **Type-Safety** - End-to-end TypeScript + Zod  
-✅ **Separation of Concerns** - UI / Model / API clearly separated  
-✅ **Mobile-First** - Form optimized for mobile  
-✅ **French Localization** - All text in French  
-✅ **Pure Functions** - Business logic testable  
+✅ **Feature-Sliced Design** - Complete vertical slice
+✅ **Type-Safety** - End-to-end TypeScript + Zod
+✅ **Separation of Concerns** - UI / Model / API clearly separated
+✅ **Mobile-First** - Form optimized for mobile
+✅ **French Localization** - All text in French
+✅ **Pure Functions** - Business logic testable
 
 ---
 
@@ -40,25 +40,25 @@ Order creation form with payment integration and ticket generation.
 ## Features
 
 ### Order Form
-✅ Article display (name, price)  
-✅ Customer name (validation)  
-✅ Phone number (Cameroon format: 6XXXXXXXX)  
-✅ Email (optional)  
-✅ Payment method (MTN/Orange)  
-✅ Order summary  
-✅ Form validation (React Hook Form + Zod)  
-✅ Loading states  
-✅ Toast notifications  
+✅ Article display (name, price)
+✅ Customer name (validation)
+✅ Phone number (Cameroon format: 6XXXXXXXX)
+✅ Email (optional)
+✅ Payment method (MTN/Orange)
+✅ Order summary
+✅ Form validation (React Hook Form + Zod)
+✅ Loading states
+✅ Toast notifications
 
 ### Success Display
-✅ Success confirmation  
-✅ QR code display  
-✅ Ticket code (format: TKT-YYYYMMDD-XXXX)  
-✅ Download ticket button  
-✅ Share button (mobile)  
-✅ Payment instructions  
-✅ Order details  
-✅ Next steps guide  
+✅ Success confirmation
+✅ QR code display
+✅ Ticket code (format: TKT-YYYYMMDD-XXXX)
+✅ Download ticket button
+✅ Share button (mobile)
+✅ Payment instructions
+✅ Order details
+✅ Next steps guide
 
 ---
 
@@ -136,7 +136,7 @@ Response:
 {
   order: Order,
   ticket: {
-    code: string,        // TKT-20241015-0001
+    code: string,        // TKT-20251015-0001
     qrCode: string       // Data URL or image URL
   },
   paymentInstructions: {
@@ -164,18 +164,18 @@ Response:
 ### Ticket Code Format
 ```
 TKT-YYYYMMDD-XXXX
-TKT-20241015-0001
+TKT-20251015-0001
 ```
 
 ### QR Code Content
 ```json
 {
-  "ticketCode": "TKT-20241015-0001",
+  "ticketCode": "TKT-20251015-0001",
   "orderId": "uuid",
   "articleId": "uuid",
   "customerPhone": "6XXXXXXXX",
   "amount": 850000,
-  "createdAt": "2024-10-15T10:30:00Z"
+  "createdAt": "2025-10-15T10:30:00Z"
 }
 ```
 
@@ -255,12 +255,12 @@ Invalid:
 
 ## Mobile Optimization
 
-✅ **Form Inputs** - `text-base` on mobile (prevents zoom)  
-✅ **Touch Targets** - 44px+ buttons  
-✅ **Keyboard** - Appropriate input types (tel, email)  
-✅ **Auto-Complete** - Name, phone, email  
-✅ **Summary Card** - Always visible  
-✅ **Single Column** - Stacks well on mobile  
+✅ **Form Inputs** - `text-base` on mobile (prevents zoom)
+✅ **Touch Targets** - 44px+ buttons
+✅ **Keyboard** - Appropriate input types (tel, email)
+✅ **Auto-Complete** - Name, phone, email
+✅ **Summary Card** - Always visible
+✅ **Single Column** - Stacks well on mobile
 
 ---
 
@@ -278,7 +278,7 @@ const [showOrderForm, setShowOrderForm] = useState(false);
 </Button>
 
 {showOrderForm && (
-  <OrderCreateForm 
+  <OrderCreateForm
     articleId={article.id}
     articleName={article.name}
     articlePrice={article.price}
@@ -295,7 +295,7 @@ const [showOrderForm, setShowOrderForm] = useState(false);
 import { OrderSuccessDisplay } from "@/features/order-create";
 
 {orderResponse && (
-  <OrderSuccessDisplay 
+  <OrderSuccessDisplay
     response={orderResponse}
     onClose={() => {
       setOrderResponse(null);
@@ -331,21 +331,21 @@ import { OrderSuccessDisplay } from "@/features/order-create";
 ## Security Considerations
 
 ### Input Validation
-✅ Server-side validation (Zod)  
-✅ Phone format check  
-✅ Email format check  
-✅ SQL injection prevention (Prisma)  
+✅ Server-side validation (Zod)
+✅ Phone format check
+✅ Email format check
+✅ SQL injection prevention (Prisma)
 
 ### Ticket Security
-✅ Unique ticket codes  
-✅ QR code includes signature  
-✅ Expiration time (24h)  
-✅ One-time use  
+✅ Unique ticket codes
+✅ QR code includes signature
+✅ Expiration time (24h)
+✅ One-time use
 
 ### Payment Verification
-✅ Manual admin verification  
-✅ Transaction ID tracking  
-✅ Double-payment prevention  
+✅ Manual admin verification
+✅ Transaction ID tracking
+✅ Double-payment prevention
 
 ---
 
@@ -369,7 +369,7 @@ import { OrderSuccessDisplay } from "@/features/order-create";
 
 ---
 
-**Progress:** 23/34 (68%)  
+**Progress:** 23/34 (68%)
 **Next:** Step 24 - order-validate (Ticket validation & pickup)
 
 ---

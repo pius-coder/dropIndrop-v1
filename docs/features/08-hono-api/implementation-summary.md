@@ -165,7 +165,7 @@ GET  /api/health   - Health check
 ```json
 {
   "status": "ok",
-  "timestamp": "2024-01-15T10:30:00.000Z",
+  "timestamp": "2025-01-15T10:30:00.000Z",
   "environment": "development"
 }
 ```
@@ -235,7 +235,7 @@ articles.post(
   async (c) => {
     const data = c.req.valid("json");
     const admin = c.var.admin;
-    
+
     const article = await prisma.article.create({
       data: {
         ...data,
@@ -243,7 +243,7 @@ articles.post(
         uniqueSlug: generateArticleSlug(data.name)
       }
     });
-    
+
     return created(c, article, "Article créé avec succès");
   }
 );
@@ -251,15 +251,15 @@ articles.post(
 // Get article (public)
 articles.get("/:id", async (c) => {
   const id = c.req.param("id");
-  
+
   const article = await prisma.article.findUnique({
     where: { id }
   });
-  
+
   if (!article) {
     return notFound(c, "Article introuvable");
   }
-  
+
   return success(c, article);
 });
 
@@ -354,12 +354,12 @@ curl -X POST http://localhost:3000/api/articles \
 
 ## Security Features
 
-✅ JWT authentication with 7-day expiry  
-✅ Password hashing (to be implemented with bcrypt)  
-✅ CORS configuration  
-✅ Error message sanitization  
-✅ Type-safe middleware  
-✅ Request logging  
+✅ JWT authentication with 7-day expiry
+✅ Password hashing (to be implemented with bcrypt)
+✅ CORS configuration
+✅ Error message sanitization
+✅ Type-safe middleware
+✅ Request logging
 
 ---
 
@@ -392,16 +392,16 @@ app.use("/api/*", rateLimiter({
 
 ## Summary
 
-✅ Complete API infrastructure  
-✅ JWT authentication middleware  
-✅ Zod validation integration  
-✅ Global error handling  
-✅ Standardized responses  
-✅ Request logging  
-✅ CORS configured  
-✅ Health check endpoint  
-✅ French localization  
-✅ Type-safe throughout  
+✅ Complete API infrastructure
+✅ JWT authentication middleware
+✅ Zod validation integration
+✅ Global error handling
+✅ Standardized responses
+✅ Request logging
+✅ CORS configured
+✅ Health check endpoint
+✅ French localization
+✅ Type-safe throughout
 
-**Time:** 45 minutes  
+**Time:** 45 minutes
 **Next:** Step 12 - Shadcn UI Setup (30 min)

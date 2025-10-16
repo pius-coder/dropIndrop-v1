@@ -223,7 +223,7 @@ window.location.href = result.paymentUrl;
 import { validateTicket, canPickup } from "@/entities/order";
 
 const result = await validateTicket({
-  ticketCode: "TKT-20241215-0123"
+  ticketCode: "TKT-20251215-0123"
 });
 
 if (!result.valid) {
@@ -291,7 +291,7 @@ describe("generateTicketCode", () => {
     const code = generateTicketCode();
     expect(code).toMatch(/^TKT-\d{8}-\d{4}$/);
   });
-  
+
   it("should generate unique codes", () => {
     const codes = new Set();
     for (let i = 0; i < 100; i++) {
@@ -307,7 +307,7 @@ describe("isTicketExpired", () => {
     yesterday.setDate(yesterday.getDate() - 1);
     expect(isTicketExpired(yesterday)).toBe(true);
   });
-  
+
   it("should return false for future dates", () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -322,11 +322,11 @@ describe("detectPaymentProvider", () => {
   it("should detect MTN from 67x prefix", () => {
     expect(detectPaymentProvider("672345678")).toBe("MTN_MOMO");
   });
-  
+
   it("should detect Orange from 69x prefix", () => {
     expect(detectPaymentProvider("692345678")).toBe("ORANGE_MONEY");
   });
-  
+
   it("should handle formatted numbers", () => {
     expect(detectPaymentProvider("+237 67 234 5678")).toBe("MTN_MOMO");
   });
@@ -336,7 +336,7 @@ describe("formatPhoneForPayment", () => {
   it("should add +237 prefix", () => {
     expect(formatPhoneForPayment("672345678")).toBe("+237672345678");
   });
-  
+
   it("should not duplicate +237", () => {
     expect(formatPhoneForPayment("+237672345678")).toBe("+237672345678");
   });
@@ -352,31 +352,31 @@ describe("canPickup", () => {
       pickupStatus: "PENDING",
       ticketExpiresAt: new Date(Date.now() + 86400000) // Tomorrow
     };
-    
+
     const result = canPickup(order);
     expect(result.allowed).toBe(false);
     expect(result.reason).toBe("Le paiement n'est pas confirmé");
   });
-  
+
   it("should reject expired tickets", () => {
     const order = {
       paymentStatus: "PAID",
       pickupStatus: "PENDING",
       ticketExpiresAt: new Date(Date.now() - 86400000) // Yesterday
     };
-    
+
     const result = canPickup(order);
     expect(result.allowed).toBe(false);
     expect(result.reason).toBe("Ticket expiré");
   });
-  
+
   it("should allow valid orders", () => {
     const order = {
       paymentStatus: "PAID",
       pickupStatus: "PENDING",
       ticketExpiresAt: new Date(Date.now() + 86400000) // Tomorrow
     };
-    
+
     const result = canPickup(order);
     expect(result.allowed).toBe(true);
   });
@@ -432,13 +432,13 @@ Extend `calculateTotalAmount()`:
 ```typescript
 export function calculateTotalAmount(articlePrice: number, method: PaymentMethod) {
   const subtotal = articlePrice;
-  
+
   // Example: 2% transaction fee
   const feePercent = 0.02;
   const fees = Math.ceil(subtotal * feePercent);
-  
+
   const total = subtotal + fees;
-  
+
   return { subtotal, fees, total };
 }
 ```
@@ -460,13 +460,13 @@ const validationCache = new Map<string, { result: any, timestamp: number }>();
 function getCachedValidation(ticketCode: string) {
   const cached = validationCache.get(ticketCode);
   if (!cached) return null;
-  
+
   const age = Date.now() - cached.timestamp;
   if (age > 30000) { // 30 seconds
     validationCache.delete(ticketCode);
     return null;
   }
-  
+
   return cached.result;
 }
 ```
@@ -476,16 +476,16 @@ function getCachedValidation(ticketCode: string) {
 ## Summary
 
 **Order entity provides:**
-✓ Complete payment flow (MTN/Orange)  
-✓ Ticket generation with QR codes  
-✓ Validation & pickup workflow  
-✓ 12 API methods  
-✓ Auto-detect payment provider  
-✓ Phone number formatting  
-✓ Expiry management (7 days default)  
-✓ French localization  
-✓ Mobile-first ready  
-✓ 100% testable  
+✓ Complete payment flow (MTN/Orange)
+✓ Ticket generation with QR codes
+✓ Validation & pickup workflow
+✓ 12 API methods
+✓ Auto-detect payment provider
+✓ Phone number formatting
+✓ Expiry management (7 days default)
+✓ French localization
+✓ Mobile-first ready
+✓ 100% testable
 
 **Ready for:**
 - Order creation feature

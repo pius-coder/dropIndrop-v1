@@ -1,6 +1,6 @@
 /**
  * Ticket Validator Component
- * 
+ *
  * Manual ticket code entry with validation
  */
 
@@ -9,7 +9,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +34,8 @@ import { validateTicketSchema, type ValidateTicketInput } from "../model/types";
 import type { ValidateTicketResponse } from "../model/types";
 
 export function TicketValidator() {
-  const [validationResult, setValidationResult] = useState<ValidateTicketResponse | null>(null);
+  const [validationResult, setValidationResult] =
+    useState<ValidateTicketResponse | null>(null);
   const { mutate: validate, isPending: isValidating } = useValidateTicket();
   const { mutate: markPickedUp, isPending: isMarking } = useMarkPickedUp();
 
@@ -101,7 +108,7 @@ export function TicketValidator() {
                     <FormLabel>Code Ticket</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="TKT-20241015-0001"
+                        placeholder="TKT-20251015-0001"
                         className="text-base md:text-sm font-mono"
                         {...field}
                       />
@@ -146,7 +153,9 @@ export function TicketValidator() {
                     <CardTitle className="text-green-700">
                       ✅ Ticket Valide
                     </CardTitle>
-                    <CardDescription>{validationResult.message}</CardDescription>
+                    <CardDescription>
+                      {validationResult.message}
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -181,7 +190,9 @@ export function TicketValidator() {
                         </span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-muted-foreground">Téléphone:</span>
+                        <span className="text-muted-foreground">
+                          Téléphone:
+                        </span>
                         <span className="font-medium">
                           {validationResult.order.customer.phone}
                         </span>
@@ -204,7 +215,9 @@ export function TicketValidator() {
                           {validationResult.order.article.name}
                         </p>
                         <p className="text-lg font-bold text-primary">
-                          {validationResult.order.totalPrice.toLocaleString("fr-FR")}{" "}
+                          {validationResult.order.totalPrice.toLocaleString(
+                            "fr-FR",
+                          )}{" "}
                           FCFA
                         </p>
                       </div>

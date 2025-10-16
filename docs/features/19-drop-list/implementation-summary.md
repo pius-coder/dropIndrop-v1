@@ -3,17 +3,17 @@
 ## Overview
 Drop management interface with filtering and quick actions.
 
-**Time:** 45 minutes  
+**Time:** 45 minutes
 **Status:** ✅ Complete
 
 ---
 
 ## Architecture Adherence
 
-✅ **Feature-Sliced Design** - Complete vertical slice  
-✅ **Type-Safety** - End-to-end TypeScript + Zod  
-✅ **Mobile-First** - Responsive cards  
-✅ **French Localization** - All text in French  
+✅ **Feature-Sliced Design** - Complete vertical slice
+✅ **Type-Safety** - End-to-end TypeScript + Zod
+✅ **Mobile-First** - Responsive cards
+✅ **French Localization** - All text in French
 
 ---
 
@@ -40,19 +40,19 @@ Drop management interface with filtering and quick actions.
 ## Features
 
 ### Drop List
-✅ Card-based layout  
-✅ Status badges (color-coded)  
-✅ Statistics (articles, groups)  
-✅ Dates (created, scheduled, sent)  
-✅ Quick actions (view, send, delete)  
-✅ Conditional actions based on status  
+✅ Card-based layout
+✅ Status badges (color-coded)
+✅ Statistics (articles, groups)
+✅ Dates (created, scheduled, sent)
+✅ Quick actions (view, send, delete)
+✅ Conditional actions based on status
 
 ### Filters
-✅ Search by name  
-✅ Filter by status  
-✅ Sort by (created, scheduled, sent, name)  
-✅ Sort order (asc/desc)  
-✅ Reset button  
+✅ Search by name
+✅ Filter by status
+✅ Sort by (created, scheduled, sent, name)
+✅ Sort order (asc/desc)
+✅ Reset button
 
 ### Status Display
 - 🟢 **DRAFT** - Gray
@@ -72,7 +72,7 @@ Drop management interface with filtering and quick actions.
 │ [Scheduled: Date]           │
 │                             │
 │ Articles: 5  Groupes: 3     │
-│ Créé le 15/10/2024          │
+│ Créé le 15/10/2025          │
 │                             │
 │ [Voir] [Envoyer] [Supprimer]│
 └─────────────────────────────┘
@@ -91,7 +91,7 @@ Drop management interface with filtering and quick actions.
 
 ### With drop-send
 ```tsx
-<DropList 
+<DropList
   onSend={(drop) => {
     // Opens SendDropButton
   }}
@@ -100,7 +100,7 @@ Drop management interface with filtering and quick actions.
 
 ### With drop-validate
 ```tsx
-<DropList 
+<DropList
   onView={(drop) => {
     // Shows validation + send option
   }}
@@ -111,11 +111,11 @@ Drop management interface with filtering and quick actions.
 
 ## Mobile Optimization
 
-✅ **Card Layout** - Stacks well on mobile  
-✅ **Touch Targets** - 44px+ buttons  
-✅ **Text Size** - `text-base` on mobile  
-✅ **Responsive Grid** - 2 cols for stats  
-✅ **Flex Wrap** - Actions wrap on small screens  
+✅ **Card Layout** - Stacks well on mobile
+✅ **Touch Targets** - 44px+ buttons
+✅ **Text Size** - `text-base` on mobile
+✅ **Responsive Grid** - 2 cols for stats
+✅ **Flex Wrap** - Actions wrap on small screens
 
 ---
 
@@ -126,7 +126,7 @@ import { DropList } from "@/features/drop-list";
 
 export default function DropsPage() {
   return (
-    <DropList 
+    <DropList
       onView={(drop) => router.push(`/admin/drops/${drop.id}`)}
       onSend={(drop) => setDropToSend(drop)}
       onDelete={(drop) => setDropToDelete(drop)}
@@ -187,7 +187,7 @@ Response:
 
 ---
 
-**Progress:** 22/34 (65%)  
+**Progress:** 22/34 (65%)
 **Next:** Step 23 - order-create (Order form with payment)
 
 ---

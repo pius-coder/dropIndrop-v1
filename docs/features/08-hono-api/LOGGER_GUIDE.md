@@ -11,7 +11,7 @@
 ================================================================================
 📖 GET /api/articles
 📝 Request ID: req_1705315200000_abc123
-🕐 Time: 2024-01-15T10:30:00.000Z
+🕐 Time: 2025-01-15T10:30:00.000Z
 🔍 Query: { category: "electronique", limit: "10" }
 👤 User: John Doe (john@example.com) - ADMIN
 ```
@@ -57,7 +57,7 @@
 
 ```json
 {
-  "timestamp": "2024-01-15T10:30:00.000Z",
+  "timestamp": "2025-01-15T10:30:00.000Z",
   "requestId": "req_1705315200000_abc123",
   "level": "info",
   "method": "GET",
@@ -75,7 +75,7 @@
 **Error Log:**
 ```json
 {
-  "timestamp": "2024-01-15T10:30:05.000Z",
+  "timestamp": "2025-01-15T10:30:05.000Z",
   "requestId": "req_1705315205000_xyz789",
   "level": "error",
   "method": "POST",
@@ -116,7 +116,7 @@ app.use("*", logger);
 ================================================================================
 📖 GET /api/articles/123
 📝 Request ID: req_1705315200000_abc123
-🕐 Time: 2024-01-15T10:30:00.000Z
+🕐 Time: 2025-01-15T10:30:00.000Z
 👤 User: Admin User (admin@example.com) - SUPER_ADMIN
 🟢 Response: 200 ⚡ 25ms - 450 B
 ================================================================================
@@ -131,7 +131,7 @@ app.use("*", structuredLogger);
 
 **Output:**
 ```json
-{"timestamp":"2024-01-15T10:30:00.000Z","requestId":"req_...","level":"info","method":"GET","path":"/api/articles/123","status":200,"duration":25,"userId":"admin-id","userRole":"SUPER_ADMIN"}
+{"timestamp":"2025-01-15T10:30:00.000Z","requestId":"req_...","level":"info","method":"GET","path":"/api/articles/123","status":200,"duration":25,"userId":"admin-id","userRole":"SUPER_ADMIN"}
 ```
 
 ### Smart Logger (Auto-switch)
@@ -244,7 +244,7 @@ logtail.info("API Request", logEntry);
 ================================================================================
 📖 GET /api/articles
 📝 Request ID: req_1705315200000_abc123
-🕐 Time: 2024-01-15T10:30:00.000Z
+🕐 Time: 2025-01-15T10:30:00.000Z
 🔍 Query: { category: "electronique", limit: "20" }
 👤 User: Jean Mballa (jean@dropindrop.cm) - ADMIN
 🟢 Response: 200 ⚡ 35ms - 1.8 KB
@@ -256,7 +256,7 @@ logtail.info("API Request", logEntry);
 ================================================================================
 ➕ POST /api/articles
 📝 Request ID: req_1705315205000_xyz789
-🕐 Time: 2024-01-15T10:30:05.000Z
+🕐 Time: 2025-01-15T10:30:05.000Z
 📦 Body: {
   name: "iPhone 15 Pro",
   price: 850000,
@@ -273,7 +273,7 @@ logtail.info("API Request", logEntry);
 ================================================================================
 🗑️ DELETE /api/articles/nonexistent
 📝 Request ID: req_1705315210000_def456
-🕐 Time: 2024-01-15T10:30:10.000Z
+🕐 Time: 2025-01-15T10:30:10.000Z
 👤 User: Admin User (admin@dropindrop.cm) - ADMIN
 🟡 Response: 404 ⏱️ 18ms
 ❌ Error: {
@@ -288,7 +288,7 @@ logtail.info("API Request", logEntry);
 ================================================================================
 📖 GET /api/reports/analytics
 📝 Request ID: req_1705315215000_ghi789
-🕐 Time: 2024-01-15T10:30:15.000Z
+🕐 Time: 2025-01-15T10:30:15.000Z
 👤 User: Manager User (manager@dropindrop.cm) - ADMIN
 🟢 Response: 200 🔥 1245ms - 15.3 KB
 ================================================================================
@@ -351,13 +351,13 @@ export enum LogLevel {
 
 ## Summary
 
-✅ Enhanced development logger with emojis & colors  
-✅ Structured JSON logger for production  
-✅ Request ID tracking  
-✅ User information logging  
-✅ Performance indicators  
-✅ Sensitive data sanitization  
-✅ Error details  
-✅ Query & body logging  
-✅ Response size tracking  
-✅ Auto-switch based on environment  
+✅ Enhanced development logger with emojis & colors
+✅ Structured JSON logger for production
+✅ Request ID tracking
+✅ User information logging
+✅ Performance indicators
+✅ Sensitive data sanitization
+✅ Error details
+✅ Query & body logging
+✅ Response size tracking
+✅ Auto-switch based on environment

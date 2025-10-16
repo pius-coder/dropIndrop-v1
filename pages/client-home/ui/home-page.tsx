@@ -1,6 +1,6 @@
 /**
  * Client Home Page Component
- * 
+ *
  * Public-facing homepage with featured articles
  */
 
@@ -31,9 +31,7 @@ export function HomePage() {
       <section className="bg-primary text-primary-foreground py-12 md:py-20">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center space-y-6">
-            <h1 className="text-4xl md:text-6xl font-bold">
-              Drop-In-Drop
-            </h1>
+            <h1 className="text-4xl md:text-6xl font-bold">Drop-In-Drop</h1>
             <p className="text-lg md:text-xl opacity-90">
               Les meilleurs produits tech au Cameroun
             </p>
@@ -71,9 +69,7 @@ export function HomePage() {
             <h2 className="text-2xl md:text-3xl font-bold mb-2">
               Produits disponibles
             </h2>
-            <p className="text-muted-foreground">
-              Découvrez notre sélection
-            </p>
+            <p className="text-muted-foreground">Découvrez notre sélection</p>
           </div>
 
           {isLoading && (
@@ -161,7 +157,7 @@ export function HomePage() {
       <footer className="py-8 border-t">
         <div className="container">
           <div className="text-center text-sm text-muted-foreground">
-            <p>© 2024 Drop-In-Drop. Tous droits réservés.</p>
+            <p>© 2025 Drop-In-Drop. Tous droits réservés.</p>
             <p className="mt-2">Cameroun 🇨🇲</p>
           </div>
         </div>

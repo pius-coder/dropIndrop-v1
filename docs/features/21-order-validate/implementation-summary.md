@@ -3,17 +3,17 @@
 ## Overview
 Ticket validation and pickup confirmation for order fulfillment.
 
-**Time:** 1 hour  
+**Time:** 1 hour
 **Status:** ✅ Complete (UI ready, QR scanner pending)
 
 ---
 
 ## Architecture Adherence
 
-✅ **Feature-Sliced Design** - Complete vertical slice  
-✅ **Type-Safety** - End-to-end TypeScript + Zod  
-✅ **Mobile-First** - Optimized for admin on mobile  
-✅ **French Localization** - All text in French  
+✅ **Feature-Sliced Design** - Complete vertical slice
+✅ **Type-Safety** - End-to-end TypeScript + Zod
+✅ **Mobile-First** - Optimized for admin on mobile
+✅ **French Localization** - All text in French
 
 ---
 
@@ -41,22 +41,22 @@ Ticket validation and pickup confirmation for order fulfillment.
 ## Features
 
 ### Ticket Validator
-✅ Manual code entry (format: TKT-YYYYMMDD-XXXX)  
-✅ Format validation (Zod)  
-✅ Real-time validation  
-✅ Order details display  
-✅ Customer info display  
-✅ Article info with image  
-✅ Status badges (payment, pickup)  
-✅ Pickup button (conditional)  
-✅ Warning messages  
-✅ Toast notifications  
+✅ Manual code entry (format: TKT-YYYYMMDD-XXXX)
+✅ Format validation (Zod)
+✅ Real-time validation
+✅ Order details display
+✅ Customer info display
+✅ Article info with image
+✅ Status badges (payment, pickup)
+✅ Pickup button (conditional)
+✅ Warning messages
+✅ Toast notifications
 
 ### QR Scanner (Placeholder)
-⏭️ Camera access  
-⏭️ QR code detection  
-⏭️ Auto-decode  
-✅ Fallback to manual entry  
+⏭️ Camera access
+⏭️ QR code detection
+⏭️ Auto-decode
+✅ Fallback to manual entry
 
 ---
 
@@ -110,19 +110,19 @@ If can pickup:
 ## Validation Rules
 
 ### Valid Ticket
-✅ Format correct (TKT-YYYYMMDD-XXXX)  
-✅ Ticket exists in database  
-✅ Payment status = PAID  
-✅ Pickup status = PENDING  
-✅ Not expired (< 30 days)  
+✅ Format correct (TKT-YYYYMMDD-XXXX)
+✅ Ticket exists in database
+✅ Payment status = PAID
+✅ Pickup status = PENDING
+✅ Not expired (< 30 days)
 
 ### Invalid Ticket
-❌ Format incorrect  
-❌ Ticket not found  
-❌ Payment not confirmed  
-❌ Already picked up  
-❌ Expired  
-❌ Cancelled  
+❌ Format incorrect
+❌ Ticket not found
+❌ Payment not confirmed
+❌ Already picked up
+❌ Expired
+❌ Cancelled
 
 ---
 
@@ -132,7 +132,7 @@ If can pickup:
 ```typescript
 Request:
 {
-  ticketCode: string  // TKT-20241015-0001
+  ticketCode: string  // TKT-20251015-0001
 }
 
 Response:
@@ -248,11 +248,11 @@ import { QrScanner } from 'react-qr-scanner';
 
 ## Mobile Optimization
 
-✅ **Large Input** - Easy typing on mobile  
-✅ **Touch Buttons** - 44px+ height  
-✅ **Camera Access** - Native camera API  
-✅ **Auto-Focus** - Focus on input  
-✅ **Keyboard Type** - Uppercase for ticket code  
+✅ **Large Input** - Easy typing on mobile
+✅ **Touch Buttons** - 44px+ height
+✅ **Camera Access** - Native camera API
+✅ **Auto-Focus** - Focus on input
+✅ **Keyboard Type** - Uppercase for ticket code
 
 ---
 
@@ -287,20 +287,20 @@ const [mode, setMode] = useState<"scanner" | "manual">("scanner");
 ## Security Considerations
 
 ### Ticket Security
-✅ One-time use (marked as picked up)  
-✅ Expiration (30 days)  
-✅ Format validation  
-✅ Database verification  
+✅ One-time use (marked as picked up)
+✅ Expiration (30 days)
+✅ Format validation
+✅ Database verification
 
 ### Admin Authorization
-✅ Require admin login  
-✅ Track who validated (audit log)  
-✅ Role-based permissions  
+✅ Require admin login
+✅ Track who validated (audit log)
+✅ Role-based permissions
 
 ### Stock Protection
-✅ Atomic stock updates  
-✅ Stock history tracking  
-✅ Prevent negative stock  
+✅ Atomic stock updates
+✅ Stock history tracking
+✅ Prevent negative stock
 
 ---
 
@@ -373,7 +373,7 @@ Ce ticket a expiré (créé il y a plus de 30 jours)
 
 ---
 
-**Progress:** 24/34 (71%)  
+**Progress:** 24/34 (71%)
 **Next:** Step 25 - Pages layer (admin-dashboard)
 
 ---
