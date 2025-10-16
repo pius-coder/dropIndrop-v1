@@ -83,7 +83,10 @@ export function CustomerAuthForm({
       if (result.success) {
         setPhoneNumber(data.phone);
         setStep("verify");
-        verifyForm.setValue("phone", data.phone);
+        verifyForm.reset({
+          phone: data.phone,
+          otp: "",
+        });
 
         toast.success("Code OTP envoyé!", {
           description: "Vérifiez votre WhatsApp pour le code de vérification",
@@ -112,7 +115,10 @@ export function CustomerAuthForm({
       const response = await fetch("/api/customers/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          phone: phoneNumber, // Use phone number from component state
+          otp: data.otp,
+        }),
       });
 
       const result = await response.json();
@@ -333,14 +339,15 @@ export function CustomerAuthForm({
                 <FormItem>
                   <FormLabel>Code de vérification</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
+                    <input
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       placeholder="123456"
                       maxLength={6}
-                      className="text-center text-2xl tracking-widest"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-center text-2xl tracking-widest ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      value={field.value || ''}
                       onChange={(e) => {
-                        // Only allow numbers
                         const value = e.target.value.replace(/[^0-9]/g, '');
                         field.onChange(value);
                       }}
