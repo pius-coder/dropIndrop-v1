@@ -30,19 +30,26 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function DropCreateForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { mutate: createDrop, isPending } = useCreateDrop();
+  const {
+    mutate: createDrop,
+    isPending,
+    isError,
+    error: mutationError,
+    reset,
+  } = useCreateDrop();
 
-  const form = useForm<CreateDropInput>({
+  const form = useForm({
     resolver: zodResolver(createDropSchema),
     defaultValues: {
       name: "",
       articleIds: [],
-      whatsappGroupIds: [],
+      whatsappGroupIds: ["cjld2cjxh0000qzrmn831i8xe"], // Mock group ID for testing
     },
   });
 
@@ -57,25 +64,25 @@ export function DropCreateForm() {
     }
   }, [searchParams, form]);
 
-  const onSubmit = (data: CreateDropInput) => {
-    console.log("Drop Creation Started", data);
-    console.log("Form State:", form.getValues());
-    console.log("Form Errors:", form.formState.errors);
-
+  const onSubmit = (data: CreateDropInput) =>
     createDrop(data, {
       onSuccess: (drop) => {
+        console.log("✅ Drop created successfully:", drop);
         toast.success("Drop créé avec succès", {
           description: `${drop.name} est prêt à être envoyé`,
         });
+        // Reset form
+        form.reset();
+        // Navigate to drops list
         router.push("/admin/drops");
       },
       onError: (error: Error) => {
+        console.error("❌ Drop creation failed:", error);
         toast.error("Erreur lors de la création", {
           description: error.message,
         });
       },
     });
-  };
 
   return (
     <Card>
@@ -88,16 +95,13 @@ export function DropCreateForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form 
-            onSubmit={form.handleSubmit(
-              onSubmit,
-              (errors) => {
-                console.log("Validation Errors:", errors);
-                toast.error("Erreur de validation", {
-                  description: "Veuillez vérifier tous les champs requis"
-                });
-              }
-            )} 
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (errors) => {
+              console.log("Validation Errors:", errors);
+              toast.error("Erreur de validation", {
+                description: "Veuillez vérifier tous les champs requis",
+              });
+            })}
             className="space-y-6"
           >
             {/* Name */}
@@ -134,7 +138,7 @@ export function DropCreateForm() {
                     <ArticleSelector
                       selectedIds={field.value}
                       onSelectionChange={field.onChange}
-                      minSelection={1}
+                      minSelection={3}
                       maxSelection={20}
                     />
                   </FormControl>
@@ -156,15 +160,17 @@ export function DropCreateForm() {
                   <FormControl>
                     <div className="rounded-lg border p-4 bg-muted/50">
                       <p className="text-sm text-muted-foreground">
-                        ℹ️ Sélection de groupes: À implémenter avec un composant multi-select
+                        ℹ️ Sélection de groupes: À implémenter avec un composant
+                        multi-select
                       </p>
-                      <p className="text-xs text-destructive mt-2">
-                        Temporairement: Aucun groupe sélectionné (TODO)
+                      <p className="text-xs text-blue-600 mt-2">
+                        ✅ Temporairement: 1 groupe mock sélectionné
+                        (cjld2cjxh0000qzrmn831i8xe)
                       </p>
                       {/* Hidden input to satisfy form */}
-                      <input 
-                        type="hidden" 
-                        value={field.value?.join(',') || ''} 
+                      <input
+                        type="hidden"
+                        value={field.value?.join(",") || ""}
                       />
                     </div>
                   </FormControl>
@@ -178,11 +184,14 @@ export function DropCreateForm() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.back()}
+                onClick={() => {
+                  reset?.();
+                  form.reset();
+                }}
                 disabled={isPending}
                 className="w-full sm:w-auto"
               >
-                Annuler
+                Réinitialiser
               </Button>
               <Button
                 type="submit"
@@ -201,6 +210,16 @@ export function DropCreateForm() {
             </div>
           </form>
         </Form>
+
+        {/* Error Display */}
+        {isError && mutationError && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Erreur lors de la création du drop: {mutationError.message}
+            </AlertDescription>
+          </Alert>
+        )}
       </CardContent>
     </Card>
   );

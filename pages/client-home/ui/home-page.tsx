@@ -11,7 +11,7 @@ import { ArticleCard } from "@/entities/article";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Search, ShoppingBag } from "lucide-react";
+import { Loader2, Search, ShoppingBag, LogIn, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -20,7 +20,7 @@ export function HomePage() {
   const [search, setSearch] = useState("");
   const { data, isLoading, error } = useArticles({
     search,
-    inStock: true,
+    status: "AVAILABLE", // Only show available articles
     sortBy: "createdAt",
     sortOrder: "desc",
   });
@@ -38,6 +38,28 @@ export function HomePage() {
             <p className="text-sm md:text-base opacity-80">
               Commandez facilement via WhatsApp 📱
             </p>
+
+            {/* Auth Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+              <Button
+                variant="secondary"
+                size="lg"
+                onClick={() => router.push("/auth/login?redirectTo=/")}
+                className="w-full sm:w-auto"
+              >
+                <LogIn className="mr-2 h-4 w-4" />
+                Se connecter
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => router.push("/auth/register?redirectTo=/")}
+                className="w-full sm:w-auto"
+              >
+                <UserPlus className="mr-2 h-4 w-4" />
+                Créer un compte
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -103,7 +125,7 @@ export function HomePage() {
                 <div
                   key={article.id}
                   className="cursor-pointer"
-                  onClick={() => router.push(`/articles/${article.uniqueSlug}`)}
+                  onClick={() => router.push(`/a/${article.uniqueSlug}`)}
                 >
                   <ArticleCard article={article} />
                 </div>

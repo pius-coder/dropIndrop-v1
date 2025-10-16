@@ -60,6 +60,8 @@ export const createArticleSchema = z.object({
     .array(z.string().url("Format d'URL de vidéo invalide"))
     .max(1, "Maximum 1 vidéo autorisée")
     .default([]),
+
+  status: ArticleStatusEnum.default("AVAILABLE"),
 });
 
 /**

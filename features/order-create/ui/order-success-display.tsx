@@ -91,7 +91,7 @@ export function OrderSuccessDisplay({ response, onClose }: OrderSuccessDisplayPr
               <Download className="h-4 w-4 mr-2" />
               Télécharger
             </Button>
-            {navigator.share && (
+            {typeof navigator !== 'undefined' && 'share' in navigator && (
               <Button
                 variant="outline"
                 onClick={handleShareTicket}
@@ -142,10 +142,6 @@ export function OrderSuccessDisplay({ response, onClose }: OrderSuccessDisplayPr
             <div className="flex justify-between">
               <span className="text-muted-foreground">Numéro:</span>
               <span className="font-medium">{order.orderNumber}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Client:</span>
-              <span className="font-medium">{order.customerPhone}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Statut paiement:</span>

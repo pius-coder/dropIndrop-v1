@@ -15,7 +15,7 @@ export { getArticles, searchArticles, getArticlesByCategory } from "./api/articl
 
 // Types
 export type {
-  ArticleListFilters,
+  ArticleListFilters as ArticleListFiltersType,
   ArticleListQuery,
   ArticleListResponse,
   ArticleViewMode,

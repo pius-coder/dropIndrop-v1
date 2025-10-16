@@ -38,7 +38,6 @@ export function OrderList() {
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-2xl font-bold">Commandes</h2>
         <p className="text-muted-foreground">{total} commande(s)</p>
       </div>
 
@@ -55,13 +54,13 @@ export function OrderList() {
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium">{order.ticketNumber}</p>
+                    <p className="font-medium">{order.ticketCode}</p>
                     <p className="text-sm text-muted-foreground">
-                      {order.totalPrice.toLocaleString("fr-FR")} FCFA
+                      {Number(order.amount).toLocaleString("fr-FR")} FCFA
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Badge>{order.status}</Badge>
+                    <Badge>{order.pickupStatus}</Badge>
                     <Badge variant="outline">{order.paymentStatus}</Badge>
                   </div>
                 </div>

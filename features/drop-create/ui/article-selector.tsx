@@ -43,14 +43,20 @@ export function ArticleSelector({
   });
 
   const articles = data?.articles || [];
+  console.log("ArticleSelector - Articles received:", articles);
+  if (articles.length > 0) {
+    console.log("First article ID type:", typeof articles[0].id, "value:", articles[0].id);
+  }
   const allSelected = selectedIds.length === articles.length && articles.length > 0;
   const canSelectMore = selectedIds.length < maxSelection;
 
-  const toggleArticle = (articleId: string) => {
-    if (selectedIds.includes(articleId)) {
-      onSelectionChange(selectedIds.filter(id => id !== articleId));
+  const toggleArticle = (articleId: unknown) => {
+    // Ensure articleId is a string UUID
+    const stringId = String(articleId);
+    if (selectedIds.includes(stringId)) {
+      onSelectionChange(selectedIds.filter(id => id !== stringId));
     } else if (canSelectMore) {
-      onSelectionChange([...selectedIds, articleId]);
+      onSelectionChange([...selectedIds, stringId]);
     }
   };
 
@@ -58,7 +64,7 @@ export function ArticleSelector({
     if (allSelected) {
       onSelectionChange([]);
     } else {
-      const idsToAdd = articles.slice(0, maxSelection).map(a => a.id);
+      const idsToAdd = articles.slice(0, maxSelection).map(a => String(a.id));
       onSelectionChange(idsToAdd);
     }
   };

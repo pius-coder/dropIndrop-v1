@@ -13,6 +13,8 @@ import logout from "../routes/logout";
 import dashboard from "../routes/dashboard";
 import articles from "../routes/articles";
 import orders from "../routes/orders";
+import customers from "../routes/customers";
+import articlesPublic from "../routes/articles-public";
 
 export const runtime = "nodejs";
 
@@ -56,8 +58,10 @@ app.route("/auth", auth);
 app.route("/auth", logout);
 app.route("/dashboard", dashboard);
 app.route("/articles", articles);
+app.route("/articles", articlesPublic);
 app.route("/drops", drops);
 app.route("/orders", orders);
+app.route("/customers", customers);
 
 // 404 handler
 app.notFound((c) => {

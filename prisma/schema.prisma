@@ -277,6 +277,31 @@ model Customer {
   @@map("customers")
 }
 
+model CustomerRegistration {
+  id       String   @id @default(cuid())
+  phone    String   @unique
+  name     String
+  password String?  // Hashed password
+
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@map("customer_registrations")
+}
+
+model CustomerOTP {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  otp       String   // Hashed OTP
+  expiresAt DateTime
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+  @@index([expiresAt])
+  @@map("customer_otps")
+}
+
 model Order {
   id          String @id @default(cuid())
   orderNumber String @unique

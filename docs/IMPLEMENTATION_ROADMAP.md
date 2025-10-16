@@ -3,6 +3,7 @@
 ## Principle: Small, Incremental, Testable Steps
 
 Each step follows this cycle:
+
 1. **Create docs folder** for the feature
 2. **Context7 analysis** → document findings
 3. **Implement** → write code
@@ -16,12 +17,14 @@ Each step follows this cycle:
 ## ✅ COMPLETED
 
 ### Week 1: Foundation
+
 - ✅ **Step 1:** Git initialization
 - ✅ **Step 2:** Foundation layer (shared/)
   - API client, React Query, Zustand stores, utilities
   - Commit: 56eddcd
 
 ### Week 2: Entities (Partial)
+
 - ✅ **Step 3:** Article entity (entities/article/)
   - Types, validation, utilities, API, UI component
   - Commit: 855107c
@@ -36,6 +39,7 @@ Each step follows this cycle:
 ### Week 2: Complete Entity Layer
 
 #### **Step 5: Order Entity** (NEXT - 30 min)
+
 ```
 docs/features/03-entity-order/
   ├── context7-analysis.md      # Payment, ticket generation patterns
@@ -55,11 +59,13 @@ entities/order/
 ```
 
 **Context7 Topics:**
+
 - Payment flow patterns (MTN Mobile Money, Orange Money)
 - QR code generation
 - Ticket validation systems
 
 **Key Functions:**
+
 - `generateTicketCode()` - Unique ticket generation
 - `generateQRCode()` - QR code for ticket
 - `validateTicket()` - Check ticket validity
@@ -71,6 +77,7 @@ entities/order/
 ---
 
 #### **Step 6: Customer Entity** (20 min)
+
 ```
 docs/features/04-entity-customer/
 entities/customer/
@@ -81,6 +88,7 @@ entities/customer/
 ```
 
 **Key Functions:**
+
 - `getCustomerStats()` - Total orders, total spent
 - `isLoyalCustomer()` - Check loyalty threshold
 - `formatPhoneNumber()` - Cameroon format (+237)
@@ -90,6 +98,7 @@ entities/customer/
 ---
 
 #### **Step 7: Admin Entity** (15 min)
+
 ```
 docs/features/05-entity-admin/
 entities/admin/
@@ -100,6 +109,7 @@ entities/admin/
 ```
 
 **Key Functions:**
+
 - `hasPermission()` - Check role-based permissions
 - `canManageDrops()`, `canValidateOrders()`, etc.
 
@@ -108,6 +118,7 @@ entities/admin/
 ---
 
 #### **Step 8: Category Entity** (15 min)
+
 ```
 docs/features/06-entity-category/
 entities/category/
@@ -118,6 +129,7 @@ entities/category/
 ```
 
 **Key Functions:**
+
 - `getCategoryTree()` - Hierarchical structure
 - `getArticleCount()` - Articles per category
 
@@ -126,6 +138,7 @@ entities/category/
 ---
 
 #### **Step 9: Commit Checkpoint** (5 min)
+
 - Review all entities
 - Run type-check: `pnpm type-check`
 - Verify no errors
@@ -136,6 +149,7 @@ entities/category/
 ## Week 3: Infrastructure Setup
 
 #### **Step 10: Prisma Client Setup** (30 min)
+
 ```
 docs/features/07-prisma-setup/
 lib/db.ts                        # Prisma client singleton
@@ -143,6 +157,7 @@ prisma/seed.ts                   # Seed data script
 ```
 
 **Tasks:**
+
 - Configure Prisma client for Next.js
 - Create database singleton (dev vs prod)
 - Write seed script for initial data
@@ -153,6 +168,7 @@ prisma/seed.ts                   # Seed data script
 ---
 
 #### **Step 11: Hono API Setup** (45 min)
+
 ```
 docs/features/08-api-setup/
 app/api/[[...route]]/
@@ -167,6 +183,7 @@ lib/api/
 ```
 
 **Tasks:**
+
 - Setup Hono app with route handler
 - Auth middleware (JWT verification)
 - Validation middleware (Zod integration)
@@ -178,6 +195,7 @@ lib/api/
 ---
 
 #### **Step 12: Shadcn UI Setup** (30 min)
+
 ```
 docs/features/09-shadcn-setup/
 components/ui/
@@ -189,6 +207,7 @@ components/ui/
 ```
 
 **Tasks:**
+
 - Initialize shadcn with MCP
 - Add core mobile-first components
 - Create theme configuration
@@ -203,6 +222,7 @@ components/ui/
 ### **Feature Group 1: Article Management**
 
 #### **Step 13: Feature - article-list** (1 hour)
+
 ```
 docs/features/10-article-list/
   ├── context7-analysis.md      # React Query list patterns, infinite scroll
@@ -216,11 +236,13 @@ features/article-list/
 ```
 
 **Context7 Topics:**
+
 - React Query pagination
 - Filtering patterns
 - Mobile-first list layouts
 
 **What it does:**
+
 - Display articles in grid
 - Filter by category, status, search
 - Pagination
@@ -231,6 +253,7 @@ features/article-list/
 ---
 
 #### **Step 14: Feature - article-create** (1.5 hours)
+
 ```
 docs/features/11-article-create/
 features/article-create/
@@ -245,11 +268,13 @@ app/api/[[...route]]/route.ts      # Register route
 ```
 
 **Context7 Topics:**
+
 - React Hook Form + Zod
 - File upload patterns
 - Optimistic updates
 
 **What it does:**
+
 - Multi-step form (info → images → review)
 - Image upload (URL input for now)
 - Validation with Zod
@@ -263,6 +288,7 @@ app/api/[[...route]]/route.ts      # Register route
 ---
 
 #### **Step 15: Feature - article-update** (1 hour)
+
 ```
 docs/features/12-article-update/
 features/article-update/
@@ -279,6 +305,7 @@ features/article-update/
 ---
 
 #### **Step 16: Feature - article-delete** (30 min)
+
 ```
 docs/features/13-article-delete/
 features/article-delete/
@@ -289,6 +316,7 @@ features/article-delete/
 ```
 
 **What it does:**
+
 - Confirmation modal
 - Soft delete (archive) option
 - Optimistic update
@@ -300,6 +328,7 @@ features/article-delete/
 ---
 
 #### **Step 17: Feature - article-stock** (45 min)
+
 ```
 docs/features/14-article-stock/
 features/article-stock/
@@ -310,6 +339,7 @@ features/article-stock/
 ```
 
 **What it does:**
+
 - Quick stock adjustment (+ / -)
 - Validation (no negative)
 - History tracking
@@ -324,6 +354,7 @@ features/article-stock/
 ### **Feature Group 2: Drop Management**
 
 #### **Step 18: Feature - drop-create** (2 hours)
+
 ```
 docs/features/15-drop-create/
 features/drop-create/
@@ -338,11 +369,13 @@ features/drop-create/
 ```
 
 **Context7 Topics:**
+
 - Multi-select components
 - Form wizard patterns
 - Preview before submit
 
 **What it does:**
+
 - Step 1: Name + template
 - Step 2: Select articles (multi-select with preview)
 - Step 3: Select WhatsApp groups (multi-select)
@@ -356,6 +389,7 @@ features/drop-create/
 ---
 
 #### **Step 19: Feature - drop-validate** (1.5 hours)
+
 ```
 docs/features/16-drop-validate/
 features/drop-validate/
@@ -369,6 +403,7 @@ features/drop-validate/
 ```
 
 **What it does:**
+
 - Check same-day rule for all groups
 - Display warnings per group
 - Show blocked articles
@@ -381,6 +416,7 @@ features/drop-validate/
 ---
 
 #### **Step 20: Feature - drop-send** (2 hours)
+
 ```
 docs/features/17-drop-send/
 features/drop-send/
@@ -395,11 +431,13 @@ features/drop-send/
 ```
 
 **Context7 Topics:**
+
 - WebSocket for progress
 - Queue management
 - Error handling
 
 **What it does:**
+
 - Validate before send
 - Send to WAHA API (WhatsApp)
 - Real-time progress updates
@@ -413,6 +451,7 @@ features/drop-send/
 ---
 
 #### **Step 21: Feature - drop-list** (45 min)
+
 ```
 docs/features/18-drop-list/
 features/drop-list/
@@ -422,6 +461,7 @@ features/drop-list/
 ```
 
 **What it does:**
+
 - List all drops
 - Filter by status, date
 - Status badges
@@ -434,6 +474,7 @@ features/drop-list/
 ### **Feature Group 3: Order Management**
 
 #### **Step 22: Feature - order-create** (2 hours)
+
 ```
 docs/features/19-order-create/
 features/order-create/
@@ -444,6 +485,7 @@ features/order-create/
 ```
 
 **What it does:**
+
 - Select article
 - Customer info (phone, name)
 - Payment method (MTN/Orange)
@@ -457,6 +499,7 @@ features/order-create/
 ---
 
 #### **Step 23: Feature - order-validate** (1 hour)
+
 ```
 docs/features/20-order-validate/
 features/order-validate/
@@ -469,6 +512,7 @@ features/order-validate/
 ```
 
 **What it does:**
+
 - Scan QR code or enter ticket code
 - Validate ticket
 - Mark as picked up
@@ -481,6 +525,7 @@ features/order-validate/
 ---
 
 #### **Step 24: Feature - order-list** (45 min)
+
 ```
 docs/features/21-order-list/
 features/order-list/
@@ -490,6 +535,7 @@ features/order-list/
 ```
 
 **What it does:**
+
 - List all orders
 - Filter by status, payment, pickup
 - Quick actions
@@ -501,6 +547,7 @@ features/order-list/
 ## Week 5: Pages Layer
 
 #### **Step 25: Page - admin-dashboard** (1 hour)
+
 ```
 docs/features/22-admin-dashboard/
 pages/admin-dashboard/
@@ -511,6 +558,7 @@ app/admin/page.tsx
 ```
 
 **What it displays:**
+
 - Total articles, drops, orders
 - Low stock alerts
 - Recent activity
@@ -521,6 +569,7 @@ app/admin/page.tsx
 ---
 
 #### **Step 26: Page - admin-articles** (45 min)
+
 ```
 pages/admin-articles/
   ├── ui/articles-page.tsx
@@ -529,6 +578,7 @@ app/admin/articles/page.tsx
 ```
 
 **Uses features:**
+
 - article-list
 - article-create
 - article-update
@@ -539,12 +589,14 @@ app/admin/articles/page.tsx
 ---
 
 #### **Step 27: Page - admin-drops** (45 min)
+
 ```
 pages/admin-drops/
 app/admin/drops/page.tsx
 ```
 
 **Uses features:**
+
 - drop-list
 - drop-create
 - drop-validate
@@ -555,12 +607,14 @@ app/admin/drops/page.tsx
 ---
 
 #### **Step 28: Page - admin-orders** (45 min)
+
 ```
 pages/admin-orders/
 app/admin/orders/page.tsx
 ```
 
 **Uses features:**
+
 - order-list
 - order-validate
 
@@ -569,12 +623,14 @@ app/admin/orders/page.tsx
 ---
 
 #### **Step 29: Page - client-home** (1 hour)
+
 ```
 pages/client-home/
 app/(client)/page.tsx
 ```
 
 **What it displays:**
+
 - Featured articles
 - Categories
 - Search
@@ -585,12 +641,14 @@ app/(client)/page.tsx
 ---
 
 #### **Step 30: Page - article-view** (1 hour)
+
 ```
 pages/article-view/
 app/(client)/articles/[slug]/page.tsx
 ```
 
 **What it displays:**
+
 - Article details
 - Image carousel
 - Buy button
@@ -603,6 +661,7 @@ app/(client)/articles/[slug]/page.tsx
 ## Week 6: Testing & Polish
 
 #### **Step 31: Unit Tests** (2 hours)
+
 ```
 tests/
   ├── entities/
@@ -614,6 +673,7 @@ tests/
 ```
 
 **What to test:**
+
 - Pure functions (utils)
 - Business rules
 - Validation schemas
@@ -624,6 +684,7 @@ tests/
 ---
 
 #### **Step 32: Integration Tests** (2 hours)
+
 ```
 tests/integration/
   ├── api/
@@ -638,6 +699,7 @@ tests/integration/
 ---
 
 #### **Step 33: Final Polish** (2 hours)
+
 - Error boundaries
 - Loading states
 - Toast notifications
@@ -649,6 +711,7 @@ tests/integration/
 ---
 
 #### **Step 34: Documentation** (1 hour)
+
 ```
 docs/
   ├── API.md                      # API documentation
@@ -665,9 +728,10 @@ docs/
 **Total Steps:** 34  
 **Estimated Time:** 4-5 weeks  
 **Features:** 21 features  
-**Pages:** 6 pages  
+**Pages:** 6 pages
 
 **Key Milestones:**
+
 1. ✅ Foundation complete (Week 1)
 2. 🔄 All entities (Week 2) - 40% done
 3. ⏳ Infrastructure (Week 3)

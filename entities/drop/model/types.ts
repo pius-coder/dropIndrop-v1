@@ -32,17 +32,17 @@ export const createDropSchema = z.object({
     .max(100, "Le nom ne peut pas dépasser 100 caractères"),
 
   articleIds: z
-    .array(z.string().uuid())
+    .array(z.string())
     .min(3, "Au moins 3 articles sont requis")
     .max(20, "Maximum 20 articles par drop"),
 
   whatsappGroupIds: z
-    .array(z.string().uuid())
+    .array(z.string())
+    .min(0)
     .max(10, "Maximum 10 groupes par envoi")
-    .optional()
     .default([]),
 
-  messageTemplateId: z.string().uuid().optional(),
+  messageTemplateId: z.string().optional(),
 
   scheduledFor: z
     .date()
@@ -70,7 +70,7 @@ export const updateDropSchema = createDropSchema.partial().extend({
  */
 export const dropFilterSchema = z.object({
   status: DropStatusEnum.optional(),
-  createdBy: z.string().uuid().optional(),
+  createdBy: z.string().optional(),
   scheduledAfter: z.date().optional(),
   scheduledBefore: z.date().optional(),
   search: z.string().optional(),
@@ -80,10 +80,10 @@ export const dropFilterSchema = z.object({
  * Same-Day Validation Result
  */
 export const sameDayValidationSchema = z.object({
-  groupId: z.string().uuid(),
+  groupId: z.string(),
   groupName: z.string(),
-  allowedArticleIds: z.array(z.string().uuid()),
-  blockedArticleIds: z.array(z.string().uuid()),
+  allowedArticleIds: z.array(z.string()),
+  blockedArticleIds: z.array(z.string()),
   warnings: z.array(z.string()),
 });
 

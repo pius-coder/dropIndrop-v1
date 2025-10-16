@@ -76,7 +76,7 @@ export function ArticleDeleteDialog({
           <div className="rounded-lg border p-4 bg-muted/50">
             <p className="font-medium">{article.name}</p>
             <p className="text-sm text-muted-foreground mt-1">
-              Prix: {article.price.toLocaleString("fr-FR")} FCFA
+              Prix: {Number(article.price).toLocaleString("fr-FR")} FCFA
             </p>
             <p className="text-sm text-muted-foreground">
               Stock: {article.stock} unités
