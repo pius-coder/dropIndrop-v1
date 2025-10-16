@@ -12,5 +12,5 @@ import type { Drop } from "@/entities/drop";
  * Create new drop
  */
 export async function createDrop(data: CreateDropInput): Promise<Drop> {
-  return apiClient.post<Drop>("/api/drops", data);
+  return apiClient.post<Drop>("/drops", data);
 }

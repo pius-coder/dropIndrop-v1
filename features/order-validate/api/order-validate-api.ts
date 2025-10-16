@@ -18,7 +18,7 @@ export async function validateTicket(
   data: ValidateTicketInput
 ): Promise<ValidateTicketResponse> {
   return apiClient.post<ValidateTicketResponse>(
-    "/api/orders/validate-ticket",
+    "/orders/validate-ticket",
     data
   );
 }
