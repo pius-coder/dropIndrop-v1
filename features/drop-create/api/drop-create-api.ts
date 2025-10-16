@@ -12,5 +12,13 @@ import type { Drop } from "@/entities/drop";
  * Create new drop
  */
 export async function createDrop(data: CreateDropInput): Promise<Drop> {
-  return apiClient.post<Drop>("/drops", data);
+  console.log("🚀 createDrop API called with:", data);
+  try {
+    const result = await apiClient.post<Drop>("/drops", data);
+    console.log("✅ createDrop API success:", result);
+    return result;
+  } catch (error) {
+    console.error("❌ createDrop API error:", error);
+    throw error;
+  }
 }

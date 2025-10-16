@@ -36,12 +36,18 @@ class ApiClient {
   async request<T>(method: string, url: string, data?: unknown): Promise<T> {
     const token = this.getToken();
 
+    console.log(`📡 API Request: ${method} ${this.baseURL}${url}`);
+    console.log("🔑 Token available:", !!token);
+    console.log("📦 Request data:", data);
+
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
 
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
+    } else {
+      console.warn("⚠️ No token found in Zustand store!");
     }
 
     try {
@@ -50,6 +56,8 @@ class ApiClient {
         headers,
         body: data ? JSON.stringify(data) : undefined,
       });
+
+      console.log(`📥 Response status: ${response.status} ${response.statusText}`);
 
       // Parse response body for both success and error cases
       let responseData: any;
@@ -66,6 +74,7 @@ class ApiClient {
 
       // Only throw for server errors (5xx) or network errors
       if (response.status >= 500) {
+        console.error("❌ Server error 5xx:", responseData);
         throw new ApiError(
           response.status,
           response.statusText,
@@ -73,17 +82,18 @@ class ApiClient {
         );
       }
 
-      // For client errors (4xx), return error data in the response
+      // For client errors (4xx), throw to trigger onError callback
       if (!response.ok) {
-        return {
-          error: true,
-          status: response.status,
-          message: responseData.message || responseData.error || response.statusText,
-          ...responseData,
-        } as T;
+        console.error("❌ Client error 4xx:", responseData);
+        throw new ApiError(
+          response.status,
+          response.statusText,
+          responseData.message || responseData.error || response.statusText
+        );
       }
 
       // Success response
+      console.log("✅ API Success:", responseData);
       return responseData as T;
     } catch (error) {
       // Network errors or other fetch failures

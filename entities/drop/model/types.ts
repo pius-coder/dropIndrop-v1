@@ -33,13 +33,13 @@ export const createDropSchema = z.object({
 
   articleIds: z
     .array(z.string().uuid())
-    .min(1, "Au moins un article est requis")
+    .min(3, "Au moins 3 articles sont requis")
     .max(20, "Maximum 20 articles par drop"),
 
   whatsappGroupIds: z
     .array(z.string().uuid())
-    .min(0, "Groupes WhatsApp (en développement)")
     .max(10, "Maximum 10 groupes par envoi")
+    .optional()
     .default([]),
 
   messageTemplateId: z.string().uuid().optional(),
