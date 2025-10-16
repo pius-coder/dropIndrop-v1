@@ -10,6 +10,7 @@ import { logger, errorHandler, cors } from "@/lib/api/middleware";
 import auth from "../routes/auth";
 import drops from "../routes/drops";
 import articles from "../routes/articles";
+import orders from "../routes/orders";
 
 export const runtime = "nodejs";
 

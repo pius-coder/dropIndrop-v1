@@ -16,12 +16,12 @@ import { z } from "zod";
 const app = new Hono<AuthContext>();
 
 const orderListQuerySchema = z.object({
-  paymentStatus: z.enum(["PENDING", "CONFIRMED", "FAILED"]).optional(),
-  pickupStatus: z.enum(["PENDING", "READY", "PICKED_UP"]).optional(),
+  paymentStatus: z.enum(["PENDING", "PAID", "FAILED", "REFUNDED"]).optional(),
+  pickupStatus: z.enum(["PENDING", "PICKED_UP", "CANCELLED"]).optional(),
   search: z.string().optional(),
   page: z.coerce.number().min(1).default(1),
   limit: z.coerce.number().min(1).max(100).default(20),
-  sortBy: z.enum(["createdAt", "totalPrice"]).optional(),
+  sortBy: z.enum(["createdAt", "amount"]).optional(),
   sortOrder: z.enum(["asc", "desc"]).optional(),
 });
 
