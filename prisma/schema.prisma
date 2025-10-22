@@ -1,0 +1,313 @@
+// Prisma schema for DropInDrop WhatsApp E-commerce Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum definitions
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  DELIVERY_MANAGER
+  CLIENT
+}
+
+enum PaymentProvider {
+  STRIPE
+  MTN_MOMO
+  ORANGE_MONEY
+  MOCK
+}
+
+enum DropStatus {
+  DRAFT
+  SCHEDULED
+  SENT
+  CANCELLED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  DELIVERED
+  CANCELLED
+}
+
+// User Entity - Manages all platform users with role-based access
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique @db.VarChar(50)
+  email        String?   @db.VarChar(255)
+  phoneNumber  String    @unique @db.VarChar(20)
+  passwordHash String    @db.VarChar(255)
+  role         UserRole  @default(CLIENT)
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime  @updatedAt @db.Timestamp(6)
+  lastLoginAt  DateTime?
+
+  // Relations
+  ordersCreated   Order[]             @relation("OrderCreatedBy")
+  ordersDelivered Order[]             @relation("OrderDeliveredBy")
+  customerOrders  Order[]             @relation("CustomerOrders")
+  ticketsUsed     Ticket[]            @relation("TicketUsedBy")
+  dropsCreated    Drop[]              @relation("DropCreatedBy")
+  whatsappGroups  UserWhatsAppGroup[]
+
+  @@map("users")
+}
+
+// Category Entity - Organizes products hierarchically
+model Category {
+  id          String     @id @default(cuid())
+  name        String     @db.VarChar(100)
+  description String?
+  parentId    String?
+  sortOrder   Int        @default(0)
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @updatedAt @db.Timestamp(6)
+
+  // Relations
+  parent   Category?  @relation("CategoryParent", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryParent")
+  products Product[]
+
+  @@map("categories")
+}
+
+// Product Entity - Items available for sale in drops
+model Product {
+  id            String   @id @default(cuid())
+  name          String   @db.VarChar(200)
+  description   String
+  price         Decimal  @db.Decimal(10, 2)
+  sku           String?  @unique @db.VarChar(50)
+  categoryId    String
+  images        String[] // JSON array of image URLs
+  isActive      Boolean  @default(true)
+  stockQuantity Int      @default(0)
+  viewCount     Int      @default(0)
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime @updatedAt @db.Timestamp(6)
+
+  // Relations
+  category     Category      @relation(fields: [categoryId], references: [id])
+  dropProducts DropProduct[]
+  orderItems   OrderItem[]
+
+  @@map("products")
+}
+
+// Drop Entity - Collections of products for WhatsApp distribution
+model Drop {
+  id            String     @id @default(cuid())
+  name          String?    @db.VarChar(200)
+  scheduledDate DateTime   @db.Timestamp(6)
+  status        DropStatus @default(DRAFT)
+  sentAt        DateTime?  @db.Timestamp(6)
+  messageId     String?    @db.VarChar(100)
+  createdBy     String
+  createdAt     DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime   @updatedAt @db.Timestamp(6)
+
+  // Relations
+  creator  User          @relation("DropCreatedBy", fields: [createdBy], references: [id])
+  products DropProduct[]
+  groups   DropGroup[]
+  orders   Order[]       @relation("DropOrders")
+
+  @@map("drops")
+}
+
+// WhatsApp Group Entity - Manages WhatsApp groups for drop distribution
+model WhatsAppGroup {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(100)
+  chatId      String   @unique @db.VarChar(50) // Format: 1234567890@g.us
+  description String?
+  isActive    Boolean  @default(true)
+  memberCount Int?
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+
+  // Relations
+  drops DropGroup[]
+  users UserWhatsAppGroup[]
+
+  @@map("whatsapp_groups")
+}
+
+// Order Entity - Customer purchases and payment tracking
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique @db.VarChar(20)
+  customerId      String
+  status          OrderStatus @default(PENDING)
+  totalAmount     Decimal     @db.Decimal(10, 2)
+  paymentIntentId String?     @db.VarChar(100)
+  paidAt          DateTime?   @db.Timestamp(6)
+  deliveredAt     DateTime?   @db.Timestamp(6)
+  deliveredBy     String?
+  notes           String?
+  createdById     String?
+  createdAt       DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+
+  // Relations
+  customer       User        @relation("CustomerOrders", fields: [customerId], references: [id])
+  deliveryPerson User?       @relation("OrderDeliveredBy", fields: [deliveredBy], references: [id])
+  createdBy      User?       @relation("OrderCreatedBy", fields: [createdById], references: [id])
+  items          OrderItem[]
+  ticket         Ticket?
+  drops          Drop[]      @relation("DropOrders")
+
+  @@map("orders")
+}
+
+// Order Item Entity - Individual products within an order
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  unitPrice  Decimal @db.Decimal(10, 2)
+  totalPrice Decimal @db.Decimal(10, 2)
+
+  // Relations
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+// Ticket Entity - Delivery verification with QR codes
+model Ticket {
+  id         String    @id @default(cuid())
+  orderId    String    @unique
+  qrCodeData String // Encrypted order verification data
+  uniqueCode String    @unique @db.VarChar(10) // Format: ABCD-1234
+  isUsed     Boolean   @default(false)
+  usedAt     DateTime? @db.Timestamp(6)
+  usedBy     String?
+  expiresAt  DateTime  @db.Timestamp(6)
+  createdAt  DateTime  @default(now()) @db.Timestamp(6)
+
+  // Relations
+  order      Order @relation(fields: [orderId], references: [id])
+  usedByUser User? @relation("TicketUsedBy", fields: [usedBy], references: [id])
+
+  @@map("tickets")
+}
+
+// Configuration Entity - Platform settings and configuration
+model Configuration {
+  id               String   @id @default(cuid())
+
+  // General Settings
+  siteName         String   @db.VarChar(200)
+  siteDescription  String   @db.VarChar(500)
+  contactEmail     String   @db.VarChar(255)
+  supportPhone     String   @db.VarChar(20)
+  businessAddress  String   @db.VarChar(255)
+  timezone         String   @default("Africa/Douala") @db.VarChar(50)
+  currency         String   @db.VarChar(3) // ISO 4217 currency code
+  language         String   @default("en") @db.VarChar(10)
+
+  // WhatsApp Configuration
+  whatsappApiUrl     String   @db.VarChar(255)
+  whatsappApiKey     String   @db.VarChar(255)
+  whatsappSessionName String  @db.VarChar(100)
+  whatsappBusinessNumber String @db.VarChar(20)
+  whatsappWelcomeMessage String @db.VarChar(500)
+  whatsappAutoReplyEnabled Boolean @default(false)
+  whatsappBusinessHoursEnabled Boolean @default(false)
+  whatsappBusinessHours Json // Store business hours as JSON
+
+  // Payment Configuration
+  paymentProvider  PaymentProvider @default(MOCK)
+  paymentEnabled   Boolean   @default(false)
+  paymentTestMode  Boolean   @default(true)
+  paymentSupportedCurrencies String[] // JSON array of currency codes
+  paymentMinAmount Decimal   @db.Decimal(10, 2)
+  paymentMaxAmount Decimal   @db.Decimal(10, 2)
+
+  // Notification Configuration
+  emailNotifications    Boolean @default(true)
+  smsNotifications      Boolean @default(false)
+  whatsappNotifications Boolean @default(true)
+  orderUpdates          Boolean @default(true)
+  deliveryUpdates       Boolean @default(true)
+  promotionalMessages   Boolean @default(false)
+
+  // Setup Status
+  isSetupComplete  Boolean  @default(false)
+  setupCompletedAt DateTime?
+
+  // Metadata
+  createdAt        DateTime @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime @updatedAt @db.Timestamp(6)
+
+  @@map("configurations")
+}
+
+// Junction Tables
+
+// Drop-Product many-to-many relationship
+model DropProduct {
+  dropId    String
+  productId String
+  sortOrder Int    @default(0)
+
+  // Relations
+  drop    Drop    @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@id([dropId, productId])
+  @@map("drop_products")
+}
+
+// Drop-WhatsApp Group many-to-many relationship
+model DropGroup {
+  dropId  String
+  groupId String
+
+  // Relations
+  drop  Drop          @relation(fields: [dropId], references: [id], onDelete: Cascade)
+  group WhatsAppGroup @relation(fields: [groupId], references: [id])
+
+  @@id([dropId, groupId])
+  @@map("drop_groups")
+}
+
+// OTP Entity - Temporary OTP codes for phone number verification
+model OTP {
+  id          String   @id @default(cuid())
+  phoneNumber String   @db.VarChar(20)
+  otpCode     String   @db.VarChar(10)
+  expiresAt   DateTime @db.Timestamp(6)
+  attempts    Int      @default(0)
+  isUsed      Boolean  @default(false)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+
+  @@map("otps")
+}
+
+// User-WhatsApp Group many-to-many relationship
+model UserWhatsAppGroup {
+  userId  String
+  groupId String
+
+  // Relations
+  user  User          @relation(fields: [userId], references: [id])
+  group WhatsAppGroup @relation(fields: [groupId], references: [id])
+
+  @@id([userId, groupId])
+  @@map("user_whatsapp_groups")
+}
