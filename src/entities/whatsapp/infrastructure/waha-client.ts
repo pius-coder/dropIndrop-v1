@@ -1,6 +1,6 @@
-import { WahaChatService } from "../../../../mvp-deprecated/waha/chat";
-import { WahaGroupService } from "../../../../mvp-deprecated/waha/group";
 import { retry, sleep } from "../../../lib/utils";
+import { WahaChatService } from "./chat";
+import { WahaGroupService } from "./group";
 
 // Types for WhatsApp operations
 export interface WhatsAppMessage {

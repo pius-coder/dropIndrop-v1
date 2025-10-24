@@ -30,6 +30,7 @@ export class WhatsAppGroupRepository {
           chatId: data.chatId,
           description: data.description,
           memberCount: data.memberCount,
+          createdBy: data.createdBy,
         },
       });
 
@@ -358,14 +359,16 @@ export class WhatsAppGroupRepository {
   /**
    * Map Prisma group to domain group
    */
-  private mapToDomain(prismaGroup: PrismaWhatsAppGroup): WhatsAppGroup {
+  private mapToDomain(prismaGroup: any): WhatsAppGroup {
     return new WhatsAppGroup(
       prismaGroup.id,
       prismaGroup.name,
       prismaGroup.chatId,
+      prismaGroup.createdBy, // This is correct based on prisma schema
       prismaGroup.description || undefined,
       prismaGroup.memberCount || undefined,
       prismaGroup.isActive,
+      prismaGroup.lastActivity || undefined,
       prismaGroup.createdAt,
       prismaGroup.updatedAt
     );

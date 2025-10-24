@@ -52,12 +52,14 @@ model User {
   lastLoginAt  DateTime?
 
   // Relations
-  ordersCreated   Order[]             @relation("OrderCreatedBy")
-  ordersDelivered Order[]             @relation("OrderDeliveredBy")
-  customerOrders  Order[]             @relation("CustomerOrders")
-  ticketsUsed     Ticket[]            @relation("TicketUsedBy")
-  dropsCreated    Drop[]              @relation("DropCreatedBy")
-  whatsappGroups  UserWhatsAppGroup[]
+  ordersCreated           Order[]                 @relation("OrderCreatedBy")
+  ordersDelivered         Order[]                 @relation("OrderDeliveredBy")
+  customerOrders          Order[]                 @relation("CustomerOrders")
+  ticketsUsed             Ticket[]                @relation("TicketUsedBy")
+  dropsCreated            Drop[]                  @relation("DropCreatedBy")
+  createdWhatsAppGroups   WhatsAppGroup[]         @relation("UserCreatedWhatsAppGroups")
+  whatsappGroups          UserWhatsAppGroup[]
+  uploadedImages          Image[]                 @relation("UploadedImages")
 
   @@map("users")
 }
@@ -89,7 +91,6 @@ model Product {
   price         Decimal  @db.Decimal(10, 2)
   sku           String?  @unique @db.VarChar(50)
   categoryId    String
-  images        String[] // JSON array of image URLs
   isActive      Boolean  @default(true)
   stockQuantity Int      @default(0)
   viewCount     Int      @default(0)
@@ -100,6 +101,7 @@ model Product {
   category     Category      @relation(fields: [categoryId], references: [id])
   dropProducts DropProduct[]
   orderItems   OrderItem[]
+  images       ProductImage[]
 
   @@map("products")
 }
@@ -121,6 +123,7 @@ model Drop {
   products DropProduct[]
   groups   DropGroup[]
   orders   Order[]       @relation("DropOrders")
+  images   DropImage[]
 
   @@map("drops")
 }
@@ -133,12 +136,15 @@ model WhatsAppGroup {
   description String?
   isActive    Boolean  @default(true)
   memberCount Int?
+  lastActivity DateTime? @db.Timestamp(6)
+  createdBy   String
   createdAt   DateTime @default(now()) @db.Timestamp(6)
   updatedAt   DateTime @updatedAt @db.Timestamp(6)
 
   // Relations
-  drops DropGroup[]
-  users UserWhatsAppGroup[]
+  creator User            @relation("UserCreatedWhatsAppGroups", fields: [createdBy], references: [id])
+  drops   DropGroup[]
+  users   UserWhatsAppGroup[]
 
   @@map("whatsapp_groups")
 }
@@ -297,6 +303,108 @@ model OTP {
   updatedAt   DateTime @updatedAt @db.Timestamp(6)
 
   @@map("otps")
+}
+
+// Image Management Entities
+
+// Image categories for organization
+model ImageCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique @db.VarChar(100)
+  description String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+
+  // Relations
+  images      Image[]
+
+  @@map("image_categories")
+}
+
+// Image Entity - Comprehensive image metadata and management
+model Image {
+  id          String   @id @default(cuid())
+  title       String?  @db.VarChar(255) // User-provided title/description
+  altText     String?  @db.VarChar(255) // Accessibility alt text
+  url         String   @db.VarChar(500) // Primary image URL
+  thumbUrl    String?  @db.VarChar(500) // Thumbnail URL
+  deleteUrl   String?  @db.VarChar(500) // ImgBB deletion URL
+
+  // File metadata
+  filename    String   @db.VarChar(255) // Original filename
+  originalName String  @db.VarChar(255) // Display name
+  size        Int      // File size in bytes
+  mimeType    String   @db.VarChar(100) // MIME type
+  width       Int?     // Image width in pixels
+  height      Int?     // Image height in pixels
+
+  // Upload tracking
+  uploadedBy  String   // User ID who uploaded
+  uploader    User     @relation("UploadedImages", fields: [uploadedBy], references: [id])
+
+  // Organization
+  categoryId  String?
+  category    ImageCategory? @relation(fields: [categoryId], references: [id])
+  tags        String[]       // JSON array of tags
+  isPublic    Boolean  @default(true) // Public visibility
+
+  // Status and metadata
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+
+  // Relations to other entities
+  products    ProductImage[]
+  drops       DropImage[]
+
+  @@map("images")
+  @@index([uploadedBy])
+  @@index([categoryId])
+  @@index([isActive])
+  @@index([createdAt])
+  @@index([mimeType])
+  @@index([isPublic, isActive])
+}
+
+// Junction Tables for Image Relations
+
+// Many-to-many: Images and Products
+model ProductImage {
+  productId String
+  imageId   String
+  sortOrder Int    @default(0) // Display order
+  isPrimary Boolean @default(false) // Primary product image
+
+  // Relations
+  product Product @relation(fields: [productId], references: [id])
+  image   Image   @relation(fields: [imageId], references: [id])
+
+  @@id([productId, imageId])
+  @@map("product_images")
+  @@index([productId])
+  @@index([imageId])
+  @@index([sortOrder])
+  @@index([isPrimary])
+}
+
+// Many-to-many: Images and Drops
+model DropImage {
+  dropId    String
+  imageId   String
+  sortOrder Int    @default(0) // Display order
+  caption   String? @db.VarChar(500) // Optional caption for drop context
+
+  // Relations
+  drop  Drop  @relation(fields: [dropId], references: [id])
+  image Image @relation(fields: [imageId], references: [id])
+
+  @@id([dropId, imageId])
+  @@map("drop_images")
+  @@index([dropId])
+  @@index([imageId])
+  @@index([sortOrder])
 }
 
 // User-WhatsApp Group many-to-many relationship

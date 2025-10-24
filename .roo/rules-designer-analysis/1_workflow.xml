@@ -1,0 +1,106 @@
+<workflow_instructions>
+  <mode_overview>
+    Design Analysis Mode for converting compiled HTML/CSS/JS into React applications using Tailwind CSS and Shadcn UI components.
+  </mode_overview>
+
+  <initialization_steps>
+    <step number="1">
+      <action>Parse HTML Structure</action>
+      <details>
+        Analyze the provided HTML file and store key observations:
+        - Identify main sections (header, hero, features, footer)
+        - Detect reusable components (navbar, cards, modals, buttons)
+        - Note dynamic behaviors (mobile menu toggle, form validation)
+        - Map component hierarchy and relationships
+      </details>
+      <memory_tool>
+        Store HTML Structure: sections, components, and behaviors identified
+      </memory_tool>
+    </step>
+
+    <step number="2">
+      <action>Extract CSS Styles</action>
+      <details>
+        Extract all CSS rules from style tags or linked files:
+        - Colors: map hex values to Tailwind colors (e.g., #2563eb → blue-600)
+        - Fonts: verify font families match Tailwind config
+        - Custom classes: convert to Tailwind utility classes
+        - Responsive breakpoints: convert media queries to Tailwind prefixes
+        - Spacing, sizing, and layout properties
+      </details>
+      <memory_tool>
+        Store CSS mappings: colors, fonts, classes, and breakpoints
+      </memory_tool>
+    </step>
+
+    <step number="3">
+      <action>Component Mapping</action>
+      <details>
+        Match HTML elements to Shadcn components and plan custom components:
+        - Reference Shadcn docs for available components
+        - Buttons → shadcn/ui/button
+        - Cards → shadcn/ui/card
+        - Forms → shadcn/ui/form + react-hook-form
+        - Alerts → shadcn/ui/alert
+        - Create custom components for unmatched elements
+        - Plan component props and state management
+      </details>
+      <memory_tool>
+        Store Component Map: HTML elements to Shadcn/Custom components
+      </memory_tool>
+    </step>
+  </initialization_steps>
+
+  <main_workflow>
+    <phase name="conversion">
+      <description>Convert HTML to React + Tailwind + Shadcn</description>
+      <steps>
+        <step>Setup app/ folder structure with components/, styles/, hooks/</step>
+        <step>Install and configure Shadcn UI components</step>
+        <step>Convert HTML elements to React components with Shadcn integration</step>
+        <step>Apply Tailwind CSS classes for styling and responsiveness</step>
+        <step>Implement React hooks for dynamic behaviors</step>
+        <step>Add accessibility attributes and ARIA labels</step>
+        <step>Optimize component performance and bundle size</step>
+      </steps>
+    </phase>
+
+    <phase name="validation">
+      <description>Verify implementation accuracy</description>
+      <steps>
+        <step>Compare visual output with original HTML design</step>
+        <step>Test responsive behavior across breakpoints</step>
+        <step>Validate accessibility compliance</step>
+        <step>Check Shadcn component usage and customization</step>
+        <step>Ensure no inline styles used (Tailwind only)</step>
+      </steps>
+    </phase>
+  </main_workflow>
+
+  <conversion_rules>
+    <rule category="styling">
+      Convert all CSS classes to Tailwind utilities (no inline styles)
+    </rule>
+    <rule category="components">
+      Use Shadcn components wherever possible, custom components when needed
+    </rule>
+    <rule category="responsive">
+      Implement mobile-first responsive design with Tailwind breakpoints
+    </rule>
+    <rule category="accessibility">
+      Add proper ARIA attributes and semantic HTML structure
+    </rule>
+    <rule category="performance">
+      Optimize component rendering and bundle size
+    </rule>
+  </conversion_rules>
+
+  <completion_criteria>
+    <criterion>Pixel-perfect design replication</criterion>
+    <criterion>Full responsive functionality</criterion>
+    <criterion>Shadcn UI components properly integrated</criterion>
+    <criterion>Tailwind CSS only (no inline styles)</criterion>
+    <criterion>Accessibility compliance</criterion>
+    <criterion>Performance optimized</criterion>
+  </completion_criteria>
+</workflow_instructions>

@@ -1,0 +1,80 @@
+# Development files
+src/
+specs/
+.roo/
+.kilocode/
+.clinerules/
+.roomodes/
+.specify/
+
+# Config files for development
+biome.json
+components.json
+postcss.config.mjs
+next.config.ts
+middleware.ts
+tsconfig.json
+
+# Development dependencies and scripts
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment and secrets
+.env*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Git
+.git/
+.gitignore
+
+# Logs
+logs/
+*.log
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+out/
+dist/
+build/
+
+# Coverage and testing
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md
+AGENTS.md
+
+# Vercel
+.vercel/
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts

@@ -4,22 +4,30 @@ import {
   ValidationResult,
   ValidationError,
   NotFoundError,
+  ConflictError,
 } from "../../../lib/domain";
 
 // Domain types for Drop entity
 export interface CreateDropData {
-  name?: string;
+  name: string;
+  description?: string;
   scheduledDate: Date;
+  createdBy: string;
+  imageUrl?: string;
   productIds: string[];
   groupIds: string[];
 }
 
 export interface UpdateDropData {
   name?: string;
+  description?: string;
   scheduledDate?: Date;
+  createdBy?: string;
+  imageUrl?: string;
   productIds?: string[];
   groupIds?: string[];
   status?: DropStatus;
+  isActive?: boolean;
 }
 
 export interface DropFilters {
@@ -27,6 +35,7 @@ export interface DropFilters {
   scheduledAfter?: Date;
   scheduledBefore?: Date;
   createdBy?: string;
+  isActive?: boolean;
   search?: string;
 }
 
@@ -56,23 +65,29 @@ export enum DropStatus {
 
 // Drop domain entity
 export class Drop extends BaseEntity {
-  public readonly name?: string;
+  public readonly name: string;
+  public readonly description?: string;
   public readonly scheduledDate: Date;
   public readonly status: DropStatus;
   public readonly sentAt?: Date;
   public readonly messageId?: string;
   public readonly createdBy: string;
+  public readonly imageUrl?: string;
+  public readonly isActive: boolean;
   public readonly products: DropProduct[];
   public readonly groups: DropGroup[];
 
   constructor(
     id: string,
+    name: string,
     scheduledDate: Date,
     createdBy: string,
     products: DropProduct[] = [],
     groups: DropGroup[] = [],
-    name?: string,
     status: DropStatus = DropStatus.DRAFT,
+    description?: string,
+    imageUrl?: string,
+    isActive: boolean = true,
     sentAt?: Date,
     messageId?: string,
     createdAt?: Date,
@@ -80,11 +95,14 @@ export class Drop extends BaseEntity {
   ) {
     super(id, createdAt, updatedAt);
     this.name = name;
+    this.description = description;
     this.scheduledDate = scheduledDate;
     this.status = status;
     this.sentAt = sentAt;
     this.messageId = messageId;
     this.createdBy = createdBy;
+    this.imageUrl = imageUrl;
+    this.isActive = isActive;
     this.products = products;
     this.groups = groups;
   }
@@ -150,6 +168,84 @@ export class Drop extends BaseEntity {
     return this.groups.length > 0;
   }
 
+  public hasImage(): boolean {
+    return !!this.imageUrl;
+  }
+
+  public isActiveDrop(): boolean {
+    return this.isActive;
+  }
+
+  public canBeActivated(): boolean {
+    return !this.isActive;
+  }
+
+  public canBeDeactivated(): boolean {
+    return this.isActive && this.isDraft();
+  }
+
+  public activate(): Result<Drop> {
+    if (!this.canBeActivated()) {
+      return {
+        success: false,
+        error: new ValidationError("Drop cannot be activated"),
+      };
+    }
+
+    const updatedDrop = new Drop(
+      this.id,
+      this.name,
+      this.scheduledDate,
+      this.createdBy,
+      this.products,
+      this.groups,
+      this.status,
+      this.description,
+      this.imageUrl,
+      true,
+      this.sentAt,
+      this.messageId,
+      this.createdAt,
+      new Date()
+    );
+
+    return {
+      success: true,
+      data: updatedDrop,
+    };
+  }
+
+  public deactivate(): Result<Drop> {
+    if (!this.canBeDeactivated()) {
+      return {
+        success: false,
+        error: new ValidationError("Drop cannot be deactivated"),
+      };
+    }
+
+    const updatedDrop = new Drop(
+      this.id,
+      this.name,
+      this.scheduledDate,
+      this.createdBy,
+      this.products,
+      this.groups,
+      this.status,
+      this.description,
+      this.imageUrl,
+      false,
+      this.sentAt,
+      this.messageId,
+      this.createdAt,
+      new Date()
+    );
+
+    return {
+      success: true,
+      data: updatedDrop,
+    };
+  }
+
   // Status transition methods
   public schedule(): Result<Drop> {
     if (!this.canBeSent()) {
@@ -177,12 +273,15 @@ export class Drop extends BaseEntity {
 
     const updatedDrop = new Drop(
       this.id,
+      this.name,
       this.scheduledDate,
       this.createdBy,
       this.products,
       this.groups,
-      this.name,
       DropStatus.SCHEDULED,
+      this.description,
+      this.imageUrl,
+      this.isActive,
       this.sentAt,
       this.messageId,
       this.createdAt,
@@ -205,12 +304,15 @@ export class Drop extends BaseEntity {
 
     const updatedDrop = new Drop(
       this.id,
+      this.name,
       this.scheduledDate,
       this.createdBy,
       this.products,
       this.groups,
-      this.name,
       DropStatus.SENT,
+      this.description,
+      this.imageUrl,
+      this.isActive,
       new Date(),
       messageId,
       this.createdAt,
@@ -235,12 +337,15 @@ export class Drop extends BaseEntity {
 
     const updatedDrop = new Drop(
       this.id,
+      this.name,
       this.scheduledDate,
       this.createdBy,
       this.products,
       this.groups,
-      this.name,
       DropStatus.CANCELLED,
+      this.description,
+      this.imageUrl,
+      this.isActive,
       this.sentAt,
       this.messageId,
       this.createdAt,
@@ -273,8 +378,9 @@ export class Drop extends BaseEntity {
     // Create updated drop
     const updatedDrop = new Drop(
       this.id,
+      updates.name !== undefined ? updates.name : this.name,
       updates.scheduledDate || this.scheduledDate,
-      this.createdBy,
+      updates.createdBy || this.createdBy,
       updates.productIds
         ? updates.productIds.map((id, index) => ({
             productId: id,
@@ -284,8 +390,12 @@ export class Drop extends BaseEntity {
       updates.groupIds
         ? updates.groupIds.map((id) => ({ groupId: id }))
         : this.groups,
-      updates.name !== undefined ? updates.name : this.name,
       updates.status || this.status,
+      updates.description !== undefined
+        ? updates.description
+        : this.description,
+      updates.imageUrl !== undefined ? updates.imageUrl : this.imageUrl,
+      updates.isActive ?? this.isActive,
       this.sentAt,
       this.messageId,
       this.createdAt,
@@ -303,19 +413,46 @@ export class Drop extends BaseEntity {
     const errors: string[] = [];
 
     if (updates.name !== undefined) {
-      if (updates.name && updates.name.length > 200) {
-        errors.push("Drop name must be 200 characters or less");
+      if (!updates.name || !updates.name.trim()) {
+        errors.push("Drop name is required");
+      } else if (updates.name.length < 2 || updates.name.length > 200) {
+        errors.push("Drop name must be between 2 and 200 characters");
+      }
+    }
+
+    if (updates.description !== undefined && updates.description) {
+      if (updates.description.length > 500) {
+        errors.push("Drop description must be 500 characters or less");
+      }
+    }
+
+    if (updates.imageUrl !== undefined && updates.imageUrl) {
+      if (updates.imageUrl.length > 500) {
+        errors.push("Image URL must be 500 characters or less");
+      }
+      try {
+        new URL(updates.imageUrl);
+      } catch {
+        errors.push("Image URL must be a valid URL");
       }
     }
 
     if (updates.scheduledDate !== undefined) {
-      if (updates.scheduledDate < new Date()) {
+      if (!updates.scheduledDate) {
+        errors.push("Scheduled date is required");
+      } else if (updates.scheduledDate < new Date()) {
         errors.push("Scheduled date cannot be in the past");
       }
     }
 
+    if (updates.createdBy !== undefined) {
+      if (!updates.createdBy || !updates.createdBy.trim()) {
+        errors.push("Created by is required");
+      }
+    }
+
     if (updates.productIds !== undefined) {
-      if (updates.productIds.length === 0) {
+      if (!updates.productIds || updates.productIds.length === 0) {
         errors.push("Drop must have at least one product");
       }
       if (new Set(updates.productIds).size !== updates.productIds.length) {
@@ -324,11 +461,18 @@ export class Drop extends BaseEntity {
     }
 
     if (updates.groupIds !== undefined) {
-      if (updates.groupIds.length === 0) {
+      if (!updates.groupIds || updates.groupIds.length === 0) {
         errors.push("Drop must have at least one group");
       }
       if (new Set(updates.groupIds).size !== updates.groupIds.length) {
         errors.push("Duplicate groups are not allowed");
+      }
+    }
+
+    if (updates.status !== undefined) {
+      const validStatuses = Object.values(DropStatus);
+      if (!validStatuses.includes(updates.status)) {
+        errors.push("Invalid drop status");
       }
     }
 
@@ -341,10 +485,36 @@ export class Drop extends BaseEntity {
   public static validateCreateData(data: CreateDropData): ValidationResult {
     const errors: string[] = [];
 
+    if (!data.name || !data.name.trim()) {
+      errors.push("Drop name is required");
+    } else if (data.name.length < 2 || data.name.length > 200) {
+      errors.push("Drop name must be between 2 and 200 characters");
+    }
+
+    if (data.description && data.description.length > 500) {
+      errors.push("Drop description must be 500 characters or less");
+    }
+
+    if (data.imageUrl && data.imageUrl.length > 500) {
+      errors.push("Image URL must be 500 characters or less");
+    }
+
+    if (data.imageUrl) {
+      try {
+        new URL(data.imageUrl);
+      } catch {
+        errors.push("Image URL must be a valid URL");
+      }
+    }
+
     if (!data.scheduledDate) {
       errors.push("Scheduled date is required");
     } else if (data.scheduledDate < new Date()) {
       errors.push("Scheduled date cannot be in the past");
+    }
+
+    if (!data.createdBy || !data.createdBy.trim()) {
+      errors.push("Created by is required");
     }
 
     if (!data.productIds || data.productIds.length === 0) {
@@ -359,13 +529,100 @@ export class Drop extends BaseEntity {
       errors.push("Duplicate groups are not allowed");
     }
 
-    if (data.name && data.name.length > 200) {
-      errors.push("Drop name must be 200 characters or less");
-    }
-
     return {
       isValid: errors.length === 0,
       errors,
     };
+  }
+}
+
+// Value objects for Drop domain
+export class DropName {
+  constructor(public readonly value: string) {
+    if (!value || !value.trim()) {
+      throw new ValidationError("Drop name is required");
+    }
+    if (value.length < 2 || value.length > 200) {
+      throw new ValidationError(
+        "Drop name must be between 2 and 200 characters"
+      );
+    }
+  }
+
+  public toString(): string {
+    return this.value;
+  }
+
+  public isEmpty(): boolean {
+    return !this.value.trim();
+  }
+}
+
+export class DropDescription {
+  constructor(public readonly value?: string) {
+    if (value && value.length > 500) {
+      throw new ValidationError(
+        "Drop description must be 500 characters or less"
+      );
+    }
+  }
+
+  public toString(): string | undefined {
+    return this.value;
+  }
+
+  public isEmpty(): boolean {
+    return !this.value || !this.value.trim();
+  }
+}
+
+export class DropImageUrl {
+  constructor(public readonly value?: string) {
+    if (value) {
+      if (value.length > 500) {
+        throw new ValidationError("Image URL must be 500 characters or less");
+      }
+      try {
+        new URL(value);
+      } catch {
+        throw new ValidationError("Image URL must be a valid URL");
+      }
+    }
+  }
+
+  public toString(): string | undefined {
+    return this.value;
+  }
+
+  public isEmpty(): boolean {
+    return !this.value;
+  }
+}
+
+export class ScheduledDate {
+  constructor(public readonly value: Date) {
+    if (!value) {
+      throw new ValidationError("Scheduled date is required");
+    }
+    if (value < new Date()) {
+      throw new ValidationError("Scheduled date cannot be in the past");
+    }
+  }
+
+  public isToday(): boolean {
+    const today = new Date();
+    return (
+      this.value.getFullYear() === today.getFullYear() &&
+      this.value.getMonth() === today.getMonth() &&
+      this.value.getDate() === today.getDate()
+    );
+  }
+
+  public isInPast(): boolean {
+    return this.value < new Date();
+  }
+
+  public isInFuture(): boolean {
+    return this.value > new Date();
   }
 }

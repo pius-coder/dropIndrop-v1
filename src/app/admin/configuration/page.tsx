@@ -540,7 +540,7 @@ export default function AdminConfigurationPage() {
                     if (result.success) {
                       alert("Setup completed successfully!");
                       // Force a full page reload to update layout and navigation
-                      window.location.href = "/admin/dashboard";
+                      window.location.href = "/admin";
                     } else {
                       alert(`Failed to complete setup: ${result.error}`);
                     }

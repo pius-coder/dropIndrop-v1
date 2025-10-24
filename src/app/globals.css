@@ -2,122 +2,239 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+/* Custom font face for Wear and Tear */
+@font-face {
+  font-family: "Wear and Tear";
+  src: url("/Wear and Tear/Wear and Tear.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+.font-wear-tear {
+  font-family: "Wear and Tear", cursive;
+}
+
 :root {
-  --background: rgb(255, 255, 255);
-  --foreground: rgb(17, 24, 39);
+  /* Light Mode - WhatsApp Management Platform */
+  --background: rgb(252, 252, 253);
+  --foreground: rgb(20, 20, 23);
   --card: rgb(255, 255, 255);
-  --card-foreground: rgb(17, 24, 39);
+  --card-foreground: rgb(20, 20, 23);
   --popover: rgb(255, 255, 255);
-  --popover-foreground: rgb(17, 24, 39);
-  --primary: rgb(216, 121, 67);
+  --popover-foreground: rgb(20, 20, 23);
+
+  /* Primary - Deep Purple */
+  --primary: rgb(147, 51, 234);
   --primary-foreground: rgb(255, 255, 255);
-  --secondary: rgb(82, 117, 117);
-  --secondary-foreground: rgb(255, 255, 255);
-  --muted: rgb(243, 244, 246);
-  --muted-foreground: rgb(107, 114, 128);
-  --accent: rgb(238, 238, 238);
-  --accent-foreground: rgb(17, 24, 39);
-  --destructive: rgb(239, 68, 68);
-  --destructive-foreground: rgb(250, 250, 250);
-  --border: rgb(229, 231, 235);
-  --input: rgb(229, 231, 235);
-  --ring: rgb(216, 121, 67);
-  --chart-1: rgb(95, 135, 135);
-  --chart-2: rgb(231, 138, 83);
-  --chart-3: rgb(251, 203, 151);
-  --chart-4: rgb(136, 136, 136);
-  --chart-5: rgb(153, 153, 153);
-  --sidebar: rgb(243, 244, 246);
-  --sidebar-foreground: rgb(17, 24, 39);
-  --sidebar-primary: rgb(216, 121, 67);
+
+  /* Secondary - Warm Stone */
+  --secondary: rgb(245, 243, 239);
+  --secondary-foreground: rgb(41, 37, 36);
+
+  /* Muted - Soft backgrounds */
+  --muted: rgb(250, 249, 247);
+  --muted-foreground: rgb(120, 113, 108);
+
+  /* Accent - Coral Pink */
+  --accent: rgb(251, 113, 133);
+  --accent-foreground: rgb(255, 255, 255);
+
+  /* Destructive - Orange Red */
+  --destructive: rgb(249, 115, 22);
+  --destructive-foreground: rgb(255, 255, 255);
+
+  /* Borders & Inputs */
+  --border: rgb(231, 229, 228);
+  --input: rgb(255, 255, 255);
+  --ring: rgb(147, 51, 234);
+
+  /* Charts - Diverse palette */
+  --chart-1: rgb(236, 72, 153); /* Pink */
+  --chart-2: rgb(245, 158, 11); /* Amber */
+  --chart-3: rgb(168, 85, 247); /* Purple */
+  --chart-4: rgb(20, 184, 166); /* Teal */
+  --chart-5: rgb(251, 146, 60); /* Orange */
+
+  /* Sidebar */
+  --sidebar: rgb(250, 249, 248);
+  --sidebar-foreground: rgb(68, 64, 60);
+  --sidebar-primary: rgb(147, 51, 234);
   --sidebar-primary-foreground: rgb(255, 255, 255);
-  --sidebar-accent: rgb(255, 255, 255);
-  --sidebar-accent-foreground: rgb(17, 24, 39);
-  --sidebar-border: rgb(229, 231, 235);
-  --sidebar-ring: rgb(216, 121, 67);
-  --font-sans: Geist Mono, ui-monospace, monospace;
-  --font-serif: serif;
-  --font-mono: JetBrains Mono, monospace;
-  --radius: 0rem;
-  --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 4px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.05;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-sm: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
+  --sidebar-accent: rgb(254, 243, 254);
+  --sidebar-accent-foreground: rgb(134, 25, 143);
+  --sidebar-border: rgb(231, 229, 228);
+  --sidebar-ring: rgb(147, 51, 234);
+
+  /* Font families */
+  --font-sans: Inter, system-ui, -apple-system, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: "SF Mono", Monaco, monospace;
+  --font-wear-tear: "Wear and Tear", cursive;
+
+  /* Custom colors for platform */
+  --button-primary: rgb(147, 51, 234);
+  --custom-gray: rgb(245, 243, 239);
+  --custom-black: rgb(20, 20, 23);
+  --custom-dark-gray: rgb(68, 64, 60);
+
+  /* Status colors */
+  --success: rgb(34, 197, 94);
+  --success-foreground: rgb(255, 255, 255);
+
+  --warning: rgb(245, 158, 11);
+  --warning-foreground: rgb(255, 255, 255);
+
+  --info: rgb(20, 184, 166);
+  --info-foreground: rgb(255, 255, 255);
+
+  /* Additional accent colors */
+  --rose: rgb(244, 63, 94);
+  --rose-foreground: rgb(255, 255, 255);
+
+  --violet: rgb(139, 92, 246);
+  --violet-foreground: rgb(255, 255, 255);
+
+  --fuchsia: rgb(217, 70, 239);
+  --fuchsia-foreground: rgb(255, 255, 255);
+
+  --emerald: rgb(16, 185, 129);
+  --emerald-foreground: rgb(255, 255, 255);
+
+  /* Client mode (Purple/Pink theme) */
+  --client-primary: rgb(168, 85, 247);
+  --client-secondary: rgb(196, 181, 253);
+  --client-accent: rgb(233, 213, 255);
+  --client-radius: 0.75rem;
+  --client-shadow: 0px 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0px 4px 6px -4px hsl(0 0% 0% / 0.1);
+
+  /* Vendor mode (Coral/Orange theme) */
+  --vendor-primary: rgb(251, 113, 133);
+  --vendor-secondary: rgb(254, 205, 211);
+  --vendor-accent: rgb(255, 228, 230);
+  --vendor-radius: 0rem;
+  --vendor-shadow: 0px 2px 8px 0px hsl(0 0% 0% / 0.08),
     0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow-md: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 2px 4px -1px hsl(0 0% 0% / 0.05);
-  --shadow-lg: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 4px 6px -1px hsl(0 0% 0% / 0.05);
-  --shadow-xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 8px 10px -1px hsl(0 0% 0% / 0.05);
-  --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
-  --tracking-normal: 0rem;
-  --spacing: 0.25rem;
+
+  /* Shadow system */
+  --radius: 0.5rem;
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0px 2px 4px -1px hsl(0 0% 0% / 0.06);
+  --shadow: 0px 4px 6px -1px hsl(0 0% 0% / 0.07);
+  --shadow-md: 0px 10px 15px -3px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0px 20px 25px -5px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0px 25px 50px -12px hsl(0 0% 0% / 0.25);
 }
 
 .dark {
-  --background: rgb(18, 17, 19);
-  --foreground: rgb(193, 193, 193);
-  --card: rgb(18, 18, 18);
-  --card-foreground: rgb(193, 193, 193);
-  --popover: rgb(18, 17, 19);
-  --popover-foreground: rgb(193, 193, 193);
-  --primary: rgb(231, 138, 83);
-  --primary-foreground: rgb(18, 17, 19);
-  --secondary: rgb(95, 135, 135);
-  --secondary-foreground: rgb(18, 17, 19);
-  --muted: rgb(34, 34, 34);
-  --muted-foreground: rgb(136, 136, 136);
-  --accent: rgb(51, 51, 51);
-  --accent-foreground: rgb(193, 193, 193);
-  --destructive: rgb(95, 135, 135);
-  --destructive-foreground: rgb(18, 17, 19);
-  --border: rgb(34, 34, 34);
-  --input: rgb(34, 34, 34);
-  --ring: rgb(231, 138, 83);
-  --chart-1: rgb(95, 135, 135);
-  --chart-2: rgb(231, 138, 83);
-  --chart-3: rgb(251, 203, 151);
-  --chart-4: rgb(136, 136, 136);
-  --chart-5: rgb(153, 153, 153);
-  --sidebar: rgb(18, 18, 18);
-  --sidebar-foreground: rgb(193, 193, 193);
-  --sidebar-primary: rgb(231, 138, 83);
-  --sidebar-primary-foreground: rgb(18, 17, 19);
-  --sidebar-accent: rgb(51, 51, 51);
-  --sidebar-accent-foreground: rgb(193, 193, 193);
-  --sidebar-border: rgb(34, 34, 34);
-  --sidebar-ring: rgb(231, 138, 83);
-  --font-sans: Geist Mono, ui-monospace, monospace;
-  --font-serif: serif;
-  --font-mono: JetBrains Mono, monospace;
-  --radius: 0rem;
-  --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 4px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.05;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-sm: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow-md: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 2px 4px -1px hsl(0 0% 0% / 0.05);
-  --shadow-lg: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 4px 6px -1px hsl(0 0% 0% / 0.05);
-  --shadow-xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-    0px 8px 10px -1px hsl(0 0% 0% / 0.05);
-  --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
+  /* Dark Mode - WhatsApp Management Platform */
+  --background: rgb(15, 15, 17);
+  --foreground: rgb(240, 238, 243);
+  --card: rgb(23, 23, 26);
+  --card-foreground: rgb(240, 238, 243);
+  --popover: rgb(23, 23, 26);
+  --popover-foreground: rgb(240, 238, 243);
+
+  /* Primary - Bright Purple */
+  --primary: rgb(168, 85, 247);
+  --primary-foreground: rgb(255, 255, 255);
+
+  /* Secondary - Dark warm gray */
+  --secondary: rgb(41, 39, 42);
+  --secondary-foreground: rgb(240, 238, 243);
+
+  /* Muted - Darker backgrounds */
+  --muted: rgb(33, 31, 35);
+  --muted-foreground: rgb(161, 161, 170);
+
+  /* Accent - Bright Coral */
+  --accent: rgb(244, 114, 182);
+  --accent-foreground: rgb(255, 255, 255);
+
+  /* Destructive - Bright Orange */
+  --destructive: rgb(251, 146, 60);
+  --destructive-foreground: rgb(28, 25, 23);
+
+  /* Borders & Inputs */
+  --border: rgb(46, 44, 48);
+  --input: rgb(33, 31, 35);
+  --ring: rgb(168, 85, 247);
+
+  /* Charts - Vibrant for dark mode */
+  --chart-1: rgb(244, 114, 182); /* Pink */
+  --chart-2: rgb(251, 191, 36); /* Yellow */
+  --chart-3: rgb(196, 181, 253); /* Light Purple */
+  --chart-4: rgb(94, 234, 212); /* Cyan */
+  --chart-5: rgb(254, 215, 170); /* Peach */
+
+  /* Sidebar */
+  --sidebar: rgb(20, 20, 23);
+  --sidebar-foreground: rgb(209, 213, 219);
+  --sidebar-primary: rgb(168, 85, 247);
+  --sidebar-primary-foreground: rgb(255, 255, 255);
+  --sidebar-accent: rgb(46, 39, 52);
+  --sidebar-accent-foreground: rgb(196, 181, 253);
+  --sidebar-border: rgb(46, 44, 48);
+  --sidebar-ring: rgb(168, 85, 247);
+
+  /* Font families */
+  --font-sans: Inter, system-ui, -apple-system, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: "SF Mono", Monaco, monospace;
+  --font-wear-tear: "Wear and Tear", cursive;
+
+  /* Custom colors for platform (dark) */
+  --button-primary: rgb(168, 85, 247);
+  --custom-gray: rgb(41, 39, 42);
+  --custom-black: rgb(240, 238, 243);
+  --custom-dark-gray: rgb(33, 31, 35);
+
+  /* Status colors (brighter for dark) */
+  --success: rgb(74, 222, 128);
+  --success-foreground: rgb(28, 25, 23);
+
+  --warning: rgb(252, 211, 77);
+  --warning-foreground: rgb(28, 25, 23);
+
+  --info: rgb(94, 234, 212);
+  --info-foreground: rgb(28, 25, 23);
+
+  /* Additional accent colors (bright for dark) */
+  --rose: rgb(251, 113, 133);
+  --rose-foreground: rgb(255, 255, 255);
+
+  --violet: rgb(167, 139, 250);
+  --violet-foreground: rgb(255, 255, 255);
+
+  --fuchsia: rgb(232, 121, 249);
+  --fuchsia-foreground: rgb(255, 255, 255);
+
+  --emerald: rgb(52, 211, 153);
+  --emerald-foreground: rgb(28, 25, 23);
+
+  /* Client mode (Purple/Pink theme - dark) */
+  --client-primary: rgb(196, 181, 253);
+  --client-secondary: rgb(167, 139, 250);
+  --client-accent: rgb(139, 92, 246);
+  --client-radius: 0.75rem;
+  --client-shadow: 0px 10px 15px -3px hsl(0 0% 0% / 0.3);
+
+  /* Vendor mode (Coral/Orange theme - dark) */
+  --vendor-primary: rgb(244, 114, 182);
+  --vendor-secondary: rgb(251, 113, 133);
+  --vendor-accent: rgb(254, 205, 211);
+  --vendor-radius: 0.5rem;
+  --vendor-shadow: 0px 2px 8px 0px hsl(0 0% 0% / 0.2);
+
+  /* Shadow system (stronger for dark mode) */
+  --radius: 0.5rem;
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.1);
+  --shadow-sm: 0px 2px 4px -1px hsl(0 0% 0% / 0.12);
+  --shadow: 0px 4px 6px -1px hsl(0 0% 0% / 0.15);
+  --shadow-md: 0px 10px 15px -3px hsl(0 0% 0% / 0.2);
+  --shadow-lg: 0px 20px 25px -5px hsl(0 0% 0% / 0.25);
+  --shadow-xl: 0px 25px 50px -12px hsl(0 0% 0% / 0.35);
 }
 
 @theme inline {
@@ -157,6 +274,7 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-serif: var(--font-serif);
+  --font-wear-tear: var(--font-wear-tear);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -182,4 +300,36 @@
 
 body {
   letter-spacing: var(--tracking-normal);
+}
+
+/* Client theme - macOS-like design */
+.client-theme {
+  --primary: var(--client-primary);
+  --secondary: var(--client-secondary);
+  --accent: var(--client-accent);
+  --radius: var(--client-radius);
+  --shadow-sm: var(--client-shadow);
+  --shadow: var(--client-shadow);
+  --shadow-md: 0px 4px 6px -1px hsl(0 0% 0% / 0.1),
+    0px 2px 4px -2px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0px 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0px 4px 6px -4px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0px 20px 25px -5px hsl(0 0% 0% / 0.1),
+    0px 8px 10px -6px hsl(0 0% 0% / 0.1);
+}
+
+/* Vendor theme - current design */
+.vendor-theme {
+  --primary: var(--vendor-primary);
+  --secondary: var(--vendor-secondary);
+  --accent: var(--vendor-accent);
+  --radius: var(--vendor-radius);
+  --shadow-sm: var(--vendor-shadow);
+  --shadow: var(--vendor-shadow);
+  --shadow-md: 0px 4px 6px -1px hsl(0 0% 0% / 0.1),
+    0px 2px 4px -2px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0px 10px 15px -3px hsl(0 0% 0% / 0.1),
+    0px 4px 6px -4px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0px 20px 25px -5px hsl(0 0% 0% / 0.1),
+    0px 8px 10px -6px hsl(0 0% 0% / 0.1);
 }

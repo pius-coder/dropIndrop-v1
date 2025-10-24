@@ -25,7 +25,7 @@ export class DropRepository {
           data: {
             name: data.name,
             scheduledDate: data.scheduledDate,
-            createdBy: data.productIds[0] || "", // This should be passed from service
+            createdBy: data.createdBy,
           },
         });
 
@@ -242,10 +242,20 @@ export class DropRepository {
     limit: number = 20
   ): Promise<Result<DropListResult>> {
     try {
+      console.log("🔍 [REPO] list() called with:", {
+        filters,
+        page,
+        limit,
+        hasCreatedBy: !!filters.createdBy,
+        createdByType: typeof filters.createdBy,
+      });
+
       const skip = (page - 1) * limit;
 
       // Build where clause
       const where: any = {};
+
+      console.log("🔧 [REPO] Building where clause...");
 
       if (filters.status) {
         where.status = filters.status;
@@ -272,9 +282,12 @@ export class DropRepository {
       }
 
       // Get total count
+      console.log("🔢 [REPO] Executing count query with where:", where);
       const total = await this.prisma.drop.count({ where });
+      console.log("📊 [REPO] Count result:", total);
 
       // Get drops with relations
+      console.log("🔢 [REPO] Executing findMany query with where:", where);
       const prismaDrops = await this.prisma.drop.findMany({
         where,
         include: {
@@ -291,6 +304,15 @@ export class DropRepository {
         take: limit,
       });
 
+      console.log("📦 [REPO] Prisma drops result:", {
+        count: prismaDrops.length,
+        firstDropKeys: prismaDrops[0]
+          ? Object.keys(prismaDrops[0])
+          : "no drops",
+        hasProducts: prismaDrops[0]?.products ? true : false,
+        hasGroups: prismaDrops[0]?.groups ? true : false,
+      });
+
       const drops = prismaDrops.map(this.mapToDomain);
       const totalPages = Math.ceil(total / limit);
 
@@ -301,6 +323,16 @@ export class DropRepository {
         limit,
         totalPages,
       };
+
+      console.log("✅ [REPO] Final result:", {
+        success: true,
+        dropsCount: drops.length,
+        total,
+        page,
+        limit,
+        totalPages,
+        firstDropKeys: drops[0] ? Object.keys(drops[0]) : "no drops",
+      });
 
       return { success: true, data: result };
     } catch (error: any) {
@@ -414,6 +446,16 @@ export class DropRepository {
    * Map Prisma drop to domain drop
    */
   private mapToDomain(prismaDrop: any): Drop {
+    console.log("🔄 [REPO] Mapping prisma drop:", {
+      id: prismaDrop.id,
+      hasName: !!prismaDrop.name,
+      hasProducts: !!prismaDrop.products,
+      hasGroups: !!prismaDrop.groups,
+      productsCount: prismaDrop.products?.length || 0,
+      groupsCount: prismaDrop.groups?.length || 0,
+      createdBy: prismaDrop.createdBy,
+    });
+
     const products: DomainDropProduct[] = prismaDrop.products.map(
       (dp: any) => ({
         productId: dp.productId,
@@ -425,18 +467,32 @@ export class DropRepository {
       groupId: dg.groupId,
     }));
 
-    return new Drop(
+    const drop = new Drop(
       prismaDrop.id,
+      prismaDrop.name || "",
       prismaDrop.scheduledDate,
       prismaDrop.createdBy,
       products,
       groups,
-      prismaDrop.name || undefined,
       prismaDrop.status,
+      undefined, // description (not in schema)
+      undefined, // imageUrl (not in schema)
+      true, // isActive (not in schema)
       prismaDrop.sentAt || undefined,
       prismaDrop.messageId || undefined,
       prismaDrop.createdAt,
       prismaDrop.updatedAt
     );
+
+    console.log("✅ [REPO] Mapped to domain drop:", {
+      id: drop.id,
+      name: drop.name,
+      createdBy: drop.createdBy,
+      productsCount: drop.products.length,
+      groupsCount: drop.groups.length,
+      status: drop.status,
+    });
+
+    return drop;
   }
 }

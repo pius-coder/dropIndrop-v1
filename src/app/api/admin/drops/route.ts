@@ -54,18 +54,36 @@ export async function GET(request: NextRequest) {
     const filters = {
       status: (status as any) || undefined,
       search: searchQuery || undefined,
-      createdBy: user.id, // Only show drops created by the current user
+      createdById: user.id, // Only show drops created by the current user
     };
+
+    console.log("🔍 [API] Calling dropService.list with filters:", {
+      filters,
+      page,
+      limit,
+      userId: user.id,
+    });
 
     const result = await dropService.list(filters, page, limit);
 
+    console.log("📊 [API] Service result:", {
+      success: result.success,
+      hasData: result.success ? !!result.data : false,
+      dataType: result.success ? typeof result.data : "error result",
+      dataKeys:
+        result.success && result.data ? Object.keys(result.data) : "no data",
+      error: !result.success ? result.error?.message : "no error",
+    });
+
     if (!result.success) {
+      console.error("❌ [API] Service call failed:", result.error.message);
       return NextResponse.json(
         { error: result.error.message },
         { status: 500 }
       );
     }
 
+    console.log("✅ [API] Service call successful, returning data");
     return NextResponse.json({
       success: true,
       data: result.data,
@@ -138,6 +156,7 @@ export async function POST(request: NextRequest) {
       {
         name: name?.trim(),
         scheduledDate: new Date(scheduledDate),
+        createdBy: user.id,
         productIds: productIds.map((id: string) => id.trim()),
         groupIds: groupIds.map((id: string) => id.trim()),
       },

@@ -242,8 +242,30 @@ export class DropService {
     limit: number = 20
   ): Promise<Result<DropListResult>> {
     try {
-      return await this.deps.dropRepository.list(filters, page, limit);
+      console.log("🔍 [SERVICE] list() called with:", {
+        filters,
+        page,
+        limit,
+        hasCreatedBy: !!filters.createdBy,
+        createdByType: typeof filters.createdBy,
+      });
+
+      const result = await this.deps.dropRepository.list(filters, page, limit);
+
+      console.log("📊 [SERVICE] Repository result:", {
+        success: result.success,
+        hasData: result.success ? !!result.data : false,
+        dataType: result.success ? typeof result.data : "error result",
+        dataKeys:
+          result.success && result.data ? Object.keys(result.data) : "no data",
+        dropsCount:
+          result.success && result.data ? result.data.drops.length : 0,
+        error: !result.success ? result.error?.message : "no error",
+      });
+
+      return result;
     } catch (error: any) {
+      console.error("❌ [SERVICE] Exception in list():", error.message);
       return {
         success: false,
         error: new Error(`Failed to list drops: ${error.message}`),

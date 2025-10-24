@@ -86,6 +86,14 @@ export async function POST(request: NextRequest) {
       return authResult.response;
     }
 
+    // Ensure user is authenticated
+    if (!authResult.user) {
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { name, chatId, description, memberCount } = body;
 
@@ -104,6 +112,7 @@ export async function POST(request: NextRequest) {
       chatId: chatId.trim(),
       description: description?.trim(),
       memberCount: memberCount ? Number(memberCount) : undefined,
+      createdBy: authResult.user.id,
     });
 
     if (!result.success) {
@@ -145,7 +154,17 @@ export async function PUT(request: NextRequest) {
       return authResult.response;
     }
 
-    const result = await whatsappService.syncGroupsFromWhatsApp();
+    // Ensure user is authenticated
+    if (!authResult.user) {
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 }
+      );
+    }
+
+    const result = await whatsappService.syncGroupsFromWhatsApp(
+      authResult.user.id
+    );
 
     if (!result.success) {
       return NextResponse.json(

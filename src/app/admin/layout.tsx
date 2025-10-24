@@ -31,6 +31,7 @@ import {
   ChevronDown,
   CheckCircle,
   AlertCircle,
+  ImageIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -95,6 +96,12 @@ const NAVIGATION_ITEMS = [
     href: "/admin/analytics",
     icon: BarChart3,
     description: "Reports and insights",
+  },
+  {
+    title: "Images",
+    href: "/admin/images",
+    icon: ImageIcon,
+    description: "Manage image library",
   },
 ];
 
@@ -179,7 +186,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky px-10 top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container justify-between mx-auto gap-5 flex h-16 items-center">
           {/* Mobile menu trigger */}
           <Sheet>
@@ -197,8 +204,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           {/* Logo */}
           <div className="flex items-center space-x-2">
             <Link href="/admin" className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <MessageSquare className="h-4 w-4" />
+              <div className="flex h-8 w-8 items-center justify-center ">
+                <span className="border-primary border hover:bg-primary/90 h-10 w-10">
+                  <span className="text-primary font-wear-tear text-xl/loose pt-1">
+                    DiD
+                  </span>
+                </span>
               </div>
               <span className="font-bold">DropInDrop Admin</span>
             </Link>

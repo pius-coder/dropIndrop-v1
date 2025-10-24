@@ -121,7 +121,10 @@ export class WhatsAppService {
         id
       );
       if (!existingResult.success) {
-        return existingResult;
+        return {
+          success: false,
+          error: new ValidationError("WhatsApp group not found"),
+        };
       }
 
       // Validate business rules
@@ -169,7 +172,10 @@ export class WhatsAppService {
         id
       );
       if (!existingResult.success) {
-        return existingResult;
+        return {
+          success: false,
+          error: new ValidationError("WhatsApp group not found"),
+        };
       }
 
       // Business rule: prevent deletion of groups used in drops
@@ -228,7 +234,9 @@ export class WhatsAppService {
   /**
    * Sync groups from WhatsApp
    */
-  async syncGroupsFromWhatsApp(): Promise<Result<WhatsAppGroup[]>> {
+  async syncGroupsFromWhatsApp(
+    createdById?: string
+  ): Promise<Result<WhatsAppGroup[]>> {
     try {
       // Get groups from WhatsApp
       const whatsappResult = await this.deps.wahaClient.getGroups();
@@ -241,7 +249,9 @@ export class WhatsAppService {
         };
       }
 
-      const whatsappGroups = whatsappResult.groups || [];
+      // Ensure groups is an array
+      const groupsData = whatsappResult.groups;
+      const whatsappGroups = Array.isArray(groupsData) ? groupsData : [];
       const syncedGroups: WhatsAppGroup[] = [];
 
       // Process each WhatsApp group
@@ -270,6 +280,7 @@ export class WhatsAppService {
               name: waGroup.name,
               chatId: waGroup.id,
               memberCount: waGroup.unreadCount,
+              createdById: createdById || "system",
             };
             const createResult = await this.deps.whatsappGroupRepository.create(
               createData
@@ -305,7 +316,7 @@ export class WhatsAppService {
       if (!dropResult.success) {
         return {
           success: false,
-          error: dropResult.error,
+          error: new ValidationError("Drop not found"),
         };
       }
 
@@ -318,7 +329,7 @@ export class WhatsAppService {
       if (!groupResult.success) {
         return {
           success: false,
-          error: groupResult.error,
+          error: new ValidationError("WhatsApp group not found"),
         };
       }
 
@@ -378,7 +389,7 @@ export class WhatsAppService {
       if (!dropResult.success) {
         return {
           success: false,
-          error: dropResult.error,
+          error: new ValidationError("Drop not found"),
         };
       }
 
@@ -409,7 +420,7 @@ export class WhatsAppService {
             dropId,
             groupId,
             success: false,
-            error: sendResult.error?.message,
+            error: "Failed to send drop to group",
           });
         }
       }

@@ -12,6 +12,7 @@ export interface CreateWhatsAppGroupData {
   chatId: string;
   description?: string;
   memberCount?: number;
+  createdBy: string;
 }
 
 export interface UpdateWhatsAppGroupData {
@@ -43,23 +44,29 @@ export class WhatsAppGroup extends BaseEntity {
   public readonly description?: string;
   public readonly isActive: boolean;
   public readonly memberCount?: number;
+  public readonly lastActivity?: Date;
+  public readonly createdById: string;
 
   constructor(
     id: string,
     name: string,
     chatId: string,
+    createdById: string,
     description?: string,
     memberCount?: number,
     isActive: boolean = true,
+    lastActivity?: Date,
     createdAt?: Date,
     updatedAt?: Date
   ) {
     super(id, createdAt, updatedAt);
     this.name = name;
     this.chatId = chatId;
+    this.createdById = createdById;
     this.description = description;
     this.memberCount = memberCount;
     this.isActive = isActive;
+    this.lastActivity = lastActivity;
   }
 
   // Business logic methods
@@ -97,11 +104,13 @@ export class WhatsAppGroup extends BaseEntity {
       this.id,
       updates.name || this.name,
       this.chatId, // chatId cannot be updated
+      this.createdById,
       updates.description !== undefined
         ? updates.description
         : this.description,
       updates.memberCount ?? this.memberCount,
       updates.isActive ?? this.isActive,
+      this.lastActivity,
       this.createdAt,
       new Date()
     );
@@ -117,9 +126,11 @@ export class WhatsAppGroup extends BaseEntity {
       this.id,
       this.name,
       this.chatId,
+      this.createdById,
       this.description,
       this.memberCount,
       false,
+      this.lastActivity,
       this.createdAt,
       new Date()
     );
@@ -130,12 +141,42 @@ export class WhatsAppGroup extends BaseEntity {
       this.id,
       this.name,
       this.chatId,
+      this.createdById,
       this.description,
       this.memberCount,
       true,
+      this.lastActivity,
       this.createdAt,
       new Date()
     );
+  }
+
+  // Activity tracking methods
+  public updateLastActivity(): WhatsAppGroup {
+    return new WhatsAppGroup(
+      this.id,
+      this.name,
+      this.chatId,
+      this.createdById,
+      this.description,
+      this.memberCount,
+      this.isActive,
+      new Date(),
+      this.createdAt,
+      new Date()
+    );
+  }
+
+  public isRecentlyActive(minutesThreshold: number = 30): boolean {
+    if (!this.lastActivity) {
+      return false;
+    }
+    const threshold = new Date(Date.now() - minutesThreshold * 60 * 1000);
+    return this.lastActivity > threshold;
+  }
+
+  public getCreatorId(): string {
+    return this.createdById;
   }
 
   // Validation methods
@@ -188,6 +229,10 @@ export class WhatsAppGroup extends BaseEntity {
           "Chat ID must end with @g.us (group) or @c.us (individual)"
         );
       }
+    }
+
+    if (!data.createdBy || !data.createdBy.trim()) {
+      errors.push("Created by is required");
     }
 
     if (data.description && data.description.length > 500) {

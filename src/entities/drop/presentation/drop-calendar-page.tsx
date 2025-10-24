@@ -19,6 +19,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Calendar,
   CalendarIcon,
@@ -31,92 +33,11 @@ import {
   ChevronRight,
   Send,
   Eye,
+  Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-// Mock data for demonstration - replace with actual API calls
-const mockDrops = [
-  {
-    id: "1",
-    name: "Summer Collection Drop",
-    scheduledDate: new Date(2024, 11, 15), // Dec 15, 2024
-    status: "SCHEDULED",
-    products: [
-      { id: "p1", name: "Summer Dress", price: 25000 },
-      { id: "p2", name: "Beach Hat", price: 15000 },
-    ],
-    groups: [
-      { id: "g1", name: "Fashion Group" },
-      { id: "g2", name: "Ladies Fashion" },
-    ],
-  },
-  {
-    id: "2",
-    name: "Tech Gadgets Drop",
-    scheduledDate: new Date(2024, 11, 20), // Dec 20, 2024
-    status: "DRAFT",
-    products: [
-      { id: "p3", name: "Wireless Earbuds", price: 45000 },
-      { id: "p4", name: "Smart Watch", price: 120000 },
-    ],
-    groups: [{ id: "g3", name: "Tech Enthusiasts" }],
-  },
-  {
-    id: "3",
-    name: "Holiday Special",
-    scheduledDate: new Date(2024, 11, 25), // Dec 25, 2024
-    status: "SENT",
-    products: [
-      { id: "p5", name: "Christmas Ornament", price: 8000 },
-      { id: "p6", name: "Gift Basket", price: 35000 },
-    ],
-    groups: [
-      { id: "g1", name: "Fashion Group" },
-      { id: "g4", name: "Holiday Shoppers" },
-    ],
-  },
-];
-
-const mockProducts = [
-  {
-    id: "p1",
-    name: "Summer Dress",
-    price: 25000,
-    category: { name: "Clothing" },
-  },
-  {
-    id: "p2",
-    name: "Beach Hat",
-    price: 15000,
-    category: { name: "Accessories" },
-  },
-  {
-    id: "p3",
-    name: "Wireless Earbuds",
-    price: 45000,
-    category: { name: "Electronics" },
-  },
-  {
-    id: "p4",
-    name: "Smart Watch",
-    price: 120000,
-    category: { name: "Electronics" },
-  },
-  {
-    id: "p5",
-    name: "Christmas Ornament",
-    price: 8000,
-    category: { name: "Decor" },
-  },
-  { id: "p6", name: "Gift Basket", price: 35000, category: { name: "Gifts" } },
-];
-
-const mockGroups = [
-  { id: "g1", name: "Fashion Group", isActive: true },
-  { id: "g2", name: "Ladies Fashion", isActive: true },
-  { id: "g3", name: "Tech Enthusiasts", isActive: true },
-  { id: "g4", name: "Holiday Shoppers", isActive: true },
-];
+import { useDropManagement } from "@/lib/hooks/use-drop-management";
+import DropForm from "./components/drop-form";
 
 export default function DropCalendarPage() {
   const router = useRouter();
@@ -126,6 +47,24 @@ export default function DropCalendarPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [selectedDrop, setSelectedDrop] = useState<any>(null);
 
+  // Fetch drop data
+  const {
+    drops,
+    availableProducts,
+    availableGroups,
+    analytics,
+    isLoading,
+    error,
+    createDrop,
+    updateDrop,
+    deleteDrop,
+    sendDrop,
+    isCreating,
+    isUpdating,
+    isDeleting,
+    isSending,
+  } = useDropManagement();
+  console.log("drops error:", error);
   // Get calendar data
   const calendarData = useMemo(() => {
     const year = currentDate.getFullYear();
@@ -159,23 +98,23 @@ export default function DropCalendarPage() {
 
   // Get drops for current month
   const monthDrops = useMemo(() => {
-    return mockDrops.filter((drop) => {
+    return drops.filter((drop: any) => {
       const dropDate = new Date(drop.scheduledDate);
       return (
         dropDate.getMonth() === currentDate.getMonth() &&
         dropDate.getFullYear() === currentDate.getFullYear()
       );
     });
-  }, [currentDate, mockDrops]);
+  }, [currentDate, drops]);
 
   // Get drops for selected date
   const selectedDateDrops = useMemo(() => {
     if (!selectedDate) return [];
-    return mockDrops.filter((drop) => {
+    return drops.filter((drop: any) => {
       const dropDate = new Date(drop.scheduledDate);
       return dropDate.toDateString() === selectedDate.toDateString();
     });
-  }, [selectedDate, mockDrops]);
+  }, [selectedDate, drops]);
 
   const navigateMonth = (direction: "prev" | "next") => {
     setCurrentDate((prev) => {
@@ -217,10 +156,8 @@ export default function DropCalendarPage() {
 
   const handleCreateDrop = async (data: any) => {
     try {
-      // TODO: Implement API call to create drop
-      console.log("Creating drop:", data);
+      await createDrop(data);
       setShowCreateDialog(false);
-      // Refresh data
     } catch (error) {
       console.error("Failed to create drop:", error);
     }
@@ -229,9 +166,7 @@ export default function DropCalendarPage() {
   const handleSendDrop = async (dropId: string) => {
     if (confirm("Are you sure you want to send this drop now?")) {
       try {
-        // TODO: Implement API call to send drop
-        console.log("Sending drop:", dropId);
-        // Refresh data
+        await sendDrop(dropId);
       } catch (error) {
         console.error("Failed to send drop:", error);
       }
@@ -263,6 +198,16 @@ export default function DropCalendarPage() {
         </div>
       </div>
 
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {error.message || "Failed to load drop data. Please try again."}
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
@@ -271,7 +216,9 @@ export default function DropCalendarPage() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{mockDrops.length}</div>
+            <div className="text-2xl font-bold">
+              {isLoading ? <Skeleton className="h-8 w-12" /> : drops.length}
+            </div>
           </CardContent>
         </Card>
 
@@ -282,7 +229,11 @@ export default function DropCalendarPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockDrops.filter((d) => d.status === "SCHEDULED").length}
+              {isLoading ? (
+                <Skeleton className="h-8 w-12" />
+              ) : (
+                drops.filter((d: any) => d.status === "SCHEDULED").length
+              )}
             </div>
           </CardContent>
         </Card>
@@ -294,7 +245,11 @@ export default function DropCalendarPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {mockDrops.filter((d) => d.status === "SENT").length}
+              {isLoading ? (
+                <Skeleton className="h-8 w-12" />
+              ) : (
+                drops.filter((d: any) => d.status === "SENT").length
+              )}
             </div>
           </CardContent>
         </Card>
@@ -305,7 +260,13 @@ export default function DropCalendarPage() {
             <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{monthDrops.length}</div>
+            <div className="text-2xl font-bold">
+              {isLoading ? (
+                <Skeleton className="h-8 w-12" />
+              ) : (
+                monthDrops.length
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -369,7 +330,7 @@ export default function DropCalendarPage() {
                   date.getMonth() === currentDate.getMonth();
                 const isToday =
                   date.toDateString() === new Date().toDateString();
-                const dayDrops = mockDrops.filter((drop) => {
+                const dayDrops = drops.filter((drop: any) => {
                   const dropDate = new Date(drop.scheduledDate);
                   return dropDate.toDateString() === date.toDateString();
                 });
@@ -467,17 +428,26 @@ export default function DropCalendarPage() {
                                 Products ({drop.products.length})
                               </p>
                               <div className="space-y-1">
-                                {drop.products.map((product: any) => (
-                                  <div
-                                    key={product.id}
-                                    className="flex justify-between"
-                                  >
-                                    <span>{product.name}</span>
-                                    <span className="font-medium">
-                                      {product.price.toLocaleString()} XAF
-                                    </span>
-                                  </div>
-                                ))}
+                                {drop.products.map((productRef: any) => {
+                                  const product = availableProducts.find(
+                                    (p: any) => p.id === productRef.productId
+                                  );
+                                  return (
+                                    <div
+                                      key={productRef.productId}
+                                      className="flex justify-between"
+                                    >
+                                      <span>
+                                        {product?.name ||
+                                          `Product ${productRef.productId}`}
+                                      </span>
+                                      <span className="font-medium">
+                                        {(product?.price || 0).toLocaleString()}{" "}
+                                        XAF
+                                      </span>
+                                    </div>
+                                  );
+                                })}
                               </div>
                             </div>
 
@@ -537,11 +507,13 @@ export default function DropCalendarPage() {
               Schedule a new drop with products and WhatsApp groups
             </DialogDescription>
           </DialogHeader>
-          <div className="p-4 text-center text-muted-foreground">
-            <p>
-              Drop creation form would go here with product and group selection.
-            </p>
-          </div>
+          <DropForm
+            onSuccess={() => {
+              setShowCreateDialog(false);
+              setSelectedDate(null);
+            }}
+            onCancel={() => setShowCreateDialog(false)}
+          />
         </DialogContent>
       </Dialog>
 
