@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "@fontsource/ia-writer-mono/400.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -69,7 +70,7 @@
   /* Font families */
   --font-sans: Inter, system-ui, -apple-system, sans-serif;
   --font-serif: Georgia, serif;
-  --font-mono: "SF Mono", Monaco, monospace;
+  --font-mono: "iA Writer Mono", monospace;
   --font-wear-tear: "Wear and Tear", cursive;
 
   /* Custom colors for platform */
@@ -181,7 +182,7 @@
   /* Font families */
   --font-sans: Inter, system-ui, -apple-system, sans-serif;
   --font-serif: Georgia, serif;
-  --font-mono: "SF Mono", Monaco, monospace;
+  --font-mono: "iA Writer Mono", monospace;
   --font-wear-tear: "Wear and Tear", cursive;
 
   /* Custom colors for platform (dark) */
