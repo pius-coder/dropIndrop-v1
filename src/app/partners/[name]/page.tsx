@@ -125,15 +125,15 @@ export default function PartnerPage({ params }: PartnerPageProps) {
           </div>
 
           {/* Partner Details */}
-          <div className="flex justify-center gap-6 md:gap-8">
+          <div className="flex justify-center align-center gap-6 md:gap-8">
             {/* Partner Information */}
-            <div className="flex justify-between w-full">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+            <div className="space-y-6 ">
+              <div className="flex  justify-between w-full gap-4">
+                <div className="flex justify-center flex-col items-center">
                   <h4 className="font-semibold text-foreground">Fondé en</h4>
                   <p className="text-muted-foreground">{partner.founded}</p>
                 </div>
-                <div>
+                <div className="flex justify-center flex-col items-center">
                   <h4 className="font-semibold text-foreground">
                     Localisation
                   </h4>
