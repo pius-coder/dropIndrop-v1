@@ -23,8 +23,8 @@ export interface AuditableEntity {
 
 // Utility types for domain operations
 export type Result<T, E = Error> =
-  | { success: true; data: T }
-  | { success: false; error: E };
+  | { success: true; isSuccess: true; data: T; value: T }
+  | { success: false; isSuccess: false; error: E };
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
@@ -93,3 +93,97 @@ export class ConflictError extends DomainError {
     this.name = "ConflictError";
   }
 }
+
+// Proper Result companion object implementation (matches existing usage patterns)
+export const Result = {
+  ok<T>(data?: T): Result<T> {
+    return {
+      success: true,
+      isSuccess: true,
+      data: data as T,
+      value: data as T,
+    };
+  },
+
+  success<T>(data?: T): Result<T> {
+    return this.ok(data);
+  },
+
+  err<E = Error>(error: E): Result<never, E> {
+    return {
+      success: false,
+      isSuccess: false,
+      error: error as E,
+    };
+  },
+
+  failure<T = never>(error: Error): Result<T> {
+    return this.err(error);
+  },
+
+  isSuccess<T, E>(
+    result: Result<T, E>
+  ): result is Result<T, E> & { success: true; isSuccess: true } {
+    return result.success && result.isSuccess;
+  },
+
+  isFailure<T, E>(
+    result: Result<T, E>
+  ): result is Result<T, E> & { success: false; isSuccess: false } {
+    return !result.success && !result.isSuccess;
+  },
+
+  from<T>(value: T | Error): Result<T> {
+    if (value instanceof Error) {
+      return this.err(value);
+    }
+    return this.ok(value);
+  },
+
+  async fromPromise<T>(promise: Promise<T>): Promise<Result<T>> {
+    try {
+      const data = await promise;
+      return this.ok(data);
+    } catch (error) {
+      return this.err(error as Error);
+    }
+  },
+
+  map<T, U, E>(result: Result<T, E>, mapper: (value: T) => U): Result<U, E> {
+    if (this.isSuccess(result)) {
+      return this.ok(mapper(result.data)) as Result<U, E>;
+    }
+    return result;
+  },
+
+  flatMap<T, U, E>(
+    result: Result<T, E>,
+    mapper: (value: T) => Result<U, E>
+  ): Result<U, E> {
+    if (this.isSuccess(result)) {
+      return mapper(result.data);
+    }
+    return result;
+  },
+
+  unwrap<T, E>(result: Result<T, E>): T {
+    if (this.isSuccess(result)) {
+      return result.data;
+    }
+    throw result.error;
+  },
+
+  unwrapOr<T, E>(result: Result<T, E>, defaultValue: T): T {
+    if (this.isSuccess(result)) {
+      return result.data;
+    }
+    return defaultValue;
+  },
+
+  unwrapOrElse<T, E>(result: Result<T, E>, defaultFn: (error: E) => T): T {
+    if (this.isSuccess(result)) {
+      return result.data;
+    }
+    return defaultFn(result.error);
+  },
+};

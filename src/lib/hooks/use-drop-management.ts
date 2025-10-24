@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
-import { DropStatus } from "../../entities/drop/domain/drop";
+import { DropStatus } from "@/entities/drop/domain/drop";
 
 // Drop schema for API responses
 const DropSchema = z.object({

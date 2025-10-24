@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { ProductRepository } from "../../entities/product/domain/product-repository";
-import { CategoryRepository } from "../../entities/category/domain/category-repository";
-import { OrderRepository } from "../../entities/order/domain/order-repository";
-import { UserRepository } from "../../entities/user/domain/user-repository";
-import { WhatsAppGroupRepository } from "../../entities/whatsapp/domain/whatsapp-group-repository";
-import { ConfigurationRepository } from "../../entities/configuration/domain/configuration-repository";
+import { ProductRepository } from "@/entities/product/domain/product-repository";
+import { CategoryRepository } from "@/entities/category/domain/category-repository";
+import { OrderRepository } from "@/entities/order/domain/order-repository";
+import { UserRepository } from "@/entities/user/domain/user-repository";
+import { WhatsAppGroupRepository } from "@/entities/whatsapp/domain/whatsapp-group-repository";
+import { ConfigurationRepository } from "@/entities/configuration/domain/configuration-repository";
 
 export interface DashboardStats {
   totalProducts: number;

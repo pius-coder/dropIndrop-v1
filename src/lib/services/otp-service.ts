@@ -1,6 +1,6 @@
 import { randomInt } from "crypto";
-import { wahaClient } from "../../entities/whatsapp/infrastructure/waha-client";
-import { User } from "../../entities/user/domain/user";
+import { wahaClient } from "@/entities/whatsapp/infrastructure/waha-client";
+import { User } from "@/entities/user/domain/user";
 import { UserRole } from "@prisma/client";
 import { OTPRepository } from "./otp-repository";
 import { prisma } from "../db";
@@ -119,11 +119,15 @@ export class OTPService {
     otpCode: string
   ): Promise<OTPVerifyResult> {
     try {
-      console.log(`[OTPService] Starting OTP verification for phone: ${phoneNumber}`);
+      console.log(
+        `[OTPService] Starting OTP verification for phone: ${phoneNumber}`
+      );
 
       // Check if OTP is valid format
       if (!/^\d{6}$/.test(otpCode)) {
-        console.log(`[OTPService] Invalid OTP format for phone: ${phoneNumber}`);
+        console.log(
+          `[OTPService] Invalid OTP format for phone: ${phoneNumber}`
+        );
         return {
           success: false,
           error: "Invalid OTP format",
@@ -137,7 +141,9 @@ export class OTPService {
           this.config.maxAttempts
         )
       ) {
-        console.log(`[OTPService] Too many failed attempts for phone: ${phoneNumber}`);
+        console.log(
+          `[OTPService] Too many failed attempts for phone: ${phoneNumber}`
+        );
         return {
           success: false,
           error: `Too many failed attempts. Please request a new OTP.`,
@@ -145,7 +151,9 @@ export class OTPService {
       }
 
       // Find valid OTP record in database
-      console.log(`[OTPService] Looking for valid OTP record for phone: ${phoneNumber}`);
+      console.log(
+        `[OTPService] Looking for valid OTP record for phone: ${phoneNumber}`
+      );
       const otpRecord = await this.otpRepository.findValidOTP(
         phoneNumber,
         otpCode
@@ -153,7 +161,9 @@ export class OTPService {
 
       if (!otpRecord) {
         // Record failed attempt
-        console.log(`[OTPService] Invalid or expired OTP for phone: ${phoneNumber}, recording failed attempt`);
+        console.log(
+          `[OTPService] Invalid or expired OTP for phone: ${phoneNumber}, recording failed attempt`
+        );
         await this.otpRepository.incrementAttempts(phoneNumber);
 
         return {
@@ -162,7 +172,9 @@ export class OTPService {
         };
       }
 
-      console.log(`[OTPService] Valid OTP found for phone: ${phoneNumber}, proceeding with user check`);
+      console.log(
+        `[OTPService] Valid OTP found for phone: ${phoneNumber}, proceeding with user check`
+      );
 
       // Check if user already exists
       let user = await prisma.user.findUnique({
@@ -170,7 +182,9 @@ export class OTPService {
       });
 
       if (!user) {
-        console.log(`[OTPService] User not found, creating new user for phone: ${phoneNumber}`);
+        console.log(
+          `[OTPService] User not found, creating new user for phone: ${phoneNumber}`
+        );
         // Create new user
         user = await prisma.user.create({
           data: {
@@ -183,7 +197,9 @@ export class OTPService {
         });
         console.log(`[OTPService] New user created with ID: ${user.id}`);
       } else {
-        console.log(`[OTPService] Existing user found, updating last login for user ID: ${user.id}`);
+        console.log(
+          `[OTPService] Existing user found, updating last login for user ID: ${user.id}`
+        );
         // Update last login
         user = await prisma.user.update({
           where: { id: user.id },
@@ -215,7 +231,9 @@ export class OTPService {
         user.updatedAt
       );
 
-      console.log(`[OTPService] OTP verification successful for phone: ${phoneNumber}, user ID: ${user.id}`);
+      console.log(
+        `[OTPService] OTP verification successful for phone: ${phoneNumber}, user ID: ${user.id}`
+      );
 
       // Send welcome message via WhatsApp
       try {
@@ -224,9 +242,14 @@ export class OTPService {
           chatId: `${phoneNumber.replace(/^\+/, "")}@c.us`,
           text: welcomeMessage,
         });
-        console.log(`[OTPService] Welcome message sent to phone: ${phoneNumber}`);
+        console.log(
+          `[OTPService] Welcome message sent to phone: ${phoneNumber}`
+        );
       } catch (error) {
-        console.error(`[OTPService] Failed to send welcome message to phone: ${phoneNumber}`, error);
+        console.error(
+          `[OTPService] Failed to send welcome message to phone: ${phoneNumber}`,
+          error
+        );
         // Don't fail the login if welcome message fails
       }
 
@@ -235,7 +258,10 @@ export class OTPService {
         user: domainUser,
       };
     } catch (error) {
-      console.error(`[OTPService] Error during OTP verification for phone: ${phoneNumber}`, error);
+      console.error(
+        `[OTPService] Error during OTP verification for phone: ${phoneNumber}`,
+        error
+      );
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -252,11 +278,15 @@ export class OTPService {
     otpCode: string
   ): Promise<OTPVerifyResult> {
     try {
-      console.log(`[OTPService] Starting registration OTP verification for phone: ${phoneNumber}`);
+      console.log(
+        `[OTPService] Starting registration OTP verification for phone: ${phoneNumber}`
+      );
 
       // Check if OTP is valid format
       if (!/^\d{6}$/.test(otpCode)) {
-        console.log(`[OTPService] Invalid OTP format for phone: ${phoneNumber}`);
+        console.log(
+          `[OTPService] Invalid OTP format for phone: ${phoneNumber}`
+        );
         return {
           success: false,
           error: "Format de code OTP invalide",
@@ -270,7 +300,9 @@ export class OTPService {
           this.config.maxAttempts
         )
       ) {
-        console.log(`[OTPService] Too many failed attempts for phone: ${phoneNumber}`);
+        console.log(
+          `[OTPService] Too many failed attempts for phone: ${phoneNumber}`
+        );
         return {
           success: false,
           error: `Trop de tentatives échouées. Veuillez redemander un nouveau code.`,
@@ -278,7 +310,9 @@ export class OTPService {
       }
 
       // Find valid OTP record in database
-      console.log(`[OTPService] Looking for valid OTP record for phone: ${phoneNumber}`);
+      console.log(
+        `[OTPService] Looking for valid OTP record for phone: ${phoneNumber}`
+      );
       const otpRecord = await this.otpRepository.findValidOTP(
         phoneNumber,
         otpCode
@@ -286,7 +320,9 @@ export class OTPService {
 
       if (!otpRecord) {
         // Record failed attempt
-        console.log(`[OTPService] Invalid or expired OTP for phone: ${phoneNumber}, recording failed attempt`);
+        console.log(
+          `[OTPService] Invalid or expired OTP for phone: ${phoneNumber}, recording failed attempt`
+        );
         await this.otpRepository.incrementAttempts(phoneNumber);
 
         return {
@@ -295,7 +331,9 @@ export class OTPService {
         };
       }
 
-      console.log(`[OTPService] Valid OTP found for phone: ${phoneNumber}, proceeding with user activation`);
+      console.log(
+        `[OTPService] Valid OTP found for phone: ${phoneNumber}, proceeding with user activation`
+      );
 
       // Find the user by phone number
       const user = await prisma.user.findUnique({
@@ -311,7 +349,9 @@ export class OTPService {
       }
 
       // Activate user account and update last login
-      console.log(`[OTPService] Activating user account for user ID: ${user.id}`);
+      console.log(
+        `[OTPService] Activating user account for user ID: ${user.id}`
+      );
       const activatedUser = await prisma.user.update({
         where: { id: user.id },
         data: {
@@ -342,14 +382,19 @@ export class OTPService {
         activatedUser.updatedAt
       );
 
-      console.log(`[OTPService] Registration OTP verification successful for phone: ${phoneNumber}, user ID: ${user.id}`);
+      console.log(
+        `[OTPService] Registration OTP verification successful for phone: ${phoneNumber}, user ID: ${user.id}`
+      );
 
       return {
         success: true,
         user: domainUser,
       };
     } catch (error) {
-      console.error(`[OTPService] Error during registration OTP verification for phone: ${phoneNumber}`, error);
+      console.error(
+        `[OTPService] Error during registration OTP verification for phone: ${phoneNumber}`,
+        error
+      );
       return {
         success: false,
         error: error instanceof Error ? error.message : "Erreur inconnue",
