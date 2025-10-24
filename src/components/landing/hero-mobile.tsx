@@ -55,7 +55,7 @@ export function HeroMobile() {
             {/* Theme Toggle */}
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
+              className="p-2 rounded-lg bg-muted hover:bg-muted/80 hover:text-primary transition-colors"
             >
               {theme === "dark" ? (
                 <Sun className="w-4 h-4 text-yellow-500" />
@@ -77,7 +77,7 @@ export function HeroMobile() {
               className={`flex-1 text-sm font-medium px-3 py-2 rounded-md transition-colors ${
                 mode === "vendor"
                   ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground hover:text-primary"
               }`}
             >
               🏪 Vendeur
@@ -87,7 +87,7 @@ export function HeroMobile() {
               className={`flex-1 text-sm font-medium px-3 py-2 rounded-md transition-colors ${
                 mode === "client"
                   ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground"
+                  : "text-muted-foreground hover:text-primary"
               }`}
             >
               🛒 Client
@@ -117,7 +117,10 @@ export function HeroMobile() {
 
           {/* CTA Buttons - Stacked on mobile */}
           <div className="space-y-3 mb-8">
-            <Button size="lg" className="w-full text-base py-3">
+            <Button
+              size="lg"
+              className="w-full text-base py-3 hover:text-primary"
+            >
               {content.primaryButton.icon === "ShoppingCart" && (
                 <ShoppingCart className="w-5 h-5 mr-2" />
               )}
@@ -130,7 +133,7 @@ export function HeroMobile() {
             <Button
               size="lg"
               variant="outline"
-              className="w-full text-base py-3"
+              className="w-full text-base py-3 hover:text-primary"
             >
               {content.secondaryButton.icon === "ShoppingCart" && (
                 <ShoppingCart className="w-5 h-5 mr-2" />
@@ -245,7 +248,7 @@ export function HeroMobile() {
             <Button
               size="lg"
               variant="secondary"
-              className="w-full text-base py-3"
+              className="w-full text-base py-3 hover:text-primary"
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               {content.cta.primaryButton}
@@ -254,7 +257,7 @@ export function HeroMobile() {
             <Button
               size="lg"
               variant="outline"
-              className="w-full text-base py-3"
+              className="w-full text-base py-3 hover:text-primary"
             >
               <MessageCircle className="w-5 h-5 mr-2" />
               {content.cta.secondaryButton}
@@ -284,7 +287,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Fonctionnalités
                   </a>
@@ -292,7 +295,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Tarifs
                   </a>
@@ -300,7 +303,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     API
                   </a>
@@ -308,7 +311,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Support
                   </a>
@@ -324,7 +327,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     À propos
                   </a>
@@ -332,7 +335,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Blog
                   </a>
@@ -340,7 +343,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Carrières
                   </a>
@@ -348,7 +351,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Contact
                   </a>
@@ -364,7 +367,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Confidentialité
                   </a>
@@ -372,7 +375,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     Conditions
                   </a>
@@ -380,7 +383,7 @@ export function HeroMobile() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors text-sm"
+                    className="hover:text-primary transition-colors text-sm"
                   >
                     RGPD
                   </a>
