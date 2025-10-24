@@ -10,45 +10,46 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "drop-In-drop - WhatsApp E-commerce Platform",
+  title:
+    "Drop-in-Drop - E-commerce WhatsApp au Cameroun | Vente en ligne sur WhatsApp",
   description:
-    "Revolutionary WhatsApp-powered e-commerce platform. Shop exclusively through WhatsApp groups, discover local products, and experience seamless community-driven commerce.",
+    "Plateforme e-commerce révolutionnaire sur WhatsApp. Achetez et vendez exclusivement via des groupes WhatsApp, découvrez des produits locaux camerounais et vivez une expérience de commerce communautaire fluide.",
   keywords:
-    "WhatsApp e-commerce, local shopping, community marketplace, WhatsApp drops, mobile commerce, group shopping",
-  authors: [{ name: "drop-In-drop Team" }],
-  creator: "drop-In-drop",
-  publisher: "drop-In-drop",
+    "ecommerce whatsapp cameroun, vente whatsapp, groupe whatsapp vente, shopping whatsapp cameroun, commerce mobile cameroun, marketplace communautaire, whatsapp drops, achats en ligne cameroun, produits locaux cameroun, mtn momo shopping, orange money ecommerce",
+  authors: [{ name: "Drop-in-Drop Team" }],
+  creator: "Drop-in-Drop",
+  publisher: "Drop-in-Drop",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://dropindrop.com"),
+  metadataBase: new URL("https://drop-in-drop.vercel.app"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "drop-In-drop - WhatsApp E-commerce Platform",
+    title: "Drop-in-Drop - E-commerce WhatsApp au Cameroun",
     description:
-      "Shop exclusively through WhatsApp. Join communities, discover local products, and experience seamless e-commerce in your preferred messaging app.",
-    url: "https://dropindrop.com",
-    siteName: "drop-In-drop",
-    locale: "en_US",
+      "Achetez sur WhatsApp en toute simplicité ! Rejoignez nos communautés, découvrez des produits locaux camerounais et faites vos achats sans quitter votre messagerie préférée.",
+    url: "https://drop-in-drop.vercel.app",
+    siteName: "Drop-in-Drop",
+    locale: "fr_CM",
     type: "website",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "drop-In-drop WhatsApp E-commerce Platform",
+        alt: "Drop-in-Drop - Plateforme e-commerce WhatsApp au Cameroun",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "drop-In-drop - WhatsApp E-commerce Platform",
+    title: "Drop-in-Drop - E-commerce WhatsApp au Cameroun",
     description:
-      "Shop exclusively through WhatsApp. Join communities, discover local products, and experience seamless e-commerce.",
+      "Achetez sur WhatsApp en toute simplicité ! Produits locaux camerounais, paiement Mobile Money, livraison rapide.",
     images: ["/og-image.jpg"],
     creator: "@dropindrop",
   },
@@ -67,6 +68,15 @@ export const metadata: Metadata = {
     google: "your-google-site-verification-code",
     yandex: "your-yandex-verification-code",
     yahoo: "your-yahoo-verification-code",
+  },
+  other: {
+    "article:author": "Drop-in-Drop Team",
+    "article:publisher": "https://drop-in-drop.vercel.app",
+    "og:site_name": "Drop-in-Drop",
+    "og:locale": "fr_CM",
+    "og:type": "website",
+    "twitter:site": "@dropindrop",
+    "twitter:creator": "@dropindrop",
   },
 };
 
