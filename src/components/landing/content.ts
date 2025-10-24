@@ -103,10 +103,22 @@ export const contentConfig = {
         "Ensemble, nous construisons l'écosystème e-commerce du 237 et du continent.",
       items: [
         {
-          name: "indiscret 🐿️",
+          name: "indiscret",
           logo: "/patners/image.png",
           description:
             "Partenaire exclusif pour des solutions innovantes et discrètes.",
+          fullName: "indiscret 🐿️",
+          website: "https://indiscret.com",
+          founded: "2020",
+          location: "Cameroun",
+          services: [
+            "Solutions digitales innovantes",
+            "Développement d'applications",
+            "Consulting technique",
+            "Formation et accompagnement",
+          ],
+          about:
+            "indiscret est une entreprise camerounaise spécialisée dans les solutions digitales innovantes. Nous accompagnons les entreprises dans leur transformation numérique avec des solutions sur mesure et un savoir-faire local.",
         },
       ],
     },
@@ -209,10 +221,21 @@ export const contentConfig = {
         "Ensemble, nous construisons l'écosystème e-commerce du 237 et du continent.",
       items: [
         {
-          name: "indiscret 🐿️",
+          name: "indiscret",
           logo: "/patners/image.png",
-          description:
-            "Partenaire exclusif pour des solutions innovantes et discrètes.",
+          description: "Exprimes ton style, importe ta difference...",
+          fullName: "indiscret 🐿️",
+          website: "https://indiscret.com",
+          founded: "2020",
+          location: "Cameroun",
+          services: [
+            "Solutions digitales innovantes",
+            "Développement d'applications",
+            "Consulting technique",
+            "Formation et accompagnement",
+          ],
+          about:
+            "indiscret est une entreprise camerounaise spécialisée dans les solutions digitales innovantes. Nous accompagnons les entreprises dans leur transformation numérique avec des solutions sur mesure et un savoir-faire local.",
         },
       ],
     },
