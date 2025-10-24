@@ -10,14 +10,14 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Drop-in-Drop - WhatsApp E-commerce Platform",
+  title: "drop-In-drop - WhatsApp E-commerce Platform",
   description:
     "Revolutionary WhatsApp-powered e-commerce platform. Shop exclusively through WhatsApp groups, discover local products, and experience seamless community-driven commerce.",
   keywords:
     "WhatsApp e-commerce, local shopping, community marketplace, WhatsApp drops, mobile commerce, group shopping",
-  authors: [{ name: "Drop-in-Drop Team" }],
-  creator: "Drop-in-Drop",
-  publisher: "Drop-in-Drop",
+  authors: [{ name: "drop-In-drop Team" }],
+  creator: "drop-In-drop",
+  publisher: "drop-In-drop",
   formatDetection: {
     email: false,
     address: false,
@@ -28,11 +28,11 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Drop-in-Drop - WhatsApp E-commerce Platform",
+    title: "drop-In-drop - WhatsApp E-commerce Platform",
     description:
       "Shop exclusively through WhatsApp. Join communities, discover local products, and experience seamless e-commerce in your preferred messaging app.",
     url: "https://dropindrop.com",
-    siteName: "Drop-in-Drop",
+    siteName: "drop-In-drop",
     locale: "en_US",
     type: "website",
     images: [
@@ -40,13 +40,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Drop-in-Drop WhatsApp E-commerce Platform",
+        alt: "drop-In-drop WhatsApp E-commerce Platform",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Drop-in-Drop - WhatsApp E-commerce Platform",
+    title: "drop-In-drop - WhatsApp E-commerce Platform",
     description:
       "Shop exclusively through WhatsApp. Join communities, discover local products, and experience seamless e-commerce.",
     images: ["/og-image.jpg"],
@@ -98,7 +98,7 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "Drop-in-Drop",
+              name: "drop-In-drop",
               url: "https://dropindrop.com",
               logo: "https://dropindrop.com/logo.png",
               description:

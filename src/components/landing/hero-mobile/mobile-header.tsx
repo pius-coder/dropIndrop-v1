@@ -16,7 +16,7 @@ export function MobileHeader({ theme, setTheme }: MobileHeaderProps) {
             <MessageCircle className="w-4 h-4 text-primary-foreground" />
           </div>
           <span className="text-lg font-bold text-foreground font-wear-tear">
-            Drop-in-Drop
+            drop-In-drop
           </span>
         </div>
 

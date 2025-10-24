@@ -27,7 +27,7 @@ export default function PartnerPage({ params }: PartnerPageProps) {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Logo />
-            <nav className="flex items-center gap-6">
+            <nav className="hidden md:flex items-center gap-6">
               <a
                 href="/"
                 className="text-muted-foreground hover:text-foreground transition-colors"
@@ -47,19 +47,28 @@ export default function PartnerPage({ params }: PartnerPageProps) {
                 Tarifs
               </a>
             </nav>
+            {/* Mobile menu button - optional for future implementation */}
+            <button className="md:hidden p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors">
+              <span className="sr-only">Menu</span>
+              <div className="w-6 h-6 flex flex-col justify-center gap-1">
+                <span className="w-full h-0.5 bg-foreground"></span>
+                <span className="w-full h-0.5 bg-foreground"></span>
+                <span className="w-full h-0.5 bg-foreground"></span>
+              </div>
+            </button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8 md:py-12">
         <div className="max-w-4xl mx-auto">
           {/* Partnership Header */}
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-8 mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-8">
               {/* Partner Logo and Name */}
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center overflow-hidden">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-primary/10 rounded-lg flex items-center justify-center overflow-hidden">
                   {partner.logo.startsWith("/") ? (
                     <Image
                       src={partner.logo}
@@ -69,7 +78,7 @@ export default function PartnerPage({ params }: PartnerPageProps) {
                       className="w-full h-full object-contain p-2"
                     />
                   ) : (
-                    <span className="text-2xl">
+                    <span className="text-xl md:text-2xl">
                       {partner.logo === "mtn-momo" && "📱"}
                       {partner.logo === "orange-money" && "💰"}
                       {partner.logo === "express-union" && "🏦"}
@@ -80,26 +89,30 @@ export default function PartnerPage({ params }: PartnerPageProps) {
                   )}
                 </div>
                 <div className="text-left">
-                  <h1 className="text-2xl font-bold text-foreground">
+                  <h1 className="text-xl md:text-2xl font-bold text-foreground">
                     {partner.fullName || partner.name}
                   </h1>
-                  <p className="text-muted-foreground">{partner.location}</p>
+                  <p className="text-sm md:text-base text-muted-foreground">
+                    {partner.location}
+                  </p>
                 </div>
               </div>
 
               {/* Plus Icon */}
-              <div className="flex items-center justify-center">
-                <Plus className="w-8 h-8 text-primary" />
+              <div className="flex items-center justify-center order-first md:order-none">
+                <Plus className="w-6 h-6 md:w-8 md:h-8 text-primary" />
               </div>
 
               {/* Drop in Drop Logo and Name */}
               <div className="flex items-center gap-4">
-                <Logo />
+                <div className="w-12 h-12 md:w-16 md:h-16 flex items-center justify-center">
+                  <Logo />
+                </div>
                 <div className="text-left">
-                  <h1 className="text-2xl font-bold text-foreground">
-                    Drop-in-Drop
+                  <h1 className="text-xl md:text-2xl font-bold text-foreground">
+                    drop-In-drop
                   </h1>
-                  <p className="text-muted-foreground">
+                  <p className="text-sm md:text-base text-muted-foreground">
                     Plateforme e-commerce WhatsApp
                   </p>
                 </div>
@@ -112,35 +125,9 @@ export default function PartnerPage({ params }: PartnerPageProps) {
           </div>
 
           {/* Partner Details */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="flex justify-center gap-6 md:gap-8">
             {/* Partner Information */}
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-xl font-semibold mb-4 text-foreground">
-                  À propos de {partner.fullName || partner.name}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed">
-                  {partner.about}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-foreground">
-                  Services
-                </h3>
-                <ul className="space-y-2">
-                  {partner.services?.map((service, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center gap-2 text-muted-foreground"
-                    >
-                      <span className="w-2 h-2 bg-primary rounded-full"></span>
-                      {service}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+            <div className="flex justify-between w-full">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-semibold text-foreground">Fondé en</h4>
@@ -160,7 +147,7 @@ export default function PartnerPage({ params }: PartnerPageProps) {
                     href={partner.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                    className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-2 rounded-lg hover:bg-primary/90 transition-colors text-sm md:text-base"
                   >
                     Visiter le site web
                     <span>↗</span>
@@ -168,63 +155,22 @@ export default function PartnerPage({ params }: PartnerPageProps) {
                 </div>
               )}
             </div>
-
-            {/* Partnership Benefits */}
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-xl font-semibold mb-4 text-foreground">
-                  Notre partenariat
-                </h2>
-                <div className="bg-muted/50 rounded-lg p-6">
-                  <p className="text-muted-foreground leading-relaxed">
-                    En collaborant avec {partner.fullName || partner.name}, nous
-                    offrons à nos utilisateurs des solutions intégrées et
-                    fiables pour une expérience e-commerce complète sur
-                    WhatsApp. Cette partnership renforce notre engagement à
-                    fournir des services de qualité dans tout le Cameroun.
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-lg font-semibold mb-3 text-foreground">
-                  Avantages pour nos utilisateurs
-                </h3>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    Intégration transparente avec nos services
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    Support technique local et réactif
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    Solutions adaptées au marché camerounais
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-1">•</span>
-                    Sécurité et fiabilité des transactions
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-card mt-16">
-        <div className="container mx-auto px-4 py-8">
+      <footer className="absolute w-full bottom-0 border-t border-border bg-card mt-8 md:mt-16">
+        <div className="container mx-auto px-4 py-6 md:py-8">
           <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Logo />
-              <span className="font-semibold text-foreground">
-                Drop-in-Drop
-              </span>
+            <div className="flex items-center flex-col justify-center -gap-2 mb-4">
+              <div className="text-center font-wear-tear font-thin text-muted-foreground">
+                <span className="font-wear-tear text-9xl text-foreground">
+                  DROP IN DROP
+                </span>
+              </div>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm md:text-base">
               &copy; {new Date().getFullYear()} Drop-in-Drop. Tous droits
               réservés.
             </p>

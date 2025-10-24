@@ -111,12 +111,6 @@ export const contentConfig = {
           website: "https://indiscret.com",
           founded: "2020",
           location: "Cameroun",
-          services: [
-            "Solutions digitales innovantes",
-            "Développement d'applications",
-            "Consulting technique",
-            "Formation et accompagnement",
-          ],
           about:
             "indiscret est une entreprise camerounaise spécialisée dans les solutions digitales innovantes. Nous accompagnons les entreprises dans leur transformation numérique avec des solutions sur mesure et un savoir-faire local.",
         },
@@ -124,7 +118,7 @@ export const contentConfig = {
     },
     footer: {
       description:
-        "Zapp — ta plateforme e-commerce WhatsApp, pensée pour le 237 et le continent 🌍.",
+        "dropIndrop— ta plateforme e-commerce WhatsApp, pensée pour le 237 et le continent 🌍.",
     },
   },
 
@@ -223,17 +217,12 @@ export const contentConfig = {
         {
           name: "indiscret",
           logo: "/patners/image.png",
-          description: "Exprimes ton style, importe ta difference...",
+          description:
+            "Partenaire exclusif pour des solutions innovantes et discrètes.",
           fullName: "indiscret 🐿️",
           website: "https://indiscret.com",
           founded: "2020",
           location: "Cameroun",
-          services: [
-            "Solutions digitales innovantes",
-            "Développement d'applications",
-            "Consulting technique",
-            "Formation et accompagnement",
-          ],
           about:
             "indiscret est une entreprise camerounaise spécialisée dans les solutions digitales innovantes. Nous accompagnons les entreprises dans leur transformation numérique avec des solutions sur mesure et un savoir-faire local.",
         },
@@ -241,7 +230,7 @@ export const contentConfig = {
     },
     footer: {
       description:
-        "Zapp — la plateforme e-commerce WhatsApp pour les vendeurs 237 et les boss du continent 🌍.",
+        "dropIndrop— la plateforme e-commerce WhatsApp pour les vendeurs 237 et les boss du continent 🌍.",
     },
   },
 };
