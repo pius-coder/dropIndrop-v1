@@ -26,6 +26,7 @@ import { useTheme } from "@/components/ui/theme-provider";
 import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { Logo } from "./logo";
 import { contentConfig } from "./content";
+import { PartnersSection } from "./hero/partners-section";
 
 export function HeroMobile() {
   const [mode, setMode] = useState<"client" | "vendor">("client");
@@ -265,6 +266,9 @@ export function HeroMobile() {
           </div>
         </div>
       </section>
+
+      {/* Mobile Partners Section */}
+      <PartnersSection mode={mode} />
 
       {/* Mobile Footer */}
       <footer className="bg-card relative border-t border-border text-card-foreground px-4 py-8">

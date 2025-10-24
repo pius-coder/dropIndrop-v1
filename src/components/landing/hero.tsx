@@ -25,6 +25,7 @@ import { contentConfig } from "./content";
 import { LandingHeader } from "./landing-header";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/components/ui/theme-provider";
+import { PartnersSection } from "./hero/partners-section";
 
 export function Hero() {
   const [mode, setMode] = useState<"client" | "vendor">("client");
@@ -98,7 +99,7 @@ export function Hero() {
             </div>
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
+              className="p-2 rounded-lg bg-muted hover:bg-muted/80 hover:text-primary transition-colors"
             >
               {theme === "dark" ? (
                 <Sun className="w-4 h-4 text-yellow-500" />
@@ -125,7 +126,7 @@ export function Hero() {
             {content.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg px-8 py-3">
+            <Button size="lg" className="text-lg px-8 py-3 hover:text-primary">
               {content.primaryButton.icon === "ShoppingCart" && (
                 <ShoppingCart className="w-5 h-5 mr-2" />
               )}
@@ -137,7 +138,7 @@ export function Hero() {
             <Button
               size="lg"
               variant="outline"
-              className="text-lg text-foreground px-8 py-3"
+              className="text-lg text-foreground px-8 py-3 hover:text-primary"
             >
               {content.secondaryButton.icon === "ShoppingCart" && (
                 <ShoppingCart className="w-5 h-5 mr-2" />
@@ -242,17 +243,27 @@ export function Hero() {
             {content.cta.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-3">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="text-lg px-8 py-3 hover:text-primary"
+            >
               <ShoppingCart className="w-5 h-5 mr-2" />
               {content.cta.primaryButton}
             </Button>
-            <Button size="lg" variant="outline" className="text-lg px-8 py-3">
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg px-8 py-3 hover:text-primary"
+            >
               <MessageCircle className="w-5 h-5 mr-2" />
               {content.cta.secondaryButton}
             </Button>
           </div>
         </div>
       </section>
+      {/* Partners Section */}
+      <PartnersSection mode={mode} />
       {/* Footer */}
       <footer className="bg-card relative border-t border-border text-card-foreground py-12">
         <div className="container bottom-0 mx-auto px-4">
@@ -272,7 +283,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Fonctionnalités
                   </a>
@@ -280,7 +291,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Tarifs
                   </a>
@@ -288,7 +299,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     API
                   </a>
@@ -296,7 +307,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Support
                   </a>
@@ -310,7 +321,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     À propos
                   </a>
@@ -318,7 +329,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Blog
                   </a>
@@ -326,7 +337,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Carrières
                   </a>
@@ -334,7 +345,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Contact
                   </a>
@@ -348,7 +359,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Confidentialité
                   </a>
@@ -356,7 +367,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     Conditions
                   </a>
@@ -364,7 +375,7 @@ export function Hero() {
                 <li>
                   <a
                     href="/coming-soon"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors"
                   >
                     RGPD
                   </a>

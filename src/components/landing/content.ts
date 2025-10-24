@@ -97,6 +97,48 @@ export const contentConfig = {
       primaryButton: "Rejoindre maintenant",
       secondaryButton: "Explorer les produits",
     },
+    partners: {
+      title: "Nos partenaires de confiance",
+      subtitle:
+        "Ensemble, nous construisons l'écosystème e-commerce du 237 et du continent.",
+      items: [
+        {
+          name: "MTN MoMo",
+          logo: "mtn-momo",
+          description:
+            "Paiements mobiles rapides et sécurisés pour tous tes achats.",
+        },
+        {
+          name: "Orange Money",
+          logo: "orange-money",
+          description:
+            "Transferts d'argent instantanés et fiables dans tout le pays.",
+        },
+        {
+          name: "Express Union",
+          logo: "express-union",
+          description:
+            "Réseau de points de retrait et de dépôt dans tout le Cameroun.",
+        },
+        {
+          name: "DHL Express",
+          logo: "dhl",
+          description:
+            "Livraison express internationale pour tes commandes spéciales.",
+        },
+        {
+          name: "UBA",
+          logo: "uba",
+          description:
+            "Solutions bancaires innovantes pour les entrepreneurs 237.",
+        },
+        {
+          name: "Afriland First Bank",
+          logo: "afriland",
+          description: "Accompagnement financier pour développer ton business.",
+        },
+      ],
+    },
     footer: {
       description:
         "Zapp — ta plateforme e-commerce WhatsApp, pensée pour le 237 et le continent 🌍.",
@@ -189,6 +231,48 @@ export const contentConfig = {
         "Des milliers de vendeurs du continent utilisent déjà dropIndrop pour gérer mieux, vendre plus et dormir tranquille 😎.",
       primaryButton: "Commencer mon essai gratuit",
       secondaryButton: "Parler à l’équipe",
+    },
+    partners: {
+      title: "Nos partenaires de confiance",
+      subtitle:
+        "Ensemble, nous construisons l'écosystème e-commerce du 237 et du continent.",
+      items: [
+        {
+          name: "MTN MoMo",
+          logo: "mtn-momo",
+          description:
+            "Paiements mobiles rapides et sécurisés pour tous tes achats.",
+        },
+        {
+          name: "Orange Money",
+          logo: "orange-money",
+          description:
+            "Transferts d'argent instantanés et fiables dans tout le pays.",
+        },
+        {
+          name: "Express Union",
+          logo: "express-union",
+          description:
+            "Réseau de points de retrait et de dépôt dans tout le Cameroun.",
+        },
+        {
+          name: "DHL Express",
+          logo: "dhl",
+          description:
+            "Livraison express internationale pour tes commandes spéciales.",
+        },
+        {
+          name: "UBA",
+          logo: "uba",
+          description:
+            "Solutions bancaires innovantes pour les entrepreneurs 237.",
+        },
+        {
+          name: "Afriland First Bank",
+          logo: "afriland",
+          description: "Accompagnement financier pour développer ton business.",
+        },
+      ],
     },
     footer: {
       description:
